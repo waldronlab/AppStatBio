@@ -18,14 +18,14 @@ Book appointments at: http://www.calendly.com/lwaldron
 
 Classes will take place in Room Molveno at the following times:
 
-1. 10 Feb, 10-13
-2. 18 Feb, 10-13
-3. 24 Feb, 10:30-13:30
-4. 04 Mar, 10-13
-5. 10 Mar, 10-13
-6. 17 Mar, 10-13
-7. 24 Mar, 10-13
-8. 31 Mar, 10-13
+1. Weds. 10 Feb, 10-13
+2. Thurs. 18 Feb, 10-13
+3. Weds. 24 Feb, 10:30-13:30
+4. Fri. 04 Mar, 10-13
+5. Thu. 10 Mar, 10-13
+6. Thu. 17 Mar, 10-13
+7. Thu. 24 Mar, 10-13
+8. Thu. 31 Mar, 10-13 (presentations)
 
 ## Important Class Links
 
@@ -49,41 +49,39 @@ This course will provide biologists and bioinformaticians with practical statist
 
 ## Evaluation
 
-### Late Policy
-
-Normal late policy is a 10% reduction per day.  Reasonable exceptions can be made if you let me know in advance that you will be prevented from completing part of the course on time.
+Three components are required for class completion: 1) completion of lab exercises each week, 2) oral presentation of the final project, 3) written report of the final project.  See details below.
 
 ### Labs
 
-Each week will include a hands-on lab session, that students are required to hand in **before the following class** by committing to this Github repository. These are graded on effort as "Unsatisfactory or not done" (0/5), "Partial effort" (fraction/5), or "Full effort" (5/5).  Participation in the labs consitutes 35% of the final grade.
+Each week will include a hands-on lab session, that students are required to hand in **before the following class** by committing to this Github repository. You can work together on lab exercises, but everyone must hand in their individual lab.
 
 ### Projects
 
-A class project will be handed out after the second week of class, that will involve analysing a genomics dataset.  Students will present their projects in two ways:
+A class project will be handed out after the third week of class, that will involve analysing a genomics dataset.  Each student will analyse their own dataset and prepare an individual report. Students will present their projects in two ways:
 
-1. A 20-minute project presentation on March 31 (20%)
-2. A written report on the same project, prepared using R Markdown, due April 4 (45%).
+1. A 20-minute project presentation on March 31
+2. A written report on the same project, prepared using R Markdown, due April 4
 
-Project presentations and reports will be graded for quality of analysis, but also for presentation style and clarity.  A grading rubric will be included in the project assignment.
+Project presentations and reports will be assessed for quality of analysis, but also for presentation style and clarity
 
 ## Session detail by week (subject to change)
 
 * Week 1
-   + introduction to R
-   + random variables
+    + introduction to R
+    + random variables
 * Week 2
-   + hypothesis testing
-   + populations and samples
-   + distributions
+    + hypothesis testing
+    + populations and samples
+    + distributions
+    + t-distribution and t-tests
 * Week 3
-   + Central Limit Theorem
-   + confidence intervals
-   + t-distribution and t-tests
+    + Central Limit Theorem
+    + confidence intervals
 * Week 4
-   + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
-   + Monte Carlo simulation
-   + permutation tests
-   + bootstrap simulation
+    + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
+    + Monte Carlo simulation
+    + permutation tests
+    + bootstrap simulation
 * Week 5
 * Week 6
 * Week 7

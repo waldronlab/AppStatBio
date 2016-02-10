@@ -16,6 +16,10 @@ output:
 - Introduction to the R language
 - Introduction to `dplyr`
 
+- Book sections:
+    - Chapter 0
+    - Chapter 1 - section Random Variables
+    
 A built [html][] version of this lecture is available.
 
 The [source][] R Markdown is also available from Github.
@@ -92,7 +96,7 @@ lines(xdens, length(x) * dnbinom(xdens, size=30, mu=2), lw=2)
 
 ## Random Variables - examples
 
-- Binomial Distribution random variable ($size=20, \mu=2$), and a sample of $n=100$.
+- Binomial Distribution random variable ($size=20, prob=0.25$), and a sample of $n=100$.
     - We will _only_ use for binary outcomes
     
 ```{r, echo=FALSE}
@@ -100,7 +104,7 @@ x=rbinom(100, size=20, prob=0.25)
 res=hist(x, main="Binomial Distribution", prob=FALSE, col="lightgrey",
      breaks=seq(-0.5, round(max(x))+0.5, by=0.5))
 xdens = seq(min(x), max(x), by=1)
-lines(xdens, length(x) * dbinom(xdens, size=30, prob=0.25), lw=2)
+lines(xdens, length(x) * dbinom(xdens, size=20, prob=0.25), lw=2)
 ```
 
 # R - basic usage
@@ -127,7 +131,7 @@ Pseudo code:
 
 ```{r, eval = FALSE}
 source("https://bioconductor.org/biocLite.R")
-packages <- c("packagename", "githubuser/repository", "bioconductorpackage")
+packages <- c("packagename", "githubuser/repository", "biopackage")
 BiocInstaller::biocLite(packages)
 ```
 
@@ -211,6 +215,8 @@ factor(c("good", "very good", "poor"),
 ```{r}
 1:5 %in% 4:5
 ```
+
+## Basic Data Types (cont'd)
 
 - Missing Values and others - **IMPORTANT**
 ```{r}
@@ -296,12 +302,11 @@ t(boring.matrix)
 
 ## Matrix Operations (cont'd)
 
-- Adding
+- Adding (note _vectorization_)
 ```{r}
 boring.matrix + 1
 boring.matrix + 1:3
 ```
-> - Note _vectorization_
 
 ## Matrix Operations (cont'd)
 
@@ -331,19 +336,23 @@ boring.matrix["row.1", ]
 ## Lists are Like Filing Cabinets
 
 * e.g. if we have 5 medical measurements, 10 self-reported measurements, a sex, two parent names:
-```{r, echo = FALSE}
+
+```{r}
 measurements <- c( 1.3, 1.6, 3.2, 9.8, 10.2 )
 self.reporting <- c( 13, 6, 4, 7, 6, 5, 8, 9, 7, 4 )
 sex <- FALSE
 parents <- c( "Parent1.name", "Parent2.name" )
 ```
+
+## Lists are Like Filing Cabinets (cont'd)
+
 ```{r}
 my.person <- list( measurements, self.reporting, 
                    sex, parents)
 my.person
 ```
 
-## Lists are Like Filing Cabinets
+## Lists are Like Filing Cabinets (cont'd)
 
 * Single bracket accessing
 ```{r}
@@ -354,7 +363,7 @@ my.person[1:2]
 my.person[[1]]
 ```
 
-## Lists are Like Filing Cabinets
+## Lists are Like Filing Cabinets (cont'd)
 
 ```{r}
 my.person <- list( measure = measurements, 
@@ -392,7 +401,6 @@ test.dataframe$parents
 class( test.dataframe[[1]] )
 class( test.dataframe[[2]] )
 class( test.dataframe[[3]] )
-class( test.dataframe[[4]] )
 ```
 
 ## Combining Data Frames
@@ -442,21 +450,21 @@ test.dataframe
 ## Reading in Data
 
 - Traditional:
-  + `read.table`
-  + `read.csv`
-  + `read.delim`
+    + `read.table`
+    + `read.csv`
+    + `read.delim`
   
 - New:
-  + `biocLite(data.table)` # fread() function for very large tables
-  + `biocLite(hadley/readr)`  # fast / convenient / advanced
-  + `biocLite(hadley/haven)` # data from other statistical packages
+    + `biocLite(data.table)` # fread() function for very large tables
+    + `biocLite(hadley/readr)`  # fast / convenient / advanced
+    + `biocLite(hadley/haven)` # data from other statistical packages
 
 # dplyr
 
 ## Data Manipulation using `dplyr`
 
 * `dplyr` convention aims to ease cognitive burden
-* Function names are easy to remember
+* Function names are easy to remember:
 1. select (Y)
 2. mutate/transmute (add Ys / new Y)
 3. filter (get Xs based on condition)
@@ -465,7 +473,7 @@ test.dataframe
 6. arrange (re-order observations)
 
 ## `dplyr` example
-```{r}
+```{r, message=FALSE}
 library(nycflights13)
 library(dplyr)
 delays <- flights %>% 
@@ -473,6 +481,10 @@ delays <- flights %>%
   group_by(year, month, day, hour) %>%
   summarise(delay = mean(dep_delay), n = n()) %>%
   filter(n > 10)
+```
+
+## `dplyr` example (cont'd)
+```{r}
 hist(delays$delay, main="Mean hourly delay", xlab="Delay (hours)")
 ```
 
