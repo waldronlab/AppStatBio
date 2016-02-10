@@ -1,5 +1,5 @@
 ---
-title: "Trento Session 1 Lecture"
+title: "Applied Statistics for High-throughput Biology: Session 1"
 author: "Levi Waldron"
 date: "February 10, 2016"
 output:
