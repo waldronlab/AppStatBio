@@ -1,3 +1,6 @@
+The built html version of this lecture is available [here](http://rpubs.com/lwaldron/TrentoSession1Lecture).
+
+
 Create a subdirectory here titled "yourusername_labexercises" and commit your Rmd files there for the week 1 lab exercises:
 
 1. [Getting Started](http://genomicsclass.github.io/book/pages/getting_started_exercises.html)

@@ -16,7 +16,7 @@ Book appointments at: http://www.calendly.com/lwaldron
 
 ## Times and Places
 
-Classes will take place in Room Molveno at the following times:
+Classes will take place in Room Molveno at the following times. You can add the AppStatHTB calendar to your own from the [html](https://calendar.google.com/calendar/embed?src=n1dtqvssbidjnmiuf8msc5sp5s%40group.calendar.google.com&ctz=Europe/Rome) or [iCal](https://calendar.google.com/calendar/ical/n1dtqvssbidjnmiuf8msc5sp5s%40group.calendar.google.com/public/basic.ics).
 
 1. Weds. 10 Feb, 10-13
 2. Thurs. 18 Feb, 10-13
@@ -30,7 +30,7 @@ Classes will take place in Room Molveno at the following times:
 ## Important Class Links
 
 * [YouTube channel](https://www.youtube.com/channel/UCwXiTYNRBUb_9r8-L4ziaGg) (lectures will be recorded here)
-* [Private Google Group](https://groups.google.com/forum/#!forum/appstathtb)
+* [Private Google Group](https://groups.google.com/forum/#!forum/appstathtb) for discussion and announcements.
 
 ## Summary
 
@@ -69,13 +69,16 @@ Project presentations and reports will be assessed for quality of analysis, but 
 * Week 1
     + introduction to R
     + random variables
-* Week 2
-    + hypothesis testing
-    + populations and samples
     + distributions
-    + t-distribution and t-tests
-* Week 3
+* Week 2
+    + populations and samples
     + Central Limit Theorem
+    + t-distribution
+* Week 3
+    - hypothesis testing
+    - null hypotheses
+    - Type I and II error and power
+    - multiple testing
     + confidence intervals
 * Week 4
     + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
