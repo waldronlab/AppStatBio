@@ -1,0 +1,140 @@
+---
+title: "Random Variables Exercises"
+author: "Alexis Marchesini"
+date: "17/02/2016"
+output:  github_document
+---
+
+# Random Variables Exercises 
+
+For these exercises, we will be using the following dataset:
+
+```{r}
+library(downloader) 
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleControlsPopulation.csv"
+filename <- basename(url)
+download(url, destfile=filename)
+x <- unlist( read.csv(filename) )
+```
+
+Here x represents the weights for the entire population.
+
+### Exercise 1
+What is the average of these weights?
+```{r}
+x_mean=mean(x)
+```
+### Exercise 2
+After setting the seed at 1, set.seed(1) take a random sample of size 5. What is the absolute value (use abs) of the difference between the average of the sample and the average of all the values?
+```{r}
+set.seed(1) 
+samp=sample(x,5)
+samp
+samp_mean=mean(samp)
+samp_mean
+mean_diff=abs(samp_mean-x_mean)
+mean_diff
+```
+### Exercise 3
+After setting the seed at 5, set.seed(5) take a random sample of size 5. What is the absolute value of the difference between the average of the sample and the average of all the values?
+```{r}
+set.seed(5) 
+samp2=sample(x,5)
+samp2
+samp_mean2=mean(samp2)
+samp_mean2
+mean_diff2=abs(samp_mean2-x_mean)
+mean_diff2
+```
+### Exercise 4
+Why are the answers from 2 and 3 different?
+- A) Because we made a coding mistake.
+- B) Because the average of the x is random.
+- C) Because the average of the samples is a random variable.
+- D) All of the above.
+
+**C**
+
+### Exercise 5
+Set the seed at 1, then using a for-loop take a random sample of 5 mice 1,000 times. Save these averages. What percent of these 1,000 averages are more than 1 ounce away from the average of x ?
+```{r}
+set.seed(1)
+sample_mean = NULL
+for(i in 1:1000){
+sample_mean[i] = mean(sample(x,5))
+}
+sample_mean_diff=abs(sample_mean-x_mean)
+
+sample_mean_diff_more_1 = (sum(sample_mean_diff > 1))/10
+sample_mean_diff_more_1
+```
+
+### Exercise 6
+We are now going to increase the number of times we redo the sample from 1,000 to 10,000. Set the seed at 1, then using a for-loop take a random sample of 5 mice 10,000 times. Save these averages. What percent of these 10,000 averages are more than 1 ounce away from the average of x ?
+```{r}
+set.seed(1)
+sample_mean2 = NULL
+for(i in 1:10000){
+sample_mean2[i] = mean(sample(x,5))
+}
+sample_mean_diff2=abs(sample_mean2-x_mean)
+
+sample_mean_diff2_more_1 = (sum(sample_mean_diff2 > 1))/100
+sample_mean_diff2_more_1
+```
+
+### Exercise 7
+Note that the answers to 4 and 5 barely changed. This is expected. The way we think about the random value distributions is as the distribution of the list of values obtained if we repeated the experiment an infinite number of times. On a computer, we can't perform an infinite number of iterations so instead, for our examples, we consider 1,000 to be large enough, thus 10,000 is as well. Now if instead we change the sample size, then we change the random variable and thus its distribution.
+
+Set the seed at 1, then using a for-loop take a random sample of 50 mice 1,000 times. Save these averages. What percent of these 1,000 averages are more than 1 ounce away from the average of x ?
+
+```{r}
+set.seed(1)
+sample_mean3 = NULL
+for(i in 1:1000){
+sample_mean3[i] = mean(sample(x,50))
+}
+sample_mean_diff3=abs(sample_mean3-x_mean)
+sample_mean_diff3_more_1 = (sum(sample_mean_diff3 > 1))/10
+sample_mean_diff3_more_1
+```
+### Exercise 8
+Use a histogram to "look" at the distribution of averages we get with a sample size of 5 and a sample size of 50. How would you say they differ?
+- A) They are actually the same.
+- B) They both look roughly normal, but with a sample size of 50 the spread is smaller.
+- C) They both look roughly normal, but with a sample size of 50 the spread is larger.
+- D) The second distribution does not look normal at all.
+
+```{r}
+hist(sample_mean, prob=TRUE)
+curve(dnorm(x, mean=mean(sample_mean), sd=sd(sample_mean)), add=TRUE, col="darkblue")
+          
+hist(sample_mean3, prob=TRUE)
+curve(dnorm(x, mean=mean(sample_mean3), sd=sd(sample_mean3)), add=TRUE, col="darkblue")
+
+box()
+hist(sample_mean, main="Overlapping Histograms (Blu = sample_mean3; sample size = 50)")
+hist(sample_mean3, col="darkblue", add=T)
+```
+
+ANSWER: **B**
+
+### Exercise 9
+For the last set of averages, the ones obtained from a sample size of 50, what percent are between 23 and 25?
+```{r}
+sample_mean3_23_25 = (sum(sample_mean3 > 23 & sample_mean3 < 25))/10
+sample_mean3_23_25
+```
+### Exercise 10
+Now ask the same question of a normal distribution with average 23.9 and standard deviation 0.43.
+```{r}
+my_distribution = rnorm(n=1000, m=23.9, sd=0.43) 
+my_distribution_23_25 = (sum(my_distribution > 23 & my_distribution < 25))/10
+my_distribution_23_25
+```
+The answer to 9 and 10 were very similar. This is because we can approximate the distribution of the sample average with a normal distribution. We will learn more about the reason for this next.
+
+### License
+PH525x, Rafael Irizarry and Michael Love, MIT License 
+
+The **rmarkdown** package is licensed under the GPLv3 (http://www.gnu.org/licenses/gpl.html).

@@ -1,0 +1,268 @@
+---
+title: "sarazaccara_labexercises"
+output: html_document
+author: "Sara Zaccara"
+date: "February 14, 2016"
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting Started
+
+Read in the file femaleMiceWeights.csv and report the body weight of the mouse in the exact name of the column containing the weights.
+
+```{r, echo= TRUE, warning=FALSE}
+library(downloader) 
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleMiceWeights.csv"
+filename <- "femaleMiceWeights.csv" 
+download(url, destfile=filename)
+
+femaleMiceWeights <- read.csv("./femaleMiceWeights.csv")
+View(femaleMiceWeights)
+
+```
+
+The [ and ] symbols can be used to extract specific rows and specific columns of the table. What is the entry in the 12th row and second column?
+
+```{r, echo= TRUE}
+femaleMiceWeights[12,2]
+
+```
+
+You should have learned how to use the $ character to extract a column from a table and return it as a vector. Use $ to extract the weight column and report the weight of the mouse in the 11th row.
+
+```{r, echo= TRUE}
+femaleMiceWeights$Bodyweight[11]
+
+```
+
+
+The length function returns the number of elements in a vector. How many mice are included in our dataset?
+
+```{r, echo= TRUE}
+length(femaleMiceWeights$Diet)
+
+```
+
+To create a vector with the numbers 3 to 7, we can use seq(3,7) or, because they are consecutive, 3:7. View the data and determine what rows are associated with the high fat or hf diet. Then use the mean function to compute the average weight of these mice.
+
+```{r, echo= TRUE}
+mean (femaleMiceWeights$Bodyweight [13:24])
+
+```
+
+One of the functions we will be using often is sample. Read the help file for sample using ?sample. Now take a random sample of size 1 from the numbers 13 to 24 and report back the weight of the mouse represented by that row. Make sure to type set.seed(1) to ensure that everybody gets the same answer.
+
+```{r, echo= TRUE}
+set.seed(1)
+femaleMiceWeights$Bodyweight[sample(which(femaleMiceWeights$Diet == "hf"), size=1)]
+which(femaleMiceWeights$Bodyweight == 25.34)
+
+```
+
+## dplyr exercises
+
+For these exercises, we will use a new dataset related to mammalian sleep. This data is described here. Download the CSV file from this location:
+
+We are going to read in this data, then test your knowledge of they key dplyr functions select and filter. We are also going to review two different classes: data frames and vectors.
+
+Read in the msleep_ggplot2.csv file with the function read.csv and use the function class to determine what type of object is returned.
+
+```{r, echo= TRUE}
+library(downloader)
+library(dplyr)
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/msleep_ggplot2.csv"
+filename <- "msleep_ggplot2.csv" 
+download(url, destfile=filename)
+
+msleep_ggplot2 <- read.csv("./msleep_ggplot2.csv")
+View(msleep_ggplot2)
+
+class(msleep_ggplot2)
+
+```
+
+Now use the filter function to select only the primates. How many animals in the table are primates? Hint: the nrow function gives you the number of rows of a data frame or matrix.
+
+```{r, echo= TRUE}
+
+nrow(filter(msleep_ggplot2, msleep_ggplot2$order == "Primates"))
+
+#order is a subfunction of the filter function
+
+```
+
+What is the class of the object you obtain after subsetting the table to only include primates?
+
+```{r, echo= TRUE}
+
+primates <- filter(msleep_ggplot2, msleep_ggplot2$order == "Primates")
+class(primates)
+
+```
+
+Now use the select function to extract the sleep (total) for the primates. What class is this object? Hint: use %>% to pipe the results of the filter function to select.
+
+```{r, echo= TRUE}
+
+sleep_total <- msleep_ggplot2 %>%
+  filter(msleep_ggplot2$order == "Primates")%>%
+  select(sleep_total)
+
+class(sleep_total)
+
+```
+
+Now we want to calculate the average amount of sleep for primates (the average of the numbers computed above). One challenge is that the mean function requires a vector so, if we simply apply it to the output above, we get an error. Look at the help file for unlist and use it to compute the desired average.
+
+```{r, echo= TRUE}
+
+mean(unlist(sleep_total))
+
+```
+
+For the last exercise, we could also use the dplyr summarize function. We have not introduced this function, but you can read the help file and repeat exercise 5, this time using just filter and summarize to get the answer.
+
+```{r, echo= TRUE}
+
+msleep_ggplot2 %>%
+  filter(msleep_ggplot2$order == "Primates") %>% summarise(meansleep=mean(sleep_total))
+
+```
+
+## Random Variables
+
+For these exercises, we will be using the following dataset:
+
+```{r, echo= TRUE}
+
+library(downloader) 
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleControlsPopulation.csv"
+filename <- basename(url)
+download(url, destfile=filename)
+x <- unlist( read.csv(filename) )
+
+```
+
+Here x represents the weights for the entire population.
+What is the average of these weights?
+
+```{r, echo= TRUE}
+
+mean(x)
+
+```
+
+After setting the seed at 1, set.seed(1) take a random sample of size 5. What is the absolute value (use abs) of the difference between the average of the sample and the average of all the values?
+
+```{r, echo= TRUE}
+
+set.seed(1)
+random_sample <- sample(x, size= 5)
+abs(mean(random_sample)-mean(x))
+
+```
+
+After setting the seed at 5, set.seed(5) take a random sample of size 5. What is the absolute value of the difference between the average of the sample and the average of all the values?
+
+
+```{r, echo= TRUE}
+
+set.seed(5)
+random_sample <- sample(x, size= 5)
+abs(mean(random_sample)-mean(x))
+
+```
+
+Why are the answers from 2 and 3 different?
+A) Because we made a coding mistake.
+B) Because the average of the x is random.
+C) Because the average of the samples is a random variable.
+D) All of the above.
+
+```{r, echo= TRUE}
+
+#C
+
+```
+
+Set the seed at 1, then using a for-loop take a random sample of 5 mice 1,000 times. Save these averages. What percent of these 1,000 averages are more than 1 ounce away from the average of x ?
+
+```{r, echo= TRUE}
+
+set.seed(1)
+avgs <- c()
+for (i in c(1:1000)) {
+  avgs <- append(avgs, mean(sample(x,size=5)))
+}
+100*length(which(abs(avgs - mean(x))>1))/length(avgs)
+
+```
+
+We are now going to increase the number of times we redo the sample from 1,000 to 10,000. Set the seed at 1, then using a for-loop take a random sample of 5 mice 10,000 times. Save these averages. What percent of these 10,000 averages are more than 1 ounce away from the average of x ?
+
+```{r, echo= TRUE}
+
+set.seed(1)
+avrg2 <- c()
+for(i in 1:10000) {
+    avrg2 <- c(avrg2, mean(sample(x, size=5)))
+}
+
+100*length(which(abs(avrg2 - mean(x)) >1))/length(avrg2)
+```
+
+Note that the answers to 4 and 5 barely changed. This is expected. The way we think about the random value distributions is as the distribution of the list of values obtained if we repeated the experiment an infinite number of times. On a computer, we can't perform an infinite number of iterations so instead, for our examples, we consider 1,000 to be large enough, thus 10,000 is as well. Now if instead we change the sample size, then we change the random variable and thus its distribution.
+
+Set the seed at 1, then using a for-loop take a random sample of 50 mice 1,000 times. Save these averages. What percent of these 1,000 averages are more than 1 ounce away from the average of x ?
+
+
+```{r, echo= TRUE}
+
+set.seed(1)
+avrg3 <- c()
+for(i in 1:1000) {
+    avrg3 <- c(avrg3, mean(sample(x, size=50)))
+}
+
+100*length(which(abs(avrg3 - mean(x)) >1))/length(avrg3)
+```
+
+Use a histogram to "look" at the distribution of averages we get with a sample size of 5 and a sample size of 50. How would you say they differ?
+A) They are actually the same.
+B) They both look roughly normal, but with a sample size of 50 the spread is smaller.
+C) They both look roughly normal, but with a sample size of 50 the spread is larger.
+D) The second distribution does not look normal at all.
+
+```{r, echo= TRUE}
+par(mfrow= c(1,2))
+hist(avgs, ylim =c(0,300), xlim =c(20,30)) 
+hist(avrg3, ylim =c(0,300), xlim =c(20,30))
+
+#B
+
+```
+
+For the last set of averages, the ones obtained from a sample size of 50, what percent are between 23 and 25?
+
+
+```{r, echo= TRUE}
+
+100*length(which( (avrg3 >= 23) & (avrg3<= 25)))/length(avrg3)
+
+```
+
+Now ask the same question of a normal distribution with average 23.9 and standard deviation 0.43.
+
+```{r, echo= TRUE}
+
+y <- rnorm( n = length(avrg3), mean = 23.9, sd = 0.43)
+100*length(which( (y >= 23) & (y<= 25)))/length(y)
+
+```
+
+The answer to 9 and 10 were very similar. This is because we can approximate the distribution of the sample average with a normal distribution. We will learn more about the reason for this next.
+
