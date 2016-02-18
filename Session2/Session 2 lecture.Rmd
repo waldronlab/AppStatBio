@@ -65,6 +65,15 @@ N = # in population
 <img src="pop.gif" alt="http://mips.stanford.edu/courses/stats_data_analsys/lesson_1/pop.gif" align="middle" style="height: 300px;"/>
 </center>
 
+## Sampling strategies
+
+- **Simple Random Sampling (SRS)**: each record sampled with equal probability
+
+> - **Stratified Random Sampling**: records are sampled in planned numbers from pre-defined strata (usually better than Simple Random Sampling)
+> - **Cluster Random Sampling**: clusters are randomly sampled from the population, then individuals randomly sampled from the clusters
+> - **Complex Sampling**: a general term for designs with unequal sampling probability
+> - **Convenience Sampling**: whatever records are easiest to observe
+
 ## Population size doesn't matter!
 
 - A remarkable attribute of sampling:
