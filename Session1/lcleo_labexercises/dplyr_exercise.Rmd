@@ -12,6 +12,7 @@ filename <- "msleep_ggplot2.csv"
 download(url, destfile=filename)
 library(dplyr)
 
+# more comment
 #1 
 sleep <- read.csv ('msleep_ggplot2.csv') 
 class (sleep) #character is returned
