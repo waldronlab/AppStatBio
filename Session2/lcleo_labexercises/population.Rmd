@@ -1,0 +1,85 @@
+---
+title: "population"
+author: "lcleo"
+date: "21 February 2016"
+output: html_document
+---
+
+
+```{r}
+library(downloader) 
+library(dplyr)
+library(rafalib)
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/mice_pheno.csv"
+filename <- basename(url)
+download(url, destfile=filename)
+dat <- read.csv(filename)
+
+dat <- na.omit( dat )
+
+#1
+chowm.weight <- dplyr::filter(dat, Diet=='chow' & Sex=='M') %>% dplyr::select (Bodyweight) 
+x <- unlist (chowm.weight)
+x.mean <- mean(x)
+x.mean
+
+#2
+x.sd <-popsd(x)
+x.sd
+
+#3
+set.seed(1)
+X<-sample(x,25)
+X.mean<-mean(X)
+X.mean
+
+#4
+hfm.weight <- dplyr::filter(dat, Diet=='hf' & Sex=='M') %>% dplyr::select (Bodyweight) 
+y <- unlist (hfm.weight)
+y.mean <- mean(y)
+y.mean
+
+#5
+y.sd <-popsd(y)
+y.sd
+
+#6
+set.seed(1)
+Y<-sample(y,25)
+Y.mean<-mean(Y)
+Y.mean
+
+#7
+abs(y.mean-x.mean)
+abs(X.mean-Y.mean)
+
+
+#8
+chowf.weight <- dplyr::filter(dat, Diet=='chow' & Sex=='F') %>% dplyr::select (Bodyweight) 
+x <- unlist (chowf.weight)
+x.mean <- mean(x)
+x.mean
+x.sd <-popsd(x)
+x.sd
+set.seed(1)
+X<-sample(x,25)
+X.mean<-mean(X)
+X.mean
+
+hff.weight <- dplyr::filter(dat, Diet=='hf' & Sex=='F') %>% dplyr::select (Bodyweight) 
+y <- unlist (hff.weight)
+y.mean <- mean(y)
+y.mean
+y.sd <-popsd(y)
+y.sd
+set.seed(1)
+Y<-sample(y,25)
+Y.mean<-mean(Y)
+Y.mean
+abs(y.mean-x.mean)
+abs(X.mean-Y.mean)
+
+#9
+#A The population variance of the females is smaller than that of the males; thus, the sample variable has less variability.
+```
+
