@@ -2,7 +2,7 @@
 title: "Getting started exercises"
 author: "Alexis Marchesini"
 date: "17/02/2016"
-output:  github_document
+output:  html_document
 ---
 
 # Getting started exercises
