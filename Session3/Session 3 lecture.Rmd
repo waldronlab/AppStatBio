@@ -1,0 +1,447 @@
+---
+title: 'Applied Statistics for High-throughput Biology: Session 3'
+author: "Levi Waldron"
+date: "February 24, 2016"
+output:
+  ioslides_presentation:
+    css: styles.css
+    logo: logo.png
+  slidy_presentation: default
+---
+
+
+## Review: Session 2 learning objectives
+
+- Identify the difference between populations and samples
+    + give sampling strategies
+- Identify properties of a Normal distribution
+- Define the Central Limit Theorem and give examples of its application
+
+## Session 3 outline
+
+- hypothesis testing
+- null hypotheses
+- Type I and II error and power
+- multiple testing
+- confidence intervals
+
+- Reading
+    + Chapter 1 Inference
+    + [OpenIntro Statistics](https://www.openintro.org/stat/textbook.php) chapter 4
+
+
+## Review: population vs sampling distributions
+
+- Population distributions
+    + Each realization / point is an individual
+    
+- Sampling distributions
+    + Each realization / point is a sample
+    + distribution depends on sample size
+    + large sample distributions are given by the Central Limit Theorem
+
+## Why hypothesis testing?
+- Allows yes/no statements, e.g. whether:
+    - a population mean has a hypothesized value, or
+    - an intervention causes a measurable effect relative to a control group
+
+> - Example questions with yes/no answers:
+    - Is a gene differentially expressed between two populations?
+    - Do hypertensive, smoking men have the same mean cholesterol level as the general population?
+  
+## Why hypothesis testing? (cont'd)
+
+- Hypothesis testing is not the only framework for inferential statistics, e.g.:
+    - confidence intervals
+    - posterior probabilities (Bayesian statistics)
+    - read [p-values are just the tip of the iceberg](http://www.nature.com/news/statistics-p-values-are-just-the-tip-of-the-iceberg-1.17412)
+
+## Logic of hypothesis testing
+
+**One Sample** - observations come from one of two population distributions:
+
+1. usual distribution that has been true in the past
+2. a potentially new distribution induced by an intervention or changing condition
+
+**Two Sample** - two samples are drawn, either:
+
+1. from a single population
+2. from two different populations
+
+## Logic of hypothesis testing (cont'd)
+
+- Classic one-sample hypothetical inference:
+    - Few beans of this handful are white.
+    - Most beans in this bag are white.
+    - Therefore: Probably, these beans were taken from another bag.
+
+- Classic two-sample hypothetical inference:
+    - Few beans of this handful are white. Most beans of this other handful are white.
+    - Therefore: Probably, these handfuls were taken from different bags.
+
+## Steps in hypothesis testing
+
+1. State the hypotheses (both null and alternative) 
+2. Specify the significance level ($\alpha$) 
+3. Draw sample of size n, compute the test statistic
+    - Use normal distribution (Z) when $\sigma$ is known*
+    - Use t distribution when you have to estimate $\sigma$ with s*
+4. Determine p-value
+5. Compare p-value to the significance level α and decide whether or not to reject $H_0$. State conclusions in terms of subject matter.
+
+* Details are for a 1-sample Z or t-test, but steps are common to all hypothesis testing.
+
+## Power and type I and II error
+
+| True state of nature | Result of test             |                                                 |
+|----------------------|----------------------------|-------------------------------------------------|
+|                      | **Reject $H_0$**                                      | **Fail to reject $H_0$**                                 |
+| $H_0$ TRUE           | Type I error, probability = $\alpha$ | No error, probability = $1-\alpha$                     |
+| $H_0$ FALSE          | No error, probability is called power = $1-\beta$    | Type II error, probability = $\beta$ (false negative) |
+
+## One-sided and two-sided tests
+
+- The two-sided test is standard, and stated as follows:
+    - $H_0: \mu = \mu_0$
+    - $H_A: \mu \neq \mu_0$
+
+```{r, echo=FALSE, fig.height=4}
+# draw the normal curve
+curve(dnorm(x,0,1), xlim=c(-3,3), main="Normal density", xlab="Z")
+addShading <- function(from.z, to.z){
+    S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+    S.y  <- c(0, dnorm(seq(from.z, to.z, 0.01)), 0)
+    polygon(S.x,S.y, col="red")
+}
+addShading(-3, qnorm(0.025))
+addShading(qnorm(0.975), 3)
+```
+
+## One-sided and two-sided tests
+
+- The one-sided is only used in very special situations:
+    - $H_0: \mu \geq \mu_0$ (note $H_0$ always includes "no difference")
+    - $H_A: \mu \lt \mu_0$
+    - If directionality is right p-value is halved
+
+```{r, echo=FALSE, fig.height=3.5}
+# draw the normal curve
+par(mar=c(5, 4, 1, 1))
+curve(dnorm(x,0,1), xlim=c(-3,3), main="Normal density", xlab="Z")
+addShading <- function(from.z, to.z){
+    S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+    S.y  <- c(0, dnorm(seq(from.z, to.z, 0.01)), 0)
+    polygon(S.x,S.y, col="red")
+}
+addShading(qnorm(0.975), 3)
+```
+
+## One-sample, two-sample, and paired tests
+
+- In a one-sample test, only a single sample is drawn:
+    - $H_0: \mu = \mu_0$
+- In a two-sample test, two samples are drawn *independently*:
+    - $H_0: \mu_1 = \mu_2$
+- A paired test is one sample of paired measurements, e.g.:
+    - weights before and after treatment
+    - differences between twins
+    - would be incorrect to treat as two independent samples
+
+## Use and mis-use of the p-value
+
+- The p-value is the probability of observing a sample statistic _as or more extreme_ as you did, _assuming that $H_0$ is true_
+- The p-value is a **random variable**:
+    - **don't** treat it as precise.
+    - **don't** do silly things like try to interpret differences or ratios between p-values
+    - **don't** lose track of test assumptions such as independence of observations
+    - **do** use a moderate p-value cutoff, then use some effect size measure for ranking
+- Small p-values are particularly:
+    - variable under repeated sampling, and
+    - sensitive to test assumptions
+
+## Use and mis-use of the p-value (cont'd)
+
+- If we fail to reject $H_0$, is the probability that $H_0$ is true equal to ($1-\alpha$)?  (Hint: NO NO NO!)
+    - Failing to reject $H_0$ does not mean $H_0$ is true
+    - "No evidence of difference $\neq$ evidence of no difference"
+- Statistical significance vs. practical significance
+    - As sample size increases, point estimates such as the mean are more precise
+    - With large sample size, small differences in means may be statistically significant but not practically significant
+
+## Use and mis-use of the p-value (cont'd)
+
+Although $\alpha = 0.05$ is a common cut-off for the p-value, there is no set border between “significant” and “insignificant,” only increasingly strong evidence against $H_0$ (in favor of $H_A$) as the p-value gets smaller.
+
+**Example**: a study with two primary endpoints gets a p-value of 0.055 for one endpoint, and 0.04 for the other endpoint.  Should this be interpreted as strong evidence for one endpoint and no evidence for the other endpoint?
+
+
+# Power
+
+## Basic ideas about power
+
+- Hypothesis testing is done under the assumption that $H_0$ is **TRUE**.  Power analysis is done under the assumption that $H_0$ is **FALSE**.
+- Power analysis is done during study design, prior to sample collection and data analysis
+    - If $H_A$ is as hypothesized, what will be the probability of rejecting $H_0$ given the study design?
+    - If $H_A$ is as hypothesized, what $n$ do we need for 90% probability of rejecting $H_0$?
+
+Demos: `TeachingDemos::power.examp()`, https://mramos.shinyapps.io/PowerCalc/
+
+## Basic ideas about power (cont'd)
+
+- Type II error decreases (and power increases) as the alternative hypothesis value $\mu_1$ gets farther from $\mu_0$
+- Type II error decreases (and power increases) as $\sigma$ decreases or as $n$ increases
+- Type I error stays the same no matter what $\mu_1$ is (fixed at $\alpha$) 
+- Want relatively high power (80% or 90%) for an experiment to be worth doing
+    - $\alpha$ protects the public from spurious results
+    - power = $1 − \beta$ protects the investigator from negative studies when important differences are present. 
+
+## Power analysis in practice
+
+- libraries like `library(pwr)` are useful for a lot of tests
+- Monte Carlo simulation useful for even more general situations
+    - Generate a sample under any alternative hypothesis
+    - Perform the planned significance test
+    - Repeat, and see how frequently $H_0$ is rejected (= power)
+
+# Confidence Intervals
+
+## Why confidence intervals?
+
+- Reporting just p-values is not enough. 
+- p-values do not report effect size (observed difference).
+- p-values only indicate statistical significance which does not guarantee scientific/clinical significance.
+
+## Intervals for any confidence level
+
+- If the point estimate follows the normal model with standard error SE, then a confidence interval for the population parameter is:
+    - $\bar{X} \pm z_{\alpha / 2}^{crit} \times SE$ (normal sampling distribution)
+    - $\bar{X} \pm 1.96 \times SE$ (95% CI, normal sampling distribution)
+    - $\bar{X} \pm t_{\alpha / 2, df}^{crit} \times SE$ (t sampling distribution)
+- The part after the $\pm$ is called the _margin of error_
+
+## Confidence intervals vs. hypothesis testing
+
+- Confidence intervals can be used for hypothesis testing
+    - reject $H_0$ if the "null value" is not contained in the CI
+- Do **not** use overlap between two CIs for hypothesis test
+    - for a two sample hypothesis test $H_0: \mu_1 = \mu_2$, must construct a single confidence interval for $\mu_1 - \mu_2$
+
+## Q & A: confidence intervals
+
+Which of the following are true?
+
+- The 95% CI contains 95% of the values in the population
+- The 95% CI will contain the population mean, 19 times out of 20
+- The 95% CI is 95% probable to contain the population mean
+- The 99% CI will be wider than the 95% CI
+
+# Mouse body weight example for CI and hypothesis testing
+
+## Get started downloading the data 
+
+```{r, message = FALSE}
+library(downloader)
+library(dplyr)
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/mice_pheno.csv"
+filename <- "mice_pheno.csv"
+if (!file.exists(filename)) {
+  download(url, destfile = filename)
+  }
+dat <- read.csv("mice_pheno.csv")
+```
+
+## Confidence interval for population mean (female mice on chow diet)
+
+```{r}
+chowPopulation <- dat[dat$Sex=="F" & dat$Diet=="chow",3]
+(mu_chow <- mean(chowPopulation))
+```
+
+In practice, we don't know the true population parameter. We rely on random samples to estimate the population mean. Let's take a sample size of 30 ($n = 30$). 
+
+```{r}
+set.seed(1) # set a seed for random number generation
+n <- 30; chow <- sample(chowPopulation, n)
+chow %>% mean
+```
+
+
+## CI for population mean (cont'd)
+
+- With $n=30$, we will use the CLT:
+    - $\bar{X}$ or `mean(chow)` follows a normal distribution with mean $\mu_X$ or `r mean(chowPopulation)`, and
+    - standard error approximately  $s_X/\sqrt{n}$ or:
+```{r}
+(se <- sd(chow)/sqrt(n))
+```
+
+## CI for population mean (cont'd)
+- means of 3,000 random samples of n=30
+```{r, echo=FALSE}
+N <- 30
+sampl <- rep(NA, 3000)
+for(i in 1:3000){
+  sampl[i] <- sample(chowPopulation, N) %>% mean
+}
+h <- hist(sampl, 50, main = "Histogram of Sample Means", xlab = "mean")
+xfit<-seq(min(sampl),max(sampl),length=40) 
+yfit<-dnorm(xfit,mean=mean(sampl),sd=sd(sampl)) 
+yfit <- yfit*diff(h$mids[1:2])*length(sampl) 
+lines(xfit, yfit, col="blue", lwd=2)
+abline(v = mu_chow, col = "red", lwd = 2)
+text(x = mu_chow, y = -5, labels = "mu_chow", col = "red", pos = 4)
+```
+
+
+## Constructing the CI from a single sample
+
+For a normal sampling distribution and 95% CI:
+
+```{r}
+(Zcrit <- qnorm(1 - 0.05/2))
+pnorm(Zcrit) - pnorm(-Zcrit)
+```
+
+## Constructing the CI from a single sample (cont'd)
+
+95% CI shown on the $N(0, 1)$ ($Z$) sampling distribution:
+```{r, echo=FALSE}
+curve(dnorm(x,0,1), xlim=c(-3,3), main="Normal density", xlab="Z")
+addShading(-Zcrit, Zcrit)
+```
+
+## CI from a single sample
+
+```{r}
+(interval <- c(mean(chow) - Zcrit*se, mean(chow) + Zcrit*se ))
+t.test(chow)
+```
+
+## Repeat for 250 samples
+
+```{r confidence_interval_n30, fig.cap="We show 250 random realizations of 95% confidence intervals. The color denotes if the interval fell on the parameter or not.",fig.height=4, echo=FALSE}
+library(rafalib)
+B <- 250 # number of iterations
+N <- 30
+mypar() 
+plot(mean(chowPopulation)+c(-7,7),c(1,1),type="n",
+     xlab="weight",ylab="interval",ylim=c(1,B)) # draw an empty plot with allocated space
+abline(v=mean(chowPopulation), col = "red", lwd = 2) # add line denoting population mean
+for (i in 1:B) {
+  chow <- sample(chowPopulation,N)
+  se <- sd(chow)/sqrt(N)
+  interval <- c(mean(chow)-Zcrit*se, mean(chow)+Zcrit*se)
+  covered <- 
+    mean(chowPopulation) <= interval[2] & mean(chowPopulation) >= interval[1]
+  color <- ifelse(covered,"darkorange","darkblue")
+  lines(interval, c(i,i),col=color)
+} # run loop by plotting a line for each iteration
+```
+
+## Small sample size CIs
+
+For $n=30$, the CLT works very well. However, what if $n=5$? Still trying to use the CLT:
+
+```{r confidence_interval_n5, fig.height=4, echo=FALSE}
+mypar()
+plot(mean(chowPopulation)+c(-7,7),c(1,1),type="n",
+     xlab="weight",ylab="interval",ylim=c(1,B))
+abline(v=mean(chowPopulation))
+Q <- qnorm(1- 0.05/2)
+N <- 5
+for (i in 1:B) {
+  chow <- sample(chowPopulation,N)
+  se <- sd(chow)/sqrt(N)
+  interval <- c(mean(chow)-Q*se, mean(chow)+Q*se)
+  covered <- mean(chowPopulation) <= interval[2] & mean(chowPopulation) >= interval[1]
+  color <- ifelse(covered,"darkorange","darkblue")
+  lines(interval, c(i,i),col=color)
+}
+```
+
+## Small sample size CIs (cont'd)
+
+CIs based on the CLT were too small.  Need to use t-distribution with $df=4$:
+
+```{r confidence_interval_tdist_n5, fig.height=4, echo=FALSE}
+mypar()
+plot(mean(chowPopulation) + c(-7,7), c(1,1), type="n",
+     xlab="weight", ylab="interval", ylim=c(1,B))
+abline(v=mean(chowPopulation))
+##Q <- qnorm(1- 0.05/2) ##no longer normal so use:
+Q <- qt(1- 0.05/2, df=4)
+N <- 5
+for (i in 1:B) {
+  chow <- sample(chowPopulation, N)
+  se <- sd(chow)/sqrt(N)
+  interval <- c(mean(chow)-Q*se, mean(chow)+Q*se )
+  covered <- mean(chowPopulation) <= interval[2] & mean(chowPopulation) >= interval[1]
+  color <- ifelse(covered,"darkorange","darkblue")
+  lines(interval, c(i,i),col=color)
+}
+```
+
+## Small sample size CIs (cont'd)
+
+Using the t-distribution, the size of the intervals increase and cross $\mu_X$ more frequently, about 95% of the time.
+
+```{r}
+qt(1- 0.05/2, df=4)
+```
+
+is bigger than...
+
+```{r}
+qnorm(1- 0.05/2)
+```
+
+## Connection Between Confidence Intervals and p-values
+
+Let's do a two-sample test for mouse weights on chow and high-fat diet
+
+```{r,echo=FALSE}
+url2 <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleMiceWeights.csv"
+filename2 <- "femaleMiceWeights.csv"
+if (!file.exists(filename2)) {
+  download(url2, destfile = filename2)
+}
+```
+
+```{r}
+dat2 <- read.csv("femaleMiceWeights.csv")
+controlIndex <- which(dat2$Diet=="chow")
+treatmentIndex <- which(dat2$Diet=="hf")
+control <- dat2[controlIndex, 2]
+treatment <- dat2[treatmentIndex, 2]
+```
+
+## 95% CI and hypothesis test
+
+- $H_0: \mu_{chow} = \mu_{hf}$
+- $H_A: \mu_{chow} \neq \mu_{hf}$
+
+```{r}
+t.test(treatment, control)
+```
+
+## Changing to a 90% confidence interval
+
+```{r}
+t.test(treatment, control, conf.level = 0.9)
+```
+
+
+## Lab
+
+[Power Calculation Exercises](http://genomicsclass.github.io/book/pages/power_calculations_exercises.html)
+
+
+## Links
+
+- A built [html][] version of this lecture is available.
+- The [source][] R Markdown is also available from Github.
+- A recording of the lecture will be available on the class [YouTube][] channel.
+
+[html]: http://rpubs.com/lwaldron/TrentoSession3Lecture
+[source]: https://github.com/lwaldron/AppStatTrento
+[YouTube]: https://www.youtube.com/channel/UCwXiTYNRBUb_9r8-L4ziaGg
