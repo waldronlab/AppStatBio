@@ -167,5 +167,21 @@ print (prop)
 
 ```{r ex13}
 x=seq(0.0001,0.9999,len=300)
+df_3 <- qt(x,3)
+qqnorm(df_3)
+qqline(df_3)
+
+df_10 <- qt(x,10)
+qqnorm(df_10)
+qqline(df_10)
+
+df_30 <- qt(x,30)
+qqnorm(df_30)
+qqline(df_30)
+
+df_100 <- qt(x,100)
+qqnorm(df_100)
+qqline(df_100)
+
 print ("C) The t-distribution has larger tails up until 30 degrees of freedom, at which point it is practically the same as the normal distribution.")
 ```
