@@ -1,0 +1,164 @@
+---
+title: "Central Limit Theorem and t-distribution Exercise"
+author: "Francesco Asnicar"
+date: "22 February 2016"
+output: html_document
+---
+
+For these exercises, we will be using the following dataset:
+```{r}
+library(downloader) 
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/mice_pheno.csv"
+filename <- basename(url)
+download(url, destfile=filename)
+dat <- na.omit( read.csv(filename) )
+```
+
+#1
+What proportion of these numbers are within one standard deviation away from the list’s average?
+68%
+
+#2
+What proportion of these numbers are within two standard deviations away from the list’s average?
+95%
+
+#3
+What proportion of these numbers are within three standard deviations away from the list’s average?
+99.7%
+
+#4
+What proportion of the mice are within one standard deviation away from the average weight?
+```{r}
+library(dplyr)
+library(rafalib)
+y <- dplyr::filter(dat, dat$Sex=='M', dat$Diet=='chow')$Bodyweight
+y_avg <- mean(y)
+y_sd <- rafalib::popsd(y)
+length(y[y <= y_avg+y_sd & y >= y_avg-y_sd])*100/length(y)
+```
+
+#5
+What proportion of these numbers are within two standard deviations away from the list’s average?
+```{r}
+length(y[y <= y_avg+(2*y_sd) & y >= y_avg-(2*y_sd)])*100/length(y)
+```
+
+#6
+What proportion of these numbers are within three standard deviations away from the list’s average?
+```{r}
+length(y[y <= y_avg+(3*y_sd) & y >= y_avg-(3*y_sd)])*100/length(y)
+```
+
+#7
+Which of the following best describes the qq-plot comparing mouse weights to the normal distribution? 
+```{r, echo=FALSE}
+qqnorm(y)
+qqline(y)
+```
+
+C) The mouse weights are well approximated by the normal distribution, although the larger values (right tail) are larger than predicted by the normal. This is consistent with the differences seen between question 3 and 6.
+
+#8
+What is the most likely explanation for the mouse weights being well approximated? What is the best explanation for all these being well approximated by the normal distribution? 
+```{r, echo=FALSE}
+mypar(1,4)
+m_chow <- dplyr::filter(dat, dat$Sex=='M', dat$Diet=='chow')$Bodyweight
+m_chow_avg <- mean(m_chow)
+m_chow_sd <- rafalib::popsd(m_chow)
+
+m_hf <- dplyr::filter(dat, dat$Sex=='M', dat$Diet=='hf')$Bodyweight
+m_hf_avg <- mean(m_hf)
+m_hf_sd <- rafalib::popsd(m_hf)
+
+f_chow <- dplyr::filter(dat, dat$Sex=='F', dat$Diet=='chow')$Bodyweight
+f_chow_avg <- mean(f_chow)
+f_chow_sd <- rafalib::popsd(f_chow)
+
+f_hf <- dplyr::filter(dat, dat$Sex=='F', dat$Diet=='hf')$Bodyweight
+f_hf_avg <- mean(f_hf)
+f_hf_sd <- rafalib::popsd(f_hf)
+
+qqnorm(m_chow, main='Male - chow')
+qqline(m_chow)
+
+qqnorm(m_hf, main='Male - hf')
+qqline(m_hf)
+
+qqnorm(f_chow, main='Female - chow')
+qqline(f_chow)
+
+qqnorm(f_hf, main='Female - hf')
+qqline(f_hf)
+```
+
+A) The CLT tells us that sample averages are approximately normal.
+
+#9
+What is the average of the distribution of the sample average?
+```{r, echo=FALSE}
+set.seed(1)
+avgs <- replicate(n=10000, mean(sample(m_chow, 25)))
+mypar(1,2)
+hist(avgs)
+qqnorm(avgs)
+qqline(avgs)
+mean(avgs)
+```
+
+#10
+What is the standard deviation of the distribution of sample averages?
+```{r}
+rafalib::popsd(avgs)
+```
+
+#11
+Which of the following does the CLT tell us should be close to your answer to exercise 10?
+```{r}
+popsd(y)/sqrt(25)
+```
+
+#12
+What proportion of the sample SDs are below 3.5?
+```{r}
+set.seed(1)
+m_chown_sd <- replicate(n=10000, rafalib::popsd(sample(m_chow, 25)))
+length(m_chown_sd[m_chown_sd < 3.5])*100/length(m_chown_sd)
+```
+
+#13
+Which of the following is true?
+
+C) The t-distribution has larger tails up until 30 degrees of freedom, at which point it is practically the same as the normal distribution.
+```{r, echo=FALSE}
+mypar(5,2)
+
+x <- seq(0.0001, 0.9999, len=300)
+n <- qnorm(x)
+hist(n)
+qqnorm(x, main="x")
+qqline(x)
+
+t.3 <- qt(x, df=3)
+hist(t.3)
+q.t.3 <- qnorm(t.3, mean=mean(t.3), sd=sd(t.3))
+qqnorm(q.t.3, main="t3")
+qqline(q.t.3)
+
+t.10 <- qt(x, df=10)
+hist(t.10)
+q.t.10 <- qnorm(t.10, mean=mean(t.10), sd=sd(t.10))
+qqnorm(q.t.10, main="t10")
+qqline(q.t.10)
+
+t.30 <- qt(x, df=30)
+hist(t.30)
+q.t.30 <- qnorm(t.30, mean=mean(t.30), sd=sd(t.30))
+qqnorm(q.t.30, main="t30")
+qqline(q.t.30)
+
+t.100 <- qt(x, df=100)
+hist(t.100)
+q.t.100 <- qnorm(t.100, mean=mean(t.100), sd=sd(t.100))
+qqnorm(qnorm(q.t.100), main="t100")
+qqline(qnorm(q.t.100))
+```

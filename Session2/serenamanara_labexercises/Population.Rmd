@@ -1,0 +1,98 @@
+---
+title: "Population, Samples, and Estimates Exercises"
+author: "Serena"
+date: "22 febbraio 2016"
+output: html_document
+---
+
+
+```{r}
+library(downloader)
+library(dplyr)
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/mice_pheno.csv"
+filename <- basename(url)
+download(url, destfile=filename)
+dat <- read.csv(filename) 
+
+dat <- na.omit( dat )
+```
+#1. Male control population average
+```{r}
+x <- dplyr::filter(dat, dat$Sex == 'M' & dat$Diet == "chow")
+meanx <- mean(x$Bodyweight)
+meanx
+```
+#2. Male control population standard deviation
+```{r}
+rafalib::popsd(x$Bodyweight)
+```
+#3. Sample average from x with seed=1 and size=25
+```{r}
+set.seed(1)
+smeanx <- mean(sample(x$Bodyweight, size=25))
+smeanx
+```
+#4. Male high-fat population average
+```{r}
+y <- dplyr::filter(dat, dat$Sex =='M' & dat$Diet=="hf")
+meany <- mean(y$Bodyweight)
+meany
+```
+#5. Male high-fat population standard deviation
+```{r}
+rafalib::popsd(y$Bodyweight)
+```
+#6. Sample average from y with seed=1 and size=25
+```{r}
+set.seed(1)
+smeany <- mean(sample(y$Bodyweight, size=25))
+```
+#7. What is the difference in absolute value?
+### Population means
+```{r}
+abs(meany-meanx)
+```
+### Sample means
+```{r}
+abs(smeany-smeanx)
+```
+#8. Females
+### Female control population average and standard deviation
+```{r}
+xf <- dplyr::filter(dat, dat$Sex == 'F' & dat$Diet == "chow")
+meanxf <- mean(xf$Bodyweight)
+meanxf
+
+rafalib::popsd(xf$Bodyweight)
+```
+### Sample average from x with seed=1 and size=25
+```{r}
+set.seed(1)
+smeanxf <- mean(sample(xf$Bodyweight, size=25))
+smeanxf
+```
+### Female high-fat population average and standard deviation
+```{r}
+yf <- dplyr::filter(dat, dat$Sex =='F' & dat$Diet=="hf")
+meanyf <- mean(yf$Bodyweight)
+meanyf
+
+rafalib::popsd(yf$Bodyweight)
+```
+### Sample average from y with seed=1 and size=25
+```{r}
+set.seed(1)
+smeanyf <- mean(sample(yf$Bodyweight, size=25))
+```
+### Population means
+```{r}
+abs(meanyf-meanxf)
+```
+### Sample means
+```{r}
+abs(smeanyf-smeanxf)
+```
+#9. Females sample estimates
+### For the females, our sample estimates were closer to the population difference than with males
+###A) The population variance of the females is smaller than that of the males; thus, the sample variable has less variability.
+
