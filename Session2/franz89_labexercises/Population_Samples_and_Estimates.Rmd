@@ -1,0 +1,129 @@
+---
+title: "Population, Samples, and Estimates Exercises"
+author: "Francesco Asnicar"
+date: "22 February 2016"
+output: html_document
+---
+
+For these exercises, we will be using the following dataset:
+```{r}
+library(downloader) 
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/mice_pheno.csv"
+filename <- basename(url)
+download(url, destfile=filename)
+dat <- read.csv(filename)
+```
+
+We will remove the lines that contain missing values:
+```{r}
+dat <- na.omit(dat)
+```
+
+# 1
+What is this population's average?
+```{r}
+library(dplyr)
+x <- dplyr::filter(dat, dat$Sex=='M', dat$Diet=='chow')
+pop_avg <- mean(x$Bodyweight)
+pop_avg
+```
+
+# 2
+Compute the population standard deviation.
+```{r}
+library(rafalib)
+pop_sd <- rafalib::popsd(x$Bodyweight)
+pop_sd
+```
+
+# 3
+What is the sample average?
+```{r}
+set.seed(1)
+X <- sample(x$Bodyweight, size=25)
+bar_X <- mean(X)
+bar_X
+```
+# 4
+What is this population's average?
+```{r}
+y <- dplyr::filter(dat, dat$Sex=='M', dat$Diet=='hf')
+m_hf_avg <- mean(y$Bodyweight)
+m_hf_avg
+```
+
+# 5
+Compute the population standard devitian.
+```{r}
+m_hf_sd <- rafalib::popsd(y$Bodyweight)
+m_hf_sd
+```
+
+# 6
+What is the sample average?
+```{r}
+set.seed(1)
+Y <- sample(y$Bodyweight, size=25)
+bar_Y <- mean(Y)
+bar_Y
+```
+
+# 7
+What is the difference in absolute value for the population
+```{r}
+abs(pop_avg-m_hf_avg)
+```
+
+and sample
+```{r}
+abs(bar_X-bar_Y)
+```
+
+# 8
+What is the difference in absolute value for the population
+```{r}
+female_chow <- dplyr::filter(dat, dat$Sex=='F', dat$Diet=='chow')
+female_hf <- dplyr::filter(dat, dat$Sex=='F', dat$Diet=='hf')
+
+pop_chow_avg <- mean(female_chow$Bodyweight)
+pop_chow_sd <- rafalib::popsd(female_chow$Bodyweight)
+
+pop_hf_avg <- mean(female_hf$Bodyweight)
+pop_hf_sd <- rafalib::popsd(female_hf$Bodyweight)
+
+set.seed(1)
+sample_chow <- sample(female_chow$Bodyweight, size=25)
+
+set.seed(1)
+sample_hf <- sample(female_hf$Bodyweight, size=25)
+
+sample_chow_avg <- mean(sample_chow)
+sample_chow_sd <- rafalib::popsd(sample_chow)
+
+sampe_hf_avg <- mean(sample_hf)
+sampe_hf_sd <- rafalib::popsd(sample_hf)
+
+abs(pop_hf_avg-pop_chow_avg)
+```
+
+and sample
+```{r}
+abs(sample_chow_avg-sampe_hf_avg)
+```
+
+# 9
+What is a possible explanation for this?
+
+A) The population variance of the females is smaller than that of the males; thus, the sample variable has less variability.
+
+Control
+```{r}
+pop_chow_sd
+sample_chow_sd
+```
+
+High fat
+```{r}
+pop_hf_sd
+sampe_hf_sd
+```
