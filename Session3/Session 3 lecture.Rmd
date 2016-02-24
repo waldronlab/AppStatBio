@@ -19,11 +19,9 @@ output:
 
 ## Session 3 outline
 
-- hypothesis testing
-- null hypotheses
+- Hypothesis testing
 - Type I and II error and power
-- multiple testing
-- confidence intervals
+- Confidence intervals
 
 - Reading
     + Chapter 1 Inference
