@@ -2,7 +2,7 @@
 title: "Random Variables Exercises"
 author: "Alexis Marchesini"
 date: "17/02/2016"
-output:  github_document
+output: html_document
 ---
 
 # Random Variables Exercises 
