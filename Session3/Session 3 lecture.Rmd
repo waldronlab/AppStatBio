@@ -10,13 +10,6 @@ output:
 ---
 
 
-## Review: Session 2 learning objectives
-
-- Identify the difference between populations and samples
-    + give sampling strategies
-- Identify properties of a Normal distribution
-- Define the Central Limit Theorem and give examples of its application
-
 ## Session 3 outline
 
 - Hypothesis testing
@@ -26,6 +19,13 @@ output:
 - Reading
     + Chapter 1 Inference
     + [OpenIntro Statistics](https://www.openintro.org/stat/textbook.php) chapter 4
+
+## Review: Session 2 learning objectives
+
+- Identify the difference between populations and samples
+    + give sampling strategies
+- Identify properties of a Normal distribution
+- Define the Central Limit Theorem and give examples of its application
 
 
 ## Review: population vs sampling distributions
@@ -37,6 +37,8 @@ output:
     + Each realization / point is a sample
     + distribution depends on sample size
     + large sample distributions are given by the Central Limit Theorem
+
+# Hypothesis testing
 
 ## Why hypothesis testing?
 - Allows yes/no statements, e.g. whether:
@@ -428,6 +430,12 @@ t.test(treatment, control)
 t.test(treatment, control, conf.level = 0.9)
 ```
 
+## Concluding notes
+
+- normal sampling distributions are common and result in _Wald Tests_ e.g. in multivariate analysis, survival analysis, generalized linear models
+- Confidence Intervals are more informative than p-values
+- High-throughput analyses often involve just a simple hypothesis test, repeated many times
+    - multiple testing corrections will be needed
 
 ## Lab
 
