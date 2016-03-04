@@ -1,6 +1,6 @@
 
 ---
-title: "Applied Statistics for High-throughput Biology: Session 3"
+title: "Applied Statistics for High-throughput Biology: Session 4"
 author: "Levi Waldron"
 date: "March 4, 2016"
 output:
@@ -22,9 +22,11 @@ output:
 
 - Exploratory data analysis
 
-- Reading
-    + Chapter 1 - Inference
-    + Chapter 2 - Exploratory Data Analysis
+Reading:
+- Chapter 1 - Inference
+- Chapter 2 - Exploratory Data Analysis
+- Chapter 5 - Inference for High Dimensional Data
+    + Basic exploratory data analysis
 
 # Hypothesis testing for categorical variables
 
@@ -39,7 +41,7 @@ output:
 
 ## Lady Tasting Tea
 
-- The lady in question claimed to be able to tell whether the tea or the milk was added first to a cup
+- The Lady in question claimed to be able to tell whether the tea or the milk was added first to a cup
 - Fisher proposed to give her eight cups, four of each variety, in random order
     - the Lady is **fully informed** of the experimental method
     - $H_0$: the Lady has no ability to tell which was added first
@@ -115,8 +117,8 @@ What do you notice about all these combinations?
 
 ## Chi-squared test
 
-- test of independence for rxc table (two categorical variables)
-- does not assume the margins are fixed by design
+- Test of independence for rxc table (two categorical variables)
+- Does not assume the margins are fixed by design
     - i.e., the number of cups of tea with milk poured first can be random, and the Lady doesn't know how many
     - more common in practice
     - classic genomics example is GWAS
@@ -170,6 +172,7 @@ epitools::oddsratio(relevel(genotype, "aa"), disease)$measure
 - Choice between Fisher's Exact Test and Chi-square test is determined by experimental design
 - If any counts in the table are less than 5, can use `simulate.p.value=TRUE` to get a more accurate p-value from the chi-square test
 - Both assume independent observations (important!!)
+- In a GWAS, correction for multiple testing is required
 
 # Resampling methods
 
@@ -194,10 +197,10 @@ Genome-wide association studies for common diseases and complex traits. *Nature 
 
 ## Permutation test
 
-- calculate the test statistic for each permutation
+- Calculate the test statistic for each permutation
     - 999 is a typical number
-- p-value is the quantile of the real test statistic in the "empirical null distribution" of permutation test statistics
-- permutations tests *still have assumptions*: 
+- P-value is the quantile of the real test statistic in the "empirical null distribution" of permutation test statistics
+- Permutations tests *still have assumptions*: 
     - samples are assumed to be independent and “exchangeable”
     - hidden structure such as families can cause anti-conservative p-values
 
@@ -226,24 +229,24 @@ Three-fold cross-validation
 
 <center>
 <img src="ISLR_Fig52.png" alt="ISLR_Fig52.png" style="width: 600px;"/>
+
+ISLR Figure 5.2: Variability in 2-fold cross-validation
 </center>
 
-\center ISLR Figure 5.2: Variability in 2-fold cross-validation
 
+<font size="2">
+James, Witten, Hastie, Tibshirani.  An Introduction to Statistical Learning with Applications in R. Springer, 2014. 
+
+http://www-bcf.usc.edu/~gareth/ISL/
+</font>
 
 ## Cross-validation summary
 
 * In prediction modeling, we think of data as _training_ or _test_
-     - Cross-validation is a way to estimate test set error from a training set
+     - cross-validation is a way to estimate test set error from a training set
 * Training set error always decreases with more complex (flexible) models
 * Test set error as a function of model flexibility tends to be U-shaped
-     - The low point of the U represents the most appropriate amount of model complexity
-     
-## The Bootstrap (schematic)
-
-<center>
-<img src="ISLR_Fig511.png" alt="ISLR_Fig511.png" style="width: 600px;"/>
-</center>
+     - the low point of the U represents the most appropriate amount of model complexity
 
 ## Summary of The Bootstrap
 
@@ -255,6 +258,12 @@ Three-fold cross-validation
     2. Calculate the statistic of interest
     3. Repeat
     4. Use repeated experiments to estimate the variability of your statistic of interest
+
+## The Bootstrap (schematic)
+
+<center>
+<img src="ISLR_Fig511.png" alt="ISLR_Fig511.png" style="width: 600px;"/>
+</center>
 
 # Exploratory data analysis
 
@@ -272,7 +281,8 @@ Three-fold cross-validation
 - Quantiles divide a distribution into equally sized bins
 - Division into 100 bins gives percentiles
 - Quantiles of a theoretical distribution are plotted against an experimental distribution
-- Given a perfect fit, $latex x=y $
+    - alternatively, quantiles of two experimental distributions
+- Given a perfect fit, $x=y$
 - Useful in determining data distribution (normal, t, etc.)
 
 ## Quantile Quantile Plots
@@ -307,66 +317,149 @@ qqline(x)
 
 ## Boxplots
 
-```{r echo=FALSE, fig.width=4.3}
+```{r echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow=c(1, 3))
 hist(exec.pay, main = "CEO Compensation")
-```
-```{r echo=FALSE, fig.width=4.3}
 qqnorm(exec.pay, main = "CEO Compensation")
-```
-```{r echo=FALSE, fig.width=4.3}
 boxplot(exec.pay, ylab="10,000s of dollars", ylim=c(0,400), main = "CEO Compensation")
 ```
+<center>
+Three different views of a continuous variable
+</center>
 
 ## Scatterplots And Correlation
 
-- Where data is not univariate but is normally distributed
-- A scatter plot and calculation of correlation is useful
+- For two continuous variables, scatter plot and calculation of correlation is useful
 - Provides a graphical and numeric estimation of relationships
-- Quick and easy with plot() and cor()
+- Quick and easy with `plot()` and `cor()`
 
 ## Scatterplots And Correlation
 
-```{r echo=FALSE, fig.width=4.3}
+```{r echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow=c(1,3))
 plot(father.son$fheight, father.son$sheight,xlab="Father's height in inches",ylab="Son's height in inches",main=paste("correlation =",signif(cor(father.son$fheight, father.son$sheight),2)))
-```
-```{r echo=FALSE, fig.width=4.3}
 plot(cars$speed, cars$dist,xlab="Speed",ylab="Stopping Distance",main=paste("correlation =",signif(cor(cars$speed, cars$dist),2)))
-```
-```{r echo=FALSE, fig.width=4.3}
 plot(faithful$eruptions, faithful$waiting,xlab="Eruption Duration",ylab="Waiting Time",main=paste("correlation =",signif(cor(faithful$eruptions, faithful$waiting),2)))
 ```
 
-## Stratification
+## Exploratory data analysis in high dimensions
 
-- Useful where a hypothesized difference exist between groups
-- Can also stratify bivariate data into bins, instead of scatterplot
-- When stratified data is displayed as a boxplot, trends become obvious
-- Bin trends are a stronger predictor of the estimated parameter
-
-## Stratification
-
-```{r echo=FALSE, fig.width=4.3}
-boxplot(split(father.son$sheight,round(father.son$fheight)))
-```
-```{r echo=FALSE, fig.width=4.3}
-boxplot(split(cars$dist, round(cars$speed)))
-```
-```{r echo=FALSE, fig.width=4.3}
-boxplot(split(faithful$waiting, round(faithful$eruptions)))
+<font size="2">
+```{r, eval=FALSE}
+library(BiocInstaller)
+biocLite("genomicsclass/GSE5859Subset")  #install from Github
 ```
 
-## Bi-variate Normal Distribution
-
-```{r echo=FALSE, fig.width=4.3}
-x <- father.son$fheight
-y <- father.son$sheight
-groups <- split(y,round(x))
-for(i in c(8,11,14)){
-qqnorm(groups[[i]],main=paste0("X=",names(groups)[i]," strata"),
-ylim=range(y),xlim=c(-2.5,2.5))
-qqline(groups[[i]])
-}
+```{r}
+library(GSE5859Subset)
+data(GSE5859Subset) ##this loads three tables
+c(class(geneExpression), class(sampleInfo))
+rbind(dim(geneExpression), dim(sampleInfo))
+head(sampleInfo)
 ```
+</font>
+
+## Volcano plots
+
+T-test for every row (gene) of gene expression matrix:
+```{r, message=FALSE}
+library(genefilter)
+g <- factor(sampleInfo$group)
+system.time(results <- rowttests(geneExpression,g))
+pvals <- results$p.value
+```
+
+Note that these 8,793 tests are done in about 0.01s
+
+## Volcano plots
+
+```{r, fig.height=3, fig.width=6}
+par(mar=c(4, 4, 0, 0))
+plot(results$dm, -log10(results$p.value),
+     xlab="Effect size (difference in group means)",
+     ylab="- log (base 10) p-values")
+abline(h=-log10(0.05 / nrow(geneExpression)), col="red")
+legend("bottomright", lty=1, col="red", legend="Bonferroni = 0.05")
+```
+
+## Volcano plots (summary)
+
+- Many small p-values with small effect size indicate low within-group variability
+- Inspect for asymmetry
+- Can color points by significance threshold
+
+## P-value histograms
+
+- If all null hypotheses are true, expect a flat histogram of p-values:
+
+```{r}
+m <- nrow(geneExpression)
+n <- ncol(geneExpression)
+set.seed(1); randomData <- matrix(rnorm(n*m),m,n)
+nullpvals <- rowttests(randomData,g)$p.value
+```
+
+```{r, echo=FALSE, fig.height=3}
+par(mfrow=c(1, 2))
+hist(pvals,ylim=c(0,1400))
+hist(nullpvals,ylim=c(0,1400))
+```
+
+## P-value histograms
+
+Note that permuting these data doesn't produce an ideal null p-value histogram due to batch effects:
+
+```{r, fig.height=3}
+permg <- sample(g)
+permresults <- rowttests(geneExpression, permg)
+hist(permresults$p.value)
+```
+
+## P-value histograms (summary)
+
+- Give a quick look at how many significant p-values there may be
+- When using permuted labels, can exposes non-independence among the samples
+    + can be due to batch effects or family structure
+- Most common approaches for correcting batch effects are:
+    + `ComBat`: corrects for known batch effects by linear model), and 
+    + `sva`: creates surrogate variables for unknown batch effects, corrects the structure of permutation p-values
+    + correction using control (housekeeping) genes
+
+All are available from the [svn](https://www.bioconductor.org/packages/sva) Bioconductor package
+
+## MA plot
+
+- just a scatterplot rotated 45$^o$
+
+```{r, fig.height=3}
+rafalib::mypar(1,2)
+pseudo <- apply(geneExpression, 1, median)
+plot(geneExpression[, 1], pseudo)
+plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
+```
+
+## MA plot (summary)
+
+- useful for quality control of high-dimensional data
+- plot all data values for a sample against another sample or a median "pseudosample"
+- `affyPLM::MAplots` better MA plots
+    - adds a smoothing line to highlight departures from horizontal line
+    - plots a "cloud" rather than many data points
+
+## Heatmaps
+
+Detailed representation of high-dimensional dataset
+
+```{r}
+ge = geneExpression[sample(1:nrow(geneExpression), 200), ]
+pheatmap::pheatmap(ge, scale="row")
+```
+
+## Heatmaps
+
+- Clustering becomes slow and memory-intensivefor thousands of rows
+    - probably too detailed for thousands of rows
+- can show co-expressed genes, groups of samples
 
 ## Plots To Avoid
 
@@ -377,39 +470,21 @@ qqline(groups[[i]])
 - Avoid pseudo 3D and most Excel defaults
 - Effective graphs use color judiciously
 
-## Plots To Avoid
+## Lab
 
-```{r echo=FALSE, fig.width=6.45}
-pie(table(chickwts$feed))
-plot(chickwts$feed)
-```
+- Load files anscombe[1-4].csv
+- Perform numeric summaries
+- Do linear regressions (`lm(y1 ~ x1, data=anscombe1)`)
+- Then, do graphical exploration
 
-## Plots To Avoid
+- Load data for project
 
-![](doughnut.png)
-```{r echo=FALSE, fig.width=6.45}
-plot(chickwts$feed)
-```
+## Links
 
-## Plots To Avoid
+- A built [html][] version of this lecture is available.
+- The [source][] R Markdown is also available from Github.
+- A recording of the lecture will be available on the class [YouTube][] channel.
 
-![](cylinder.png)
-```{r echo=FALSE, fig.width=6.45}
-plot(chickwts$feed)
-```
-
-## Plots To Avoid
-
-```{r echo=FALSE, fig.width=6.45}
-plot(chickwts$feed, col = rainbow(6))
-plot(chickwts$feed)
-```
-
-## Misunderstanding Correlation
-
-  > "Correlation does not imply causation!"
-
-- Even where hypothesis test produce highly correlated results, they must be reproducible 
-- For example, gene expression data tends to be skewed and not approximated by normal distribution
-- It is essential to select the correct distribution for data analysis, as given by theory
-- Exploratory data analysis is an important tool, but theoretical knowledge is essential
+[html]: http://rpubs.com/lwaldron/TrentoSession4Lecture
+[source]: https://github.com/lwaldron/AppStatTrento
+[YouTube]: https://www.youtube.com/channel/UCwXiTYNRBUb_9r8-L4ziaGg
