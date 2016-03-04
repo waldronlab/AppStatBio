@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <!-- Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. -->
 
-```{r preparation}
+```{r preparation, eval=FALSE}
 library(downloader) 
 url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleMiceWeights.csv"
 filename <- "femaleMiceWeights.csv" 

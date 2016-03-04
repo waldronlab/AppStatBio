@@ -21,7 +21,6 @@ filename <- "femaleMiceWeights.csv"
 download(url, destfile=filename)
 
 femaleMiceWeights <- read.csv("./femaleMiceWeights.csv")
-View(femaleMiceWeights)
 
 ```
 
@@ -71,7 +70,7 @@ We are going to read in this data, then test your knowledge of they key dplyr fu
 
 Read in the msleep_ggplot2.csv file with the function read.csv and use the function class to determine what type of object is returned.
 
-```{r, echo= TRUE}
+```{r, echo= TRUE, message=FALSE}
 library(downloader)
 library(dplyr)
 url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/msleep_ggplot2.csv"
@@ -79,10 +78,7 @@ filename <- "msleep_ggplot2.csv"
 download(url, destfile=filename)
 
 msleep_ggplot2 <- read.csv("./msleep_ggplot2.csv")
-View(msleep_ggplot2)
-
 class(msleep_ggplot2)
-
 ```
 
 Now use the filter function to select only the primates. How many animals in the table are primates? Hint: the nrow function gives you the number of rows of a data frame or matrix.

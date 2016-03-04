@@ -6,11 +6,11 @@ filename <- "msleep_ggplot2.csv"
 download(url, destfile=filename)
 
 #1
-data <- read.csv(filename)
+dat <- read.csv(filename)
 class(data)
 
 #2
-data.primates <- dplyr::filter(data, data$order=="Primates")
+data.primates <- dplyr::filter(dat, order=="Primates")
 nrow(data.primates)
 
 #3

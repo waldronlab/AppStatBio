@@ -76,16 +76,17 @@ Project presentations and reports will be assessed for quality of analysis, but 
     + Central Limit Theorem
     + t-distribution
 * Week 3
-    - hypothesis testing
-    - null hypotheses
-    - Type I and II error and power
-    - multiple testing
-    + confidence intervals
+    + Hypothesis testing
+    + Type I and II error and power
+    + Confidence intervals
+
 * Week 4
     + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
     + Monte Carlo simulation
     + permutation tests
     + bootstrap simulation
+    + exploratory data analysis
+    
 * Week 5
 * Week 6
 * Week 7

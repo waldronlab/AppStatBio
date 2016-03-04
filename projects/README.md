@@ -2,7 +2,7 @@
 
 The final project is a study of cancer subtypes that have been identified by whole-transcriptome clustering and reported by The Cancer Genome Atlas (TCGA) project.  The primary objectives of your analysis will be to perform your own unsupervised clustering of the dataset and compare to the reported results, and to develop and assess your own subtype classifier.
 
-Datasets have been posted as issues on the Github page – please assign one of  these issues to yourself to take on that cancer type.  The datasets includes two files:
+Datasets have been posted as issues on the Github page – please assign one of these issues to yourself to take on that cancer type.  For each cancer type there are two files:
 
 *The first* is an “.rds” file, a serialized R data file, containing an object of class “ExpressionSet”. You will need to have Bioconductor installed to use this object. You can load this file and use the resulting data object by doing:
 

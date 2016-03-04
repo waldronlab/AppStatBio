@@ -22,7 +22,6 @@ output:
 
 - Exploratory data analysis
 
-Reading:
 - Chapter 1 - Inference
 - Chapter 2 - Exploratory Data Analysis
 - Chapter 5 - Inference for High Dimensional Data
@@ -425,7 +424,7 @@ hist(permresults$p.value)
     + `sva`: creates surrogate variables for unknown batch effects, corrects the structure of permutation p-values
     + correction using control (housekeeping) genes
 
-All are available from the [svn](https://www.bioconductor.org/packages/sva) Bioconductor package
+All are available from the [sva](https://www.bioconductor.org/packages/sva) Bioconductor package
 
 ## MA plot
 
@@ -450,9 +449,9 @@ plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
 
 Detailed representation of high-dimensional dataset
 
-```{r}
+```{r, fig.height=4}
 ge = geneExpression[sample(1:nrow(geneExpression), 200), ]
-pheatmap::pheatmap(ge, scale="row")
+pheatmap::pheatmap(ge, scale="row", show_colnames = F, show_rownames = F)
 ```
 
 ## Heatmaps
@@ -460,6 +459,23 @@ pheatmap::pheatmap(ge, scale="row")
 - Clustering becomes slow and memory-intensivefor thousands of rows
     - probably too detailed for thousands of rows
 - can show co-expressed genes, groups of samples
+
+## Colors
+
+- Types of color pallettes: 
+    - **sequential**: shows a gradient
+    - **diverging**: goes in two directions from a center
+    - **qualitative**: for categorical variables
+- Keep color blindness in mind (10% of all men)
+
+## Colors (cont'd)
+
+Combination of `RColorBrewer` package and `colorRampPalette()` can create anything you want
+
+```{r, fig.height=5, echo=FALSE}
+rafalib::mypar(1, 1)
+RColorBrewer::display.brewer.all(n=7)
+```
 
 ## Plots To Avoid
 
@@ -474,10 +490,11 @@ pheatmap::pheatmap(ge, scale="row")
 
 - Load files anscombe[1-4].csv
 - Perform numeric summaries
-- Do linear regressions (`lm(y1 ~ x1, data=anscombe1)`)
+- Do linear regressions 
+    - `lm(y1 ~ x1, data=anscombe1)`
 - Then, do graphical exploration
 
-- Load data for project
+- **Load data for project**
 
 ## Links
 

@@ -16,7 +16,7 @@ library(dplyr)
 #1 
 sleep <- read.csv ('msleep_ggplot2.csv') 
 class (sleep) #character is returned
-View(sleep)
+##View(sleep)
 
 #2 subset table to only include primates
 primates <- filter(sleep, order=='Primates') 
