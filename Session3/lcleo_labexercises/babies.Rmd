@@ -1,0 +1,167 @@
+---
+title: "babies"
+author: "lcleo"
+date: "4 March 2016"
+output: html_document
+---
+
+
+```{r}
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/babies.txt"
+library(downloader)
+library(dplyr)
+filename <- basename(url)
+download(url, destfile=filename)
+babies <- read.table("babies.txt", header=TRUE)
+
+bwt.nonsmoke <- filter(babies, smoke==0) %>% select(bwt) %>% unlist 
+bwt.smoke <- filter(babies, smoke==1) %>% select(bwt) %>% unlist
+
+library(rafalib)
+mean(bwt.nonsmoke)-mean(bwt.smoke)
+sd.ns<-popsd(bwt.nonsmoke)
+sd.ns
+sd.s<-popsd(bwt.smoke)
+sd.s
+
+
+#1 Compute the t-statistic (call it tval)
+
+set.seed(1)
+dat.ns <- sample(bwt.nonsmoke, 25)
+dat.s <- sample(bwt.smoke, 25)
+
+ttest <- t.test(dat.ns, dat.s)
+ttest
+tval <- ttest$statistic
+
+library(NCStats)
+plot(ttest)
+
+righttail <- 1 - pnorm(abs(tval))
+righttail
+lefttail <- pnorm(-abs(tval))
+lefttail
+pval <- lefttail + righttail
+pval
+
+
+#3 D) 2*pnorm(-abs(tstat))
+
+#4
+diffmean<- mean(dat.s)-mean(dat.ns) 
+se <- sqrt(sd.ns/sqrt(25) + sd.s/sqrt(25))
+Zcrit <- qnorm(0.995)
+interval<-c(diffmean - Zcrit*se, diffmean + Zcrit*se)
+
+#5
+ttest99<-t.test(dat.s,dat.ns,conf.level = 0.99)
+error99 <- qt(.995,df=2*25-2)*se
+interval.t99<-c(diffmean - error99, diffmean + error99)
+
+#6 C) N and thus the degrees of freedom is large enough to make the normal and t-distributions very similar.
+
+#7 C) From the original data alone, you can tell whether you have made a Type I error.
+
+#8
+
+#9 C) Find a population for which the null is not true
+
+#10
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,5)
+sam.s<-sample(bwt.smoke,5)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,5),sample(bwt.nonsmoke,5))$p.value)
+library(plyr)
+prop<- count(rep > 0.05)
+prop$freq[2]/10000*100
+# in 90.3 % of the cases the p-value is larger than 0.05, thus we fail to reject the null-hypothesis, meaning that the means are not different from each other
+
+
+#11
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,30)
+sam.s<-sample(bwt.smoke,30)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,30),sample(bwt.nonsmoke,30))$p.value)
+prop<- count(rep > 0.05)
+prop$freq[2]/10000*100
+# in 51.7 % of the cases the p-value is larger than 0.05
+
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,60)
+sam.s<-sample(bwt.smoke,60)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,60),sample(bwt.nonsmoke,60))$p.value)
+prop<- count(rep > 0.05)
+prop$freq[2]/10000*100
+# in 20.12% of the cases the p-value is larger than 0.05
+
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,90)
+sam.s<-sample(bwt.smoke,90)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,90),sample(bwt.nonsmoke,90))$p.value)
+prop<- count(rep > 0.05)
+prop$freq[2]/10000*100
+# in 6.96% of the cases the p-value is larger than 0.05
+
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,120)
+sam.s<-sample(bwt.smoke,120)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,120),sample(bwt.nonsmoke,120))$p.value)
+prop<- count(rep > 0.05)
+prop$freq[2]/10000*100
+# in 1.59% of the cases the p-value is larger than 0.05
+
+#12
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,30)
+sam.s<-sample(bwt.smoke,30)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,30),sample(bwt.nonsmoke,30))$p.value)
+prop<- count(rep > 0.01)
+prop$freq[2]/10000*100
+# in 75.72 % of the cases the p-value is larger than 0.01
+
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,60)
+sam.s<-sample(bwt.smoke,60)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,60),sample(bwt.nonsmoke,60))$p.value)
+prop<- count(rep > 0.01)
+prop$freq[2]/10000*100
+# in 43.01% of the cases the p-value is larger than 0.01
+
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,90)
+sam.s<-sample(bwt.smoke,90)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,90),sample(bwt.nonsmoke,90))$p.value)
+prop<- count(rep > 0.01)
+prop$freq[2]/10000*100
+# in 20.56% of the cases the p-value is larger than 0.01
+
+set.seed(1)
+sam.ns<- sample(bwt.nonsmoke,120)
+sam.s<-sample(bwt.smoke,120)
+ttest<-t.test(sam.s,sam.ns)
+ttest$p.value
+rep <-replicate(10000,t.test(sample(bwt.smoke,120),sample(bwt.nonsmoke,120))$p.value)
+prop<- count(rep > 0.01)
+prop$freq[2]/10000*100
+# in 7.58% of the cases the p-value is larger than 0.01
+
+# only for sample size 120 power >80%
+```
+
