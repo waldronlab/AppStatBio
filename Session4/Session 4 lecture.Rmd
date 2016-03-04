@@ -488,7 +488,12 @@ RColorBrewer::display.brewer.all(n=7)
 
 ## Lab
 
-- Load files anscombe[1-4].csv
+- Load files anscombe[1-4].csv:
+
+```{r, eval=FALSE}
+anscombe1 <- readr::read_csv("https://raw.githubusercontent.com/waldronlab/AppStatTrento/master/Session4/anscombe1.csv")
+```
+
 - Perform numeric summaries
 - Do linear regressions 
     - `lm(y1 ~ x1, data=anscombe1)`
