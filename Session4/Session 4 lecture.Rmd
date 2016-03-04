@@ -1,0 +1,415 @@
+
+---
+title: "Applied Statistics for High-throughput Biology: Session 3"
+author: "Levi Waldron"
+date: "March 4, 2016"
+output:
+  ioslides_presentation:
+    css: styles.css
+    logo: logo.png
+  slidy_presentation: default
+---
+
+## Session 4 outline
+
+- Hypothesis testing for categorical variables
+    - Fisher's Exact Test and Chi-square Test
+
+- Resampling methods
+    + permutation tests
+    + cross-validation
+    + bootstrap simulation
+
+- Exploratory data analysis
+
+- Reading
+    + Chapter 1 - Inference
+    + Chapter 2 - Exploratory Data Analysis
+
+# Hypothesis testing for categorical variables
+
+## Hypothesis testing for categorical variables
+
+- Hypothesis testing and confidence intervals for one or two continuous variables: 
+    - *Z-test, t-test, correlation*
+
+- Two binary variables:
+    - Fisher's Exact Test
+    - Pearson's Chi-square Test
+
+## Lady Tasting Tea
+
+- The lady in question claimed to be able to tell whether the tea or the milk was added first to a cup
+- Fisher proposed to give her eight cups, four of each variety, in random order
+    - the Lady is **fully informed** of the experimental method
+    - $H_0$: the Lady has no ability to tell which was added first
+
+<center>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Nice_Cup_of_Tea.jpg/330px-Nice_Cup_of_Tea.jpg" alt="Lady tasting tea" align="middle" style="height: 200px;">
+</center>
+
+Source: https://en.wikipedia.org/wiki/Lady_tasting_tea
+
+## Fisher's Exact Test
+
+p-value is the probability of the observed number of successes, or more, under $H_0$
+
+<table>
+<caption>Tea-Tasting Distribution</caption>
+<tr>
+<th scope="col">Success count</th>
+<th scope="col">Permutations of selection</th>
+<th scope="col">Number of permutations</th>
+</tr>
+<tr>
+<td>0</td>
+<td>oooo</td>
+<td>1 × 1 = 1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>ooox, ooxo, oxoo, xooo</td>
+<td>4 × 4 = 16</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ooxx, oxox, oxxo, xoxo, xxoo, xoox</td>
+<td>6 × 6 = 36</td>
+</tr>
+<tr>
+<td>3</td>
+<td>oxxx, xoxx, xxox, xxxo</td>
+<td>4 × 4 = 16</td>
+</tr>
+<tr>
+<td>4</td>
+<td>xxxx</td>
+<td>1 × 1 = 1</td>
+</tr>
+<tr>
+<th colspan="2" scope="row">Total</th>
+<td>70</td>
+</tr>
+</table>
+
+What do you notice about all these combinations?
+
+## Notes on Fisher's Exact Test
+
+- Can also be applied to rxc tables
+- Remember that the margins of the table are *fixed by design*
+- Also referred to as the Hypergeometric Test
+- Exact p-values are difficult (and unnecessary) for large samples
+    - `fisher.test(x, y = NULL, etc, simulate.p.value = FALSE)`
+
+## Notes on Fisher's Exact Test (cont'd)
+
+- Has been applied (**with peril!**) to gene set analysis, e.g.:
+    - 10 of my top 100 genes are annotated with the cytokinesis GO term
+    - 465 of 21,000 human genes are annotated with the cytokinesis GO term
+    - Are my top 100 genes enriched for cytokinesis process?
+- Problems with this analysis:
+    - Main problem: top-n genes tend to be correlated, so their selections are not independent trials
+    - Secondary: does not match design for $H_0$
+- Alternative: permutation test repeating all steps
+
+## Chi-squared test
+
+- test of independence for rxc table (two categorical variables)
+- does not assume the margins are fixed by design
+    - i.e., the number of cups of tea with milk poured first can be random, and the Lady doesn't know how many
+    - more common in practice
+    - classic genomics example is GWAS
+- $H_0$: the two variables are independent
+- $H_A$: there is an association between the variables
+
+## Application to GWAS
+
+* Interested in association between disease and some potential causative factor
+* In a case-control study, the numbers of cases and controls are fixed, but the other variable is not
+* In a prospective or longitudinal cohort study, neither the number of cases or the other variable are fixed
+
+```{r, echo=FALSE}
+disease=factor(c(rep(0,180),rep(1,20),rep(0,40),rep(1,10)),
+               labels=c("control","cases"))
+genotype=factor(c(rep("AA/Aa",204),rep("aa",46)),
+                levels=c("AA/Aa","aa"))
+dat <- data.frame(disease, genotype)
+dat <- dat[sample(nrow(dat)),] #shuffle them up 
+summary(dat)
+```
+
+## Application to GWAS (cont'd)
+
+```{r}
+table(disease, genotype)
+chisq.test(disease, genotype)
+chisq.test(disease, genotype, simulate.p.value = TRUE)
+```
+
+## Application to GWAS (cont'd)
+
+Note that the result says nothing about *how* the departure from independence occurs
+
+```{r}
+library(epitools)
+epitools::oddsratio(genotype, disease, method="wald")$measure
+```
+
+## Note on factor reference levels
+
+Use the `relevel()` function if you want to change the reference level of a factor:
+```{r}
+epitools::oddsratio(relevel(genotype, "aa"), disease)$measure
+```
+
+(the default is whichever level is first alphabetically!)
+
+## Summary - two categorical variables
+
+- Choice between Fisher's Exact Test and Chi-square test is determined by experimental design
+- If any counts in the table are less than 5, can use `simulate.p.value=TRUE` to get a more accurate p-value from the chi-square test
+- Both assume independent observations (important!!)
+
+# Resampling methods
+
+## Big classes of resampling methods
+
+* Resampling involves simulating repeated samples from the one available sample
+    - *Permutation tests*: shuffling labels to generate an empirical null distribution
+    - *Cross-validation*: generate training and test sets _without_ replacement
+    - *Bootstrap*: generate samples of size $n$, _with_ replacement
+
+## Permutation test
+
+Response (y) variable is permuted to guarantee true $H_0$:
+
+<center>
+<img src="nrg1521-i1.gif" alt="nrg1521-i1.gif" style="height: 400px;"/>
+</center>
+
+<font size="2">
+Genome-wide association studies for common diseases and complex traits. *Nature Reviews Genetics 6*, 95-108 (February 2005).
+</font>
+
+## Permutation test
+
+- calculate the test statistic for each permutation
+    - 999 is a typical number
+- p-value is the quantile of the real test statistic in the "empirical null distribution" of permutation test statistics
+- permutations tests *still have assumptions*: 
+    - samples are assumed to be independent and “exchangeable”
+    - hidden structure such as families can cause anti-conservative p-values
+
+## K-fold cross-validation
+
+* Setting: prediction (as opposed to inference)
+* Purpose: to avoid reporting inflated prediction accuracy due to over-fitting
+
+<center>
+<img src="three-fold.png" alt="three-fold.png" style="width: 600px;"/>
+
+Three-fold cross-validation
+
+</center>
+
+## K-fold cross-validation (cont'd)
+
+* Create $K$ "folds" from the sample of size $n$, $K \le n$
+1. Randomly sample $1/K$ observations (without replacement) as the validation set
+2. Use remaining samples as the training set
+3. Fit model on the training set, estimate accuracy on the validation set
+4. Repeat $K$ times, not using the same validation samples
+5. Average validation accuracy from each of the validation sets
+
+## Variability in cross-validation
+
+<center>
+<img src="ISLR_Fig52.png" alt="ISLR_Fig52.png" style="width: 600px;"/>
+</center>
+
+\center ISLR Figure 5.2: Variability in 2-fold cross-validation
+
+
+## Cross-validation summary
+
+* In prediction modeling, we think of data as _training_ or _test_
+     - Cross-validation is a way to estimate test set error from a training set
+* Training set error always decreases with more complex (flexible) models
+* Test set error as a function of model flexibility tends to be U-shaped
+     - The low point of the U represents the most appropriate amount of model complexity
+     
+## The Bootstrap (schematic)
+
+<center>
+<img src="ISLR_Fig511.png" alt="ISLR_Fig511.png" style="width: 600px;"/>
+</center>
+
+## Summary of The Bootstrap
+
+* The Bootstrap is a very general approach to estimating uncertainty, e.g. standard errors
+* Can be applied to a wide range of models and statistics
+* Robust to outliers and violations of model assumptions
+* The basic approach:
+    1. Using the available sample (size $n$), generate a new sample of size $n$ (with replacement)
+    2. Calculate the statistic of interest
+    3. Repeat
+    4. Use repeated experiments to estimate the variability of your statistic of interest
+
+# Exploratory data analysis
+
+## Introduction
+
+> “The greatest value of a picture is when it forces us to notice what we never expected to see.” - John W. Tukey
+
+- Discover biases, systematic errors and unexpected variability in data
+- Graphical approach to detecting these issues
+- Represents a first step in data analysis and guides hypothesis testing
+- Opportunities for discovery in the outliers
+
+## Quantile Quantile Plots
+
+- Quantiles divide a distribution into equally sized bins
+- Division into 100 bins gives percentiles
+- Quantiles of a theoretical distribution are plotted against an experimental distribution
+- Given a perfect fit, $latex x=y $
+- Useful in determining data distribution (normal, t, etc.)
+
+## Quantile Quantile Plots
+
+```{r echo=FALSE, fig.width=8}
+suppressPackageStartupMessages(library(UsingR))
+suppressPackageStartupMessages(library(rafalib))
+# height qq plot
+x <- father.son$fheight
+ps <- (seq(0,99) + 0.5 ) / 100
+qs <- quantile(x, ps)
+normalqs <- qnorm(ps, mean(x), popsd(x))
+par(mfrow=c(1,3))
+plot(normalqs, qs, xlab = "Normal Percentiles", ylab = "Height Percentiles", main = "Height Q-Q Plot")
+abline(0,1)
+# t-distributed for 12 df
+x <- rt(1000, 12)
+qqnorm(x, xlab="t quantiles", main = "T Quantiles (df=12) Q-Q Plot", ylim=c(-6,6))
+qqline(x)
+# t-distributed for 3 df
+x <- rt(1000, 3)
+qqnorm(x, xlab="t quantiles", main = "T Quantiles (df=3) Q-Q Plot", ylim=c(-6,6))
+qqline(x)
+```
+
+## Boxplots
+
+- Provide a graph that is easy to interpret where data is not normally distributed
+- Would be an appropriate choice to explore income data, as distribution is highly skewed
+- Particularly informative in relation to outliers and range
+- Possible to compare multiple distributions side by side
+
+## Boxplots
+
+```{r echo=FALSE, fig.width=4.3}
+hist(exec.pay, main = "CEO Compensation")
+```
+```{r echo=FALSE, fig.width=4.3}
+qqnorm(exec.pay, main = "CEO Compensation")
+```
+```{r echo=FALSE, fig.width=4.3}
+boxplot(exec.pay, ylab="10,000s of dollars", ylim=c(0,400), main = "CEO Compensation")
+```
+
+## Scatterplots And Correlation
+
+- Where data is not univariate but is normally distributed
+- A scatter plot and calculation of correlation is useful
+- Provides a graphical and numeric estimation of relationships
+- Quick and easy with plot() and cor()
+
+## Scatterplots And Correlation
+
+```{r echo=FALSE, fig.width=4.3}
+plot(father.son$fheight, father.son$sheight,xlab="Father's height in inches",ylab="Son's height in inches",main=paste("correlation =",signif(cor(father.son$fheight, father.son$sheight),2)))
+```
+```{r echo=FALSE, fig.width=4.3}
+plot(cars$speed, cars$dist,xlab="Speed",ylab="Stopping Distance",main=paste("correlation =",signif(cor(cars$speed, cars$dist),2)))
+```
+```{r echo=FALSE, fig.width=4.3}
+plot(faithful$eruptions, faithful$waiting,xlab="Eruption Duration",ylab="Waiting Time",main=paste("correlation =",signif(cor(faithful$eruptions, faithful$waiting),2)))
+```
+
+## Stratification
+
+- Useful where a hypothesized difference exist between groups
+- Can also stratify bivariate data into bins, instead of scatterplot
+- When stratified data is displayed as a boxplot, trends become obvious
+- Bin trends are a stronger predictor of the estimated parameter
+
+## Stratification
+
+```{r echo=FALSE, fig.width=4.3}
+boxplot(split(father.son$sheight,round(father.son$fheight)))
+```
+```{r echo=FALSE, fig.width=4.3}
+boxplot(split(cars$dist, round(cars$speed)))
+```
+```{r echo=FALSE, fig.width=4.3}
+boxplot(split(faithful$waiting, round(faithful$eruptions)))
+```
+
+## Bi-variate Normal Distribution
+
+```{r echo=FALSE, fig.width=4.3}
+x <- father.son$fheight
+y <- father.son$sheight
+groups <- split(y,round(x))
+for(i in c(8,11,14)){
+qqnorm(groups[[i]],main=paste0("X=",names(groups)[i]," strata"),
+ylim=range(y),xlim=c(-2.5,2.5))
+qqline(groups[[i]])
+}
+```
+
+## Plots To Avoid
+
+> "Pie charts are a very bad way of displaying information." - R Help
+
+- Always avoid pie charts
+- Avoid doughnut charts too
+- Avoid pseudo 3D and most Excel defaults
+- Effective graphs use color judiciously
+
+## Plots To Avoid
+
+```{r echo=FALSE, fig.width=6.45}
+pie(table(chickwts$feed))
+plot(chickwts$feed)
+```
+
+## Plots To Avoid
+
+![](doughnut.png)
+```{r echo=FALSE, fig.width=6.45}
+plot(chickwts$feed)
+```
+
+## Plots To Avoid
+
+![](cylinder.png)
+```{r echo=FALSE, fig.width=6.45}
+plot(chickwts$feed)
+```
+
+## Plots To Avoid
+
+```{r echo=FALSE, fig.width=6.45}
+plot(chickwts$feed, col = rainbow(6))
+plot(chickwts$feed)
+```
+
+## Misunderstanding Correlation
+
+  > "Correlation does not imply causation!"
+
+- Even where hypothesis test produce highly correlated results, they must be reproducible 
+- For example, gene expression data tends to be skewed and not approximated by normal distribution
+- It is essential to select the correct distribution for data analysis, as given by theory
+- Exploratory data analysis is an important tool, but theoretical knowledge is essential
