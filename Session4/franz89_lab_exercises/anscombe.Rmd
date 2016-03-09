@@ -1,0 +1,47 @@
+---
+title: "anscombe"
+author: "Francesco Asnicar"
+date: "4 March 2016"
+output: html_document
+---
+
+Load data
+
+```{r}
+library(readr)
+anscombe1 <- readr::read_csv("https://raw.githubusercontent.com/waldronlab/AppStatTrento/master/Session4/anscombe1.csv")[,-1]
+anscombe2 <- readr::read_csv("https://raw.githubusercontent.com/waldronlab/AppStatTrento/master/Session4/anscombe2.csv")[,-1]
+anscombe3 <- readr::read_csv("https://raw.githubusercontent.com/waldronlab/AppStatTrento/master/Session4/anscombe3.csv")[,-1]
+anscombe4 <- readr::read_csv("https://raw.githubusercontent.com/waldronlab/AppStatTrento/master/Session4/anscombe4.csv")[,-1]
+```
+
+# Perform numeric summaries
+```{r}
+summary(anscombe1)
+summary(anscombe2)
+summary(anscombe3)
+summary(anscombe4)
+```
+
+# Do linear regressions
+```{r}
+m1 <- lm(y1 ~ x1, data=anscombe1)
+m2 <- lm(y2 ~ x2, data=anscombe2)
+m3 <- lm(y3 ~ x3, data=anscombe3)
+m4 <- lm(y4 ~ x4, data=anscombe4)
+```
+
+# Then, do graphical exploration
+```{r}[echo=FALSE]
+plot(anscombe1)
+abline(m1)
+
+plot(anscombe2)
+abline(m2)
+
+plot(anscombe3)
+abline(m3)
+
+plot(anscombe4)
+abline(m4)
+```
