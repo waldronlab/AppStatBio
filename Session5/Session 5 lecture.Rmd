@@ -301,7 +301,7 @@ plot((s$d^2 / sum(s$d^2) * 100), (p$sdev^2 / sum(p$sdev^2) * 100),
 
 ```{r}
 plot(p$scores[, 1], xlab="Index of genes", ylab="Scores of PC1", 
-     main="Scores of PC1")
+     main="Scores of PC1") #or, predict(p)
 abline(h=c(-35, 25), col="red")
 ```
 
@@ -324,16 +324,17 @@ plot(p$sdev^2 / sum(p$sdev^2)*100, ylab="% variance explained")
 ```
 ```{r, fig.height=3, fig.width=5, echo=FALSE, fig.align='center'}
 rafalib::mypar()
-plot(p$sdev^2 / sum(p$sdev^2)*100, ylab="% variance explained")
+plot(p$sdev^2 / sum(p$sdev^2)*100, ylab="% variance explained", main="Screeplot")
 ```
 
 ## PCA interpretation: eigenvalues
 
-Alternatively as cumulative % variance explained:
-```{r, fig.height=3.5}
+Alternatively as cumulative % variance explained (using `cumsum()` function):
+```{r, fig.height=4, echo=FALSE, fig.align='center'}
 rafalib::mypar()
 plot(cumsum(p$sdev^2)/sum(p$sdev^2)*100, 
-  ylab="cumulative % variance explained", ylim=c(0, 100), type="l")
+  ylab="cumulative % variance explained", ylim=c(0, 100), 
+  type="l", main="Cumulative screeplot")
 ```
 
 ## PCA interpretation: loadings
@@ -388,8 +389,8 @@ legend("topright", legend=levels(factor(tissue)), col=1:length(unique(tissue)),
 - PCA and MDS are useful for dimension reduction when you have **correlated variables**
 - Variables are always centered.  
 - Variables are also scaled unless you know they have the same scale in the population
-- PCA projection can be applied to new datasets
-- PCA is subject to over-fitting
+- PCA projection can be applied to new datasets if you know the matrix calculations
+- PCA is subject to over-fitting, screeplot can be tested by cross-validation
 
 ## Lab
 
