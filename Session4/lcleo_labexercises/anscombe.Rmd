@@ -1,0 +1,53 @@
+---
+title: "anscombe"
+author: "lcleo"
+date: "9 March 2016"
+output: html_document
+---
+
+
+```{r}
+library(downloader)
+for (i in 1:4){
+url <- paste0("https://raw.githubusercontent.com/waldronlab/AppStatTrento/master/Session4/anscombe",i,".csv")
+filename <- basename(url)
+download(url, destfile=filename)
+}
+
+files <-list.files(pattern = ".csv")
+anscombe<-list(data.frame())
+for (i in 1:length(files)){
+anscombe[[i]]<- read.csv(files[i])
+}
+names(anscombe)<- gsub(".csv","",files)
+
+#1 numeric summaries
+lapply(anscombe, function(x) summary(x))
+#For all four datasets, the mean of x is 9, the mean of y is 7.5
+
+#2 linear regression
+mod<-lapply(anscombe, function(x) lm(x[,3] ~ x[,2]))
+mod_summary<-lapply(mod, function(x) summary(x))
+mod_summary
+#Based on the summary, the model of the linear regression in all cases is y=3+0.5x
+#The R-squared is the same 66% and the p-value is 0.002 in all cases.
+
+# Scatter Plots
+par(mfrow=c(2,2))
+for (i in 1:4){
+plot(anscombe[[i]][,2], anscombe[[i]][,3], xlim=c(4,20), ylim=c(3,14))
+abline(mod[[i]],col='red')
+}
+       
+#Based on the scatter plots, the 4 datasets are graphed in a different way.
+#In the first and the third dataset there is a linear relationship between x and y. The third dataset has an outlier.
+
+# Diagnostic plots    
+par(mfrow=c(2,2))
+lapply(anscombe, function(x) plot(lm(x[,3] ~ x[,2])))
+
+#Based on the diagnostic plots, even for the first and the third dataset that seem to be explained by the linear model,
+#from the residual vs fitted values plots, we see that the residuals are not close to 0 (for the third dataset)
+#and the Cook's distance has a big deviation from 0 (for the first dataset)
+```
+
