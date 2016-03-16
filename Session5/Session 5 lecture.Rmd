@@ -370,7 +370,7 @@ legend("topleft", legend=levels(factor(tissue)), col=1:length(unique(tissue)),
 - identify two (or more) eigenvalues/vectors that preserve distances
 
 ```{r}
-d <- dist(1 - cor(e.standardize.fast))
+d <- as.dist(1 - cor(e.standardize.fast))
 mds <- cmdscale(d)
 ```
 
