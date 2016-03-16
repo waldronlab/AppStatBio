@@ -1,0 +1,28 @@
+---
+title: "pca"
+author: "lcleo"
+date: "16 March 2016"
+output: html_document
+---
+
+
+```{r}
+library(BiocInstaller)
+biocLite("genomicsclass/tissuesGeneExpression")
+library(tissuesGeneExpression)
+data(tissuesGeneExpression)
+
+
+#SVD of gene expression dataset
+system.time(e.standardize.slow <- t(apply(e, 1, function(x) x - mean(x) )))
+system.time(e.standardize.fast <- t(scale(t(e), scale=FALSE)))
+
+
+#PCA of gene expression dataset
+p <- princomp(e.standardize.fast, cor=TRUE) 
+
+#Screeplot
+plot(p$sdev^2/sum(p$sdev^2)*100, ylab='% variance explained')
+
+```
+
