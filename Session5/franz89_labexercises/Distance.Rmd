@@ -1,0 +1,79 @@
+---
+title: "Distance"
+author: "Francesco Asnicar"
+date: "10 March 2016"
+output: 
+  html_document: 
+    number_sections: yes
+    toc: yes
+---
+
+If you have not done so already, install the data package tissueGeneExpression:
+
+```{r}
+library(devtools)
+## install_github("genomicsclass/tissuesGeneExpression")
+# install_github("genomicsclass/tissuesGeneExpression", force=T)
+```
+
+The data represents RNA expression levels for eight tissues, each with several *biological replictes*. We call samples that we consider to be from the same population, such as liver tissue from different individuals, *biological replicates*:
+
+```{r}
+library(tissuesGeneExpression)
+data(tissuesGeneExpression)
+head(e)
+head(tissue)
+```
+
+#1
+How many biological replicates for hippocampus?
+
+```{r}
+length(which(tissue == "hippocampus"))
+```
+
+#2
+What is the distance between samples 3 and 45?
+
+```{r}
+dist( t( e[, c(3,45)] ) )
+```
+
+#3
+What is the distance between gene `210486_at` and `200805_at`
+
+```{r}
+dist( e[c("210486_at", "200805_at"),] )
+```
+
+#4
+If I run the command (don’t run it!):
+
+```{r}
+# d = as.matrix( dist(e) )
+```
+
+how many cells (number of rows times number of columns) will this matrix have?
+
+ANSWER: `nrow(e)*nrow(e)` = `r nrow(e)*nrow(e)`
+
+#5
+Compute the distance between all pair of samples:
+
+```{r}
+d = dist( t(e) )
+```
+
+Read the help file for `dist`. How many distances are stored in `d`? Hint: What is the length of `d`?
+
+ANSWER: `length(d)` = `r length(d)`
+
+#6
+Why is the answer to exercise 5 not `ncol(e)^2`?
+
+* A) R made a mistake there.
+* B) Distances of 0 are left out.
+* C) Because we take advantage of symmetry: only lower triangular matrix is stored thus only `ncol(e)*(ncol(e)-1)/2` values.
+* D) Because it is equal `nrow(e)^2`
+
+ANSWER: C

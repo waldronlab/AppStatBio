@@ -1,0 +1,56 @@
+---
+title: "Lesson5"
+author: "Francesco Asnicar"
+date: "10 March 2016"
+output: html_document
+---
+
+```{r, echo=FALSE}
+# source("https://bioconductor.org/biocLite.R")
+# biocLite()
+# biocLite("genomicsclass/tissuesGeneExpression")
+library(tissuesGeneExpression)
+data(tissuesGeneExpression)
+```
+
+
+#1
+Re-create PC plot with per-gene scaling 
+
+## 1.1
+By explicitly scaling the rows.
+
+Slow version:
+```{r}
+system.time(e.standardize.slow <- t(apply(e, 1, function(x) (x - mean(x))/sd(x) )))
+```
+
+Fast version:
+```{r}
+system.time(e.standardize.fast <- t(scale(t(e), scale=TRUE)))
+```
+
+
+# SVD
+s <- svd(e.standardize.fast)
+
+
+## 1.2
+By setting `cor=TRUE` in the `princomp()` function
+
+```{r, echo=FALSE}
+not.scaled <- princomp(e.standardize.fast)
+scaled <- princomp(e.standardize.fast, cor=TRUE)
+```
+
+#2
+Re-create screeplot using built-in plot function
+
+```{r, echo=FALSE}
+plot(not.scaled$sdev^2 / sum(not.scaled$sdev^2)*100, ylab="% variance explained", main="Screeplot not scaled")
+
+plot(scaled$sdev^2 / sum(scaled$sdev^2)*100, ylab="% variance explained", main="Screeplot scaled")
+```
+
+
+
