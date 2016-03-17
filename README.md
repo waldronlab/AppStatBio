@@ -65,20 +65,22 @@ A class project will be handed out after the third week of class, that will invo
 
 Project presentations and reports will be assessed for quality of analysis, but also for presentation style and clarity
 
-## Session detail by week (subject to change)
+## Session detail by week
 
 * Week 1
     + introduction to R
     + random variables
     + distributions
+    
 * Week 2
     + populations and samples
     + Central Limit Theorem
     + t-distribution
+
 * Week 3
-    + Hypothesis testing
-    + Type I and II error and power
-    + Confidence intervals
+    + hypothesis testing
+    + type I and II error and power
+    + confidence intervals
 
 * Week 4
     + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
@@ -88,6 +90,16 @@ Project presentations and reports will be assessed for quality of analysis, but 
     + exploratory data analysis
     
 * Week 5
+    + distance in high dimensions
+    + singular value decomposition
+    + principal componenets analysis and multidimensional scaling
+    
 * Week 6
+    + unsupervised clustering
+    + batch effects
+    
 * Week 7
+    + linear modeling
+    + model matrix and model formulae
+
 * Week 8: project presentations
