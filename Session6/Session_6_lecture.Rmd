@@ -266,24 +266,59 @@ month = as.integer( format(sampleInfo$date,"%m") ) + 12*year
 table(year, sampleInfo$ethnicity)
 ```
 
-## Batch Effects - an example
+## Batch Effects: PCA
 
-```{r}
+```{r, cache=TRUE, warning=FALSE}
 pc <- princomp(geneExpression, cor=TRUE)
 boxplot(pc$loadings[, 2] ~ month, varwidth=TRUE, notch=TRUE,
-        xlab="Month", ylab="PC1 loading")
+        main="PC2 vs. month", xlab="Month", ylab="PC2")
+```
+
+## Batch Effects: MDS
+
+A starting point for a color palette:
+```{r, eval=FALSE}
+RColorBrewer::display.brewer.all(n=3, colorblindFriendly = TRUE)
+```
+
+Interpolate one color per month on a quantitative palette:
+```{r}
+col3 <- c(RColorBrewer::brewer.pal(n=3, "Greys"), "black")
+MYcols <- colorRampPalette(col3, space="Lab")(length(unique(month)))
+```
+
+## Batch Effects: MDS
+
+```{r, fig.height=3.5, fig.align='center'}
+d <- as.dist(1 - cor(geneExpression))
+mds <- cmdscale(d)
+plot(mds, col=MYcols[as.integer(factor(month))],
+     main="MDS shaded by batch")
+```
+
+## Batch Effects: clustering
+
+```{r}
+hcclass <- cutree(hclust(d), k=5)
+table(hcclass, year)
 ```
 
 ## Batch Effects - summary
 
 - tend to affect many or all measurements by a little bit
-- keep track of anything that might cause a batch effect
-- can be corrected for if randomized in study design
+- During experimental design:
+    - keep track of anything that might cause a batch effect for post-hoc analysis
+    - include control samples in each batch
+- batches can be corrected for if randomized in study design
     - if confounded with treatment or outcome of interest, nothing can help you
 
 ## Lab
 
 - [Clustering and heatmaps exercises](http://genomicsclass.github.io/book/pages/clustering_and_heatmaps_exercises.html)
+- **Batches in your own dataset**
+    - Created an MDS plot colored by potential batch variables (for TCGA you have "plate" and "batch_number" variables)
+    - Perform unsupervised clustering and produce a frequency table for batch vs. cluster
+- Review the clustering methods used in your TCGA publication method, post to class Google Group
 
 ## Links
 
