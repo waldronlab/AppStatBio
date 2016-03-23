@@ -1,13 +1,13 @@
 
 ---
-title: "Applied Statistics for High-throughput Biology: Session 7"
+title: 'Applied Statistics for High-throughput Biology: Session 7'
 author: "Levi Waldron"
 date: "March 24, 2016"
 output:
+  slidy_presentation: default
   ioslides_presentation:
     css: styles.css
     logo: logo.png
-  slidy_presentation: default
 ---
 
 ## Session 7 outline
@@ -25,7 +25,7 @@ output:
 * Wolff & Gorb, [Radial arrangement of Janus-like setae permits friction control in spiders](http://www.nature.com/articles/srep01101), *Sci. Rep.* 2013.
 
 <div class="columns-2">
-<center> <img src="srep01101-f4.jpg" height=400> </center>
+<center> <img src="srep01101-f4.jpg" height=600> </center>
 
 - **(A)** Barplot showing total claw tuft area of the corresponding legs. 
 - **(B)** Boxplot presenting friction coefficient data illustrating median, interquartile range and extreme values.
@@ -34,7 +34,7 @@ output:
 ## Example: friction of spider legs
 
 <div class="columns-2">
-<center> <img src="srep01101-f4.jpg" height=400> </center>
+<center> <img src="srep01101-f4.jpg" height=600> </center>
 
 - Are the pulling and pushing friction coefficients different?
 - Are the friction coefficients different for the different leg pairs?
@@ -59,7 +59,7 @@ summary(spider)
 
 ## Example: friction of spider legs
 
-```{r, fig.height=4, fig.width=5, fig.align='center'}
+```{r, fig.align='center'}
 boxplot(spider$friction ~ spider$type * spider$leg,
         col=c("grey90","grey40"), las=2,
         main="Friction coefficients of different leg pairs")
@@ -69,7 +69,7 @@ boxplot(spider$friction ~ spider$type * spider$leg,
 
 <div class="columns-2">
 
-```{r, fig.height=4, fig.width=4, fig.align='center', echo=FALSE}
+```{r, fig.align='center', echo=FALSE}
 boxplot(spider$friction ~ spider$type * spider$leg,
         col=c("grey90","grey40"), las=2,
         main="Friction coefficients of \n different leg pairs")
@@ -105,7 +105,7 @@ The following are examples of linear models:
 
 ## Multiple linear regression model
 
-- Generally, linear models can have any number of predictors
+- Linear models can have any number of predictors
 - Systematic part of model:
 
 $$
@@ -154,7 +154,9 @@ Assumptions of linear models: $\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsi
 - R re-codes factors to dummy variables automatically. 
 - Dummy coding depends on whether factor is ordered or not.
 
-## Regression in R: model formulae
+# Model formulae
+
+## Model formulae in R
 
 [Model formulae tutorial](http://ww2.coastal.edu/kingw/statistics/R-tutorials/formulae.html)
 
@@ -165,7 +167,7 @@ Assumptions of linear models: $\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsi
 
 * The tilde means "is modeled by" or "is modeled as a function of." 
 
-## Model formulae (cont'd)
+## Regression with a single predictor
 
 Model formula for simple linear regression: 
 
@@ -174,9 +176,67 @@ Model formula for simple linear regression:
 * where "x" is the explanatory (independent) variable
 * "y" is the response (dependent) variable. 
 
-## Model formulae (cont'd)
+## Return to the spider legs
 
-Additional explanatory variables would be added as follows: 
+Friction coefficient for leg type of first leg pair:
+
+```{r, results='show'}
+spider.sub <- spider[spider$leg=="L1", ]
+fit <- lm(friction ~ type, data=spider.sub)
+summary(fit)
+```
+
+## Regression on spider leg type
+
+Regression coefficients for `friction ~ type` for first set of spider legs:
+
+```{r, results="asis", echo=TRUE}
+fit.table <- xtable::xtable(fit, label=NULL)
+print(fit.table, type="html")
+```
+
+<p></p>
+* How to interpret this table?
+    * Coefficients for **(Intercept)** and **typepush**
+    * Coefficients are t-distributed when assumptions are correct
+    * Variance in the estimates of each coefficient can be calculated
+
+## Interpretation of spider leg type coefficients
+
+```{r spider_main_coef, fig.cap="Diagram of the estimated coefficients in the linear model. The green arrow indicates the Intercept term, which goes from zero to the mean of the reference group (here the 'pull' samples). The orange arrow indicates the difference between the push group and the pull group, which is negative in this example. The circles show the individual samples, jittered horizontally to avoid overplotting.",echo=FALSE}
+set.seed(1) #same jitter in stripchart
+stripchart(split(spider.sub$friction, spider.sub$type), 
+           vertical=TRUE, pch=1, method="jitter", las=2, xlim=c(0,3), ylim=c(0,2))
+coefs <- coef(fit)
+a <- -0.25
+lgth <- .1
+library(RColorBrewer)
+cols <- brewer.pal(3,"Dark2")
+abline(h=0)
+arrows(1+a,0,1+a,coefs[1],lwd=3,col=cols[1],length=lgth)
+abline(h=coefs[1],col=cols[1])
+arrows(2+a,coefs[1],2+a,coefs[1]+coefs[2],lwd=3,col=cols[2],length=lgth)
+abline(h=coefs[1]+coefs[2],col=cols[2])
+legend("right",names(coefs),fill=cols,cex=.75,bg="white")
+```
+
+## regression on spider leg **position**
+
+Remember there are positions 1-4
+```{r}
+fit <- lm(friction ~ leg, data=spider)
+```
+
+```{r, results="asis", echo=TRUE, message=FALSE}
+fit.table <- xtable::xtable(fit, label=NULL)
+print(fit.table, type="html")
+```
+
+- Interpretation of the dummy variables legL2, legL3, legL4 ?
+
+## Regression with multiple predictors
+
+Additional explanatory variables can be added as follows: 
 
 `> y ~ x + z`
 
@@ -184,13 +244,26 @@ Note that "+" does not have its usual meaning, which would be achieved by:
 
 `> y ~ I(x + z)`
 
+## Regression on spider leg **type** and **position**
+
+Remember there are positions 1-4
+```{r}
+fit <- lm(friction ~ type + leg, data=spider)
+```
+
+```{r, results="asis", echo=TRUE, message=FALSE}
+fit.table <- xtable::xtable(fit, label=NULL)
+print(fit.table, type="html")
+```
+
+* this model still doesn't represent how the friction differences between different leg positions are modified by whether it is pulling or pushing
+
 ## Interaction (effect modification)
 
 Interaction is modeled as the product of two covariates:
 $$
 E[y|x] = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{12} x_1*x_2
 $$
-
 
 ## Interaction (effect modification)
 
@@ -209,18 +282,7 @@ symbol  | example | meaning
 ^	| (u + v + w)^3	| include these variables and all interactions up to three way
 1 | -1 | intercept: delete the intercept  
 
-## Model formulae (cont'd)
-
-How to interpret the following model formulae?
-
-`y ~ u + v + w + u:v + u:w + v:w`  
-`y ~ u * v * w - u:v:w`  
-`y ~ (u + v + w)^2`  
-`> y ~ u + v + w + u:v + u:w + v:w + u:v:w`  
-`> y ~ u * v * w`  
-`> y ~ (u + v + w)^3`  
-
-## Types of standard linear models
+## Summary: types of standard linear models
 
 ```
 lm( y ~ u + v)
@@ -228,6 +290,10 @@ lm( y ~ u + v)
 `u` and `v` factors: **ANOVA**  
 `u` and `v` numeric: **multiple regression**  
 one factor, one numeric: **ANCOVA**
+
+* R does a lot for you based on your variable classes
+    * be **sure** you know the classes of your variables
+    * be sure all rows of your regression output make sense
 
 # The Design Matrix
 
@@ -277,22 +343,116 @@ $$
 
 * The design matrix is $\mathbf{X}$
     * which the computer will take as a given when solving for $\boldsymbol{\beta}$ by minimizing the sum of squares of residuals $\boldsymbol{\varepsilon}$.
+    
+## Choice of design matrix
+    
+* there are multiple possible and reasonable design matrices for a given study design
+* the model formula encodes a default model matrix, e.g.:
 
-## ANOVA table
+```{r}
+group <- factor( c(1, 1, 2, 2) )
+model.matrix(~ group)
+```
 
-Source of Variation | Sum Sq | Deg Fr | Mean Sq | F  
-------------------- | ------ | -- | ------- | --  
-Model | MSS | k | MSS/k | (MSS/k)/MSE  
-Residual | RSS | n-(k-1) | RSS/(n-k-1) |  
-Total | TSS | n-1 | |   
+## Choice of design matrix
 
-* $k$ = Model degrees of freedom = coefficients - 1
-* $n$ = Number of observations
-* **F** is F-distributed with $k$ numerator and $n-(k-1)$ denominator degrees of freedom
+What if we forgot to code group as a factor?
+```{r}
+group <- c(1, 1, 2, 2)
+model.matrix(~ group)
+```
+
+## More groups, still one variable
+
+```{r}
+group <- factor(c(1,1,2,2,3,3))
+model.matrix(~ group)
+```
+
+## Changing the baseline group
+
+```{r}
+group <- factor(c(1,1,2,2,3,3))
+group <- relevel(x=group, ref=3)
+model.matrix(~ group)
+```
+
+## More than one variable
+
+```{r}
+diet <- factor(c(1,1,1,1,2,2,2,2))
+sex <- factor(c("f","f","m","m","f","f","m","m"))
+model.matrix(~ diet + sex)
+```
+
+## With an interaction term
+
+```{r}
+(X = model.matrix(~ diet + sex + diet:sex))
+```
+
+## Summary: applications of model matrices
+
+* Major differential expression packages recognize them:
+    * LIMMA (VOOM for RNA-seq)
+    * DESeq2 for all kinds of count data
+    * EdgeR
+* Can fit coefficients **directly** to your contrast of interest
+    * *e.g.*: what is the difference between push/pull friction for each spider-leg pair?
+
+# Analysis of Variance
+
+## Why Analysis of Variance?
+
+* Analysis of Variance allows inference on the inclusion of a categorical variable
+    * not just on individual re-coded variables (e.g. the leg pairs)
+
+```{r, fig.height=5, fig.align='center'}
+boxplot(spider$friction ~ spider$type * spider$leg,
+        col=c("grey90","grey40"), las=2,
+        main="Friction coefficients of different leg pairs")
+```
+
+$F = \frac{variability between groups}{variability within groups}$
+
+## Compare ANOVA table to regression table
+
+```{r, results='asis'}
+print(xtable::xtable(summary(fit)), type="html")
+```
+
+```{r, results='asis'}
+print(xtable::xtable(anova(fit)), type="html")
+```
+
+# Inference in high dimensions
+
+## Inference in high dimensions
+
+* Conceptually similar to what we have already done
+* just repeated many times, e.g.:
+    * is the mean expression of a gene different between two groups (t-test)
+    * is the mean expression of a gene different between any of several groups (1-way ANOVA)
+    * do this simple analysis thousands of times
+    * *note*: for small sample sizes, some Bayesian improvements can be made (i.e. LIMMA package)
+
+## Multiple testing
+
+* When testing thousands of true null hypotheses with $\alpha = 0.05$, you expect a 5\% type I error rate
+* What p-values are even smaller than you expect by chance from multiple testing?
+* Two mainstream approaches for controlling type I error rate:
+
+1. Family-wise error rate (*e.g.*, Bonferroni correction). 
+    * Controlling FWER at 0.05 ensures that the probably of _any_ type I errors is < 0.05.
+2. False Discovery Rate (*e.g.*, Benjamini-Hochberg correction)
+    * Controlling FDR at 0.05 ensures that fraction of type I errors is < 0.05.
+    * correction for the smallest p-value is the same as the Bonferroni correction
+    * correction for larger p-values becomes less stringent
 
 ## Lab
 
-- [Clustering and heatmaps exercises](http://genomicsclass.github.io/book/pages/clustering_and_heatmaps_exercises.html)
+We will continue from last week:
+
 - **Batches in your own dataset**
     - Created an MDS plot colored by potential batch variables (for TCGA you have "plate" and "batch_number" variables)
     - Perform unsupervised clustering and produce a frequency table for batch vs. cluster
@@ -304,6 +464,6 @@ Total | TSS | n-1 | |
 - The [source][] R Markdown is also available from Github.
 - A recording of the lecture will be available on the class [YouTube][] channel.
 
-[html]: http://rpubs.com/lwaldron/TrentoSession6Lecture
+[html]: http://rpubs.com/lwaldron/TrentoSession7Lecture
 [source]: https://github.com/lwaldron/AppStatTrento
 [YouTube]: https://www.youtube.com/channel/UCwXiTYNRBUb_9r8-L4ziaGg
