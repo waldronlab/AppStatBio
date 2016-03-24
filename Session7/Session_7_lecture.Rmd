@@ -273,8 +273,8 @@ Image credit: http://personal.stevens.edu/~ysakamot/
 
 ## Model formulae (cont'd)
 
-symbol  | example | meaning  
-------- | ------- | --------  
+symbol  | example | meaning
+------- | ------------ | --------------------------  
 + | + x	| include this variable  
 -	| - x	| delete this variable  
 :	| x : z	| include the interaction  
@@ -388,7 +388,37 @@ model.matrix(~ diet + sex)
 ## With an interaction term
 
 ```{r}
-(X = model.matrix(~ diet + sex + diet:sex))
+model.matrix(~ diet + sex + diet:sex)
+```
+
+## Design matrix to contrast what we want
+
+- Spider leg friction example:
+    - The question of whether push vs. pull difference is different in L2 compared to L1 is answered by the term `typepush:legL2` in a model with interaction terms:
+
+```{r}
+fitX <- lm(friction ~ type * leg, data=spider)
+```
+
+```{r, results="asis", echo=FALSE, message=FALSE}
+fit.table <- xtable::xtable(fitX, label=NULL)
+print(fit.table, type="html")
+```
+
+**What if we want to ask this question for L3 vs L2?
+
+## Design matrix to contrast what we want
+
+The desired contrast is:
+
+`typepush:legL3 − typepush:legL2`
+
+There are many ways to construct this design, one is with `library(multcomp)`: 
+```{r}
+names(coef(fitX))
+C <- matrix(c(0,0,0,0,0,-1,1,0), 1) 
+L3vsL2interaction <- multcomp::glht(fitX, linfct=C) 
+summary(L3vsL2interaction)
 ```
 
 ## Summary: applications of model matrices
@@ -405,15 +435,13 @@ model.matrix(~ diet + sex)
 ## Why Analysis of Variance?
 
 * Analysis of Variance allows inference on the inclusion of a categorical variable
-    * not just on individual re-coded variables (e.g. the leg pairs)
+    * not just on re-coded "dummy" variables (e.g. for each spider leg pair)
 
 ```{r, fig.height=5, fig.align='center'}
 boxplot(spider$friction ~ spider$type * spider$leg,
         col=c("grey90","grey40"), las=2,
         main="Friction coefficients of different leg pairs")
 ```
-
-$F = \frac{variability between groups}{variability within groups}$
 
 ## Compare ANOVA table to regression table
 
@@ -425,16 +453,41 @@ print(xtable::xtable(summary(fit)), type="html")
 print(xtable::xtable(anova(fit)), type="html")
 ```
 
+$F = \frac{\textrm{variability between groups}}{\textrm{variability within groups}} = \frac{\textrm{reduction in variance from adding variable}}{\textrm{variance of residuals}}$
+
+## Analysis of Variance: F test
+
+- Compares *between* group variance to *within* group variance
+    - $F = \frac{\textrm{variability between groups}}{\textrm{variability within groups}} = \frac{\textrm{reduction in variance from adding variable}}{\textrm{variance of residuals}}$
+- The F distribution depends on both *numerator* (df1) and *denominator* (df2) degrees of freedom
+- Rejection region is in the right tail only:
+
+```{r, echo=FALSE}
+x=seq(0.01, 10, by=0.01)
+y=df(x, df1=5, df2=5)
+plot(x, y, type="l", main="df(df1=5, df2=5)", xlab="F", ylab="Probability")
+Fcrit = qf(0.95, df1=5, df2=5)
+abline(v=Fcrit, lty=2)
+abline(h=0)
+arrows(x0=Fcrit, x1=Fcrit+1, y0=0.4, y1=0.4)
+text(x=Fcrit, y=0.3, label="Probability = 0.05", pos=4)
+```
+
+- F-test assumes normally distributed residuals and homoscedasticity
+    - but is *robust* and *conservative* to violations
+
 # Inference in high dimensions
 
 ## Inference in high dimensions
 
 * Conceptually similar to what we have already done
-* just repeated many times, e.g.:
+    * $Y_i$ expression of a gene, etc
+* Just repeated many times, e.g.:
     * is the mean expression of a gene different between two groups (t-test)
     * is the mean expression of a gene different between any of several groups (1-way ANOVA)
     * do this simple analysis thousands of times
     * *note*: for small sample sizes, some Bayesian improvements can be made (i.e. LIMMA package)
+* It is in prediction and machine learning where $Y$ is a label like patient outcome, and we can have high-dimensional predictors
 
 ## Multiple testing
 
@@ -448,6 +501,22 @@ print(xtable::xtable(anova(fit)), type="html")
     * Controlling FDR at 0.05 ensures that fraction of type I errors is < 0.05.
     * correction for the smallest p-value is the same as the Bonferroni correction
     * correction for larger p-values becomes less stringent
+
+```{r, eval=FALSE}
+p.adjust(p, method = p.adjust.methods)
+```
+
+## Summary
+
+- Linear models are the basis for identifying differential expression / differential abundance
+    - anything with at least one continuous $X$ or $Y$
+- **Assumptions**: 
+    1. normal, homoscadistic errors,
+    2. a linear relationship, and
+    3. independent observations.
+- Extends to binary $Y$ (logistic regression), count $Y$ (log-linear regression with e.g. Poisson or Negative Binomial link functions) through **Generalized Linear Models**
+- Know the model formula interface, but
+    - use model matrices to directly fit coefficients that you want to interpret
 
 ## Lab
 
