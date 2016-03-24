@@ -1,0 +1,61 @@
+---
+title: "mds"
+author: "lcleo"
+date: "24 March 2016"
+output: html_document
+---
+
+
+```{r, message=FALSE}
+#1
+library(BiocInstaller)
+library(tissuesGeneExpression) 
+data(tissuesGeneExpression) 
+y = e - rowMeans(e) 
+s = svd(y) 
+z = s$d * t(s$v)
+
+library(rafalib) 
+ftissue=factor(tissue)
+mypar(1,1) 
+plot(z[1,],z[2,],col=as.numeric(ftissue)) 
+legend("topleft",levels(ftissue),col=seq_along(ftissue),pch=1)
+
+d = dist(t(e)) 
+mds = cmdscale(d)
+abs(cor (z[,1], mds[,1])) 
+
+#2
+abs(cor (z[,2], mds[,2])) 
+
+#3
+library(BiocInstaller)
+biocLite("genomicsclass/GSE5859Subset")
+library(GSE5859Subset) 
+data(GSE5859Subset)
+s = svd(geneExpression-rowMeans(geneExpression))
+z = s$d * t(s$v) #to calculate the components (it gives the loadings)
+
+#Which dimension of z most correlates with the outcome sampleInfo$group
+#4 What is the max correlation
+max(apply(z, 1, function(x) cor(x,sampleInfo$group)))
+#0.623
+which.max(apply(z, 1, function(x) cor(x,sampleInfo$group)))
+#1st dimension
+
+#5 Which dimension of z has the second highest correlation with the outcome month
+rank(apply(z, 1, function(x) cor(x,sampleInfo$group)))
+#0.485, 6th dimension
+
+#6 Which dimension of z has the second highest correlation with month
+#convert it first to integer!!
+year <- as.integer(format(sampleInfo$date,"%y") )
+year <- year - min(year)
+month = as.integer( format(sampleInfo$date,"%m") ) + 12*year
+which.max(apply(z, 1, function(x) cor(x, month)))
+#7 What is the correlation?
+max(apply(z, 1, function(x) cor(x, month)))
+
+
+```
+
