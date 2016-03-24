@@ -525,7 +525,7 @@ We will continue from last week:
 - **Batches in your own dataset**
     - Created an MDS plot colored by potential batch variables (for TCGA you have "plate" and "batch_number" variables)
     - Perform unsupervised clustering and produce a frequency table for batch vs. cluster
-- Review the clustering methods used in your TCGA publication method, post to class Google Group
+- Review the clustering methods used in your TCGA publication, post to class Google Group
 
 ## Links
 
