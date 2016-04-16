@@ -1,0 +1,266 @@
+---
+title: "PRAD_smanara.Rmd"
+author: "Serena"
+date: "17 marzo 2016"
+output: html_document
+---
+
+
+```{r, message=FALSE}
+
+#setwd("C:/Users/Sere/Desktop/AppStatTrento/projects/serena_manara_PRAD")
+
+eset <- readRDS("PRAD_RNAseq2.rds")   ## eset and filename are examples
+library(Biobase)
+#exprs(eset)   ##provides the expression data
+#pData(eset)  ##provides “phenotype” data, in this case clinical data
+#sampleNames(eset) ##provides patient identifiers
+#featureNames(eset) ##provides gene symbols
+
+subtypes = read.csv("PRAD_subtypes.csv", sep = ";")
+subt.eset = exprs(eset)[, sampleNames(eset) %in% subtypes$PATIENT_ID]
+```
+
+#1
+How many genes and samples are there?
+
+```{r, message=FALSE}
+dim(subt.eset)
+```
+
+The number of genes is `r nrow(subt.eset)`
+
+The number of samples is `r ncol(subt.eset)`
+
+#2
+For each gene, calculate the number of samples where it has at least one count. 
+
+```{r, message=FALSE}
+ncounts = apply(subt.eset, 1, function(x) sum(x>0))
+sum(ncounts > 0)
+```
+
+How many genes have at least one count in at least 10% of the samples? 
+
+```{r, message=FALSE}
+sum(ncounts > ncol(subt.eset)/10)
+```
+
+Present a histogram of the % of samples in which each gene has 1 or more counts.
+
+```{r, echo=FALSE, message=FALSE}
+hist(ncounts/ncol(subt.eset)*100, main = "Samples with at least 1 count per gene", xlab = "% samples", ylab = "gene counts")
+```
+
+#3
+Create a single boxplot showing the expression counts of 16 randomly selected genes. Do the data appear normally distributed?
+
+```{r, echo=FALSE, message=FALSE}
+set.seed(1)
+subsample <- subt.eset[sample(nrow(subt.eset), size=16),]
+boxplot(as.vector(subsample))
+```
+
+
+No, data do not appear to be normally distributed. The mean is close to 400 and there are many outliers with higher values. Data appear to be Poisson distributed.
+
+#4
+Create another boxplot for the same genes, after adding 1 and taking base-2 logarithm of the expression counts. 
+
+```{r, echo=FALSE, message=FALSE}
+logsample <- log2(subsample + 1)
+boxplot(as.vector(logsample))
+```
+
+
+Is this more normally distributed? If so, use this transformed version of the dataset for further exploratory analysis.
+
+Yes, the transformed version of the dataset looks more normally distributed.
+
+#5
+For another look at these gene expression distributions, make 16 histograms on a 4x4 grid
+
+```{r, echo=FALSE, message=FALSE}
+rafalib::mypar(4, 4)
+for (i in 1:16) {
+  hist(logsample[,i], main=row.names(logsample)[i], xlab="")
+}
+```
+
+#6
+Using whichever transformation between 4 and 5 resulted in a more nearly normal distribution, create a boxplot showing expression values for each sample. Do any samples look like outliers?
+
+```{r, echo=FALSE, message=FALSE}
+rafalib::mypar(1, 1, las=2)
+boxplot(t(logsample))
+```
+
+
+Yes, some genes seem to have more samples behaving as outliers. To have a better understanding of our dataset, we could also have a look at boxplot scaled according to the median.
+
+```{r, echo=FALSE, message=FALSE}
+rafalib::mypar(1, 1, las=2)
+boxplot(scale(t(logsample)))
+```
+
+
+Other intresting plots could be the qqplots to assess the normality of the two transformations.
+
+
+```{r, echo=FALSE, message=FALSE}
+rafalib::mypar(1,2, las=1)
+qqnorm(as.vector(subsample))
+qqline(as.vector(subsample))
+
+qqnorm(as.vector(logsample))
+qqline(as.vector(logsample))
+```
+
+
+#A visual look for cluster structure
+
+#7
+Remove any genes that have non-zero counts in fewer than 10% of the samples. Using the more normally distributed transformation of the data, perform a Principal Components Analysis (PCA). A standard base R solution for PCA is the prcomp() function. Be sure to include variance scaling for the genes, which can be done manually or as an option to the prcomp() function. Show the screeplot of your PCA, and comment.
+
+```{r, echo=FALSE, message=FALSE}
+subt.eset10 <- log2(subt.eset[(ncounts > ncol(subt.eset)/10), ] +1)
+
+standardize.fast <- t(scale(t(subt.eset10), scale=F))
+p <- prcomp(standardize.fast)
+
+rafalib::mypar()
+plot(p$sdev^2 / sum(p$sdev^2)*100, ylab = "% variance explained")
+```
+
+
+The PC1 and PC2 explain `r sum((p$sdev^2 / sum(p$sdev^2)*100)[1:2])`% of the variance.
+
+#8
+Make two side-by-side plots of PC2 vs PC1. In the first, do not distinguish between subtypes. In the second, use color and data point shapes to distinguish between the reported subtypes. Do you see any obvious structure or clustering of the samples? Be VERY sure you have correctly aligned patient barcodes in the ExpressionSet and the barcodes file, for example using identical().
+
+```{r, echo=FALSE, message=FALSE}
+rafalib::mypar(1, 2)
+pal<-palette()[1:3]
+plot(p$rotation[,1:2], main="PC1 vs PC2")
+plot(p$rotation[,1:2], main="PC1 vs PC2 with Subtypes", col=pal, pch= c(22, 21, 24))
+legend("bottomleft", legend = unique(subtypes$mRNA_cluster), col = pal, pch= c(22, 21, 24), lwd = 1, lty=NA)
+```
+
+There are no obvious clustering or structures in the plots, even when observing the second plot with visual enhancement.
+
+#Differential Expression
+
+#9
+Use the DESeq2 Bioconductor package to assess differential expression of each gene across the subtypes, using a one-way Analysis of Variance (ANOVA). Create a histogram of raw p-values.
+
+```{r, echo=FALSE, message=FALSE}
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("DESeq2")
+library(DESeq2)
+phenotype <- pData(eset)[row.names(pData(eset)) %in% subtypes$PATIENT_ID,]
+subtypes.sort <- subtypes[order(subtypes$PATIENT_ID),]
+subtypes.sort.clean <- subtypes.sort[subtypes.sort$PATIENT_ID %in% colnames(subt.eset10), ]
+condition <- factor(subtypes.sort.clean$mRNA_cluster)
+dds <- DESeqDataSetFromMatrix(countData = matrix(as.integer(subt.eset10), ncol=328), DataFrame(condition), ~ condition)
+
+dds <- dds[rowSums(counts(dds)) >1,]
+dds <- DESeq(dds)
+res <- results(dds)
+
+hist(res$pvalue, ylim = c(0, 12000), xlab = "p-value", main = "Raw p-values")
+```
+
+Create a second histogram of F-statistics, adding a vertical red line at the critical F-statistic corresponding to a Bonferroni-corrected p-value of 0.05. Repeat these two histograms, after permuting the subtype labels. Comment on the shapes of the histograms. Note that the DESeq2 differential expression should be performed on untransformed expression values.
+
+```{r, echo=FALSE, message=FALSE}
+hist(res$padj, ylim = c(0, 12000), xlab = "p-value", main = "Adjusted p-values")
+abline(v = 0.05, col = "red")
+
+condition.permuted <- factor(sample(subtypes.sort.clean$mRNA_cluster))
+perm.dds <- DESeqDataSetFromMatrix(countData = matrix(as.integer(subt.eset10), ncol=328), DataFrame(condition.permuted), ~ condition.permuted)
+
+perm.dds <- perm.dds[rowSums(counts(perm.dds)) >1,]
+perm.dds <- DESeq(perm.dds)
+perm.res <- results(perm.dds)
+
+hist(perm.res$pvalue, xlab = "p-value", main = "Permuted raw p-values")
+hist(perm.res$padj, xlab = "p-value", main = "Permuted adjusted p-values", ylim = c(0,30000))
+abline(v = 0.05, col = "red")
+```
+
+Focusing on the non-permuted data, we can notice that after Bonferroni correction the number of significant p-values dropped a lot. Looking at the permuted data, we can see that the distribution of the non-adjusted p-values changes toward higher and less-significant values, and that the adjusted p-values are all equal to 1. The graph has some problems in depicting these data, and I was not able to solve them.
+
+
+#10
+Create a clustered heatmap of the top 1000 differentially expressed genes, ranked by p-value, with rows (genes) scaled to unit variance (row scaling is an automatic option available in most heatmap plotting functions. Create a column sidebar, for example by using the annotation_col argument of pheatmap::pheatmap().
+
+```{r, echo=FALSE, message=FALSE}
+library(pheatmap)
+library(RColorBrewer)
+top1000 <- order(res$padj, decreasing = T)[1:1000]
+palette <- RColorBrewer::brewer.pal(12, "Paired")
+
+annot <- data.frame(type = condition)
+annot.col <- list(type = RColorBrewer::brewer.pal(n=3, "PiYG"))
+rownames(annot) <- colnames(subt.eset)
+names(annot.col[[1]]) <- unique(subtypes$mRNA_cluster)
+
+pheatmap::pheatmap(subt.eset[top1000,], scale = "row", show_rownames = F, show_colnames = F, main = "Scaled top 1000 genes by p-value", color = palette, annotation_col = annot, annotation_colors = annot.col)
+```
+
+#Unsupervised Clustering
+
+#11
+Attempt to reproduce the unsupervised clustering methods reported by the paper for your cancer type. Create a “confusion matrix” showing the concordance between subtype calls produced by your method, and as provided by TCGA. Report on the methods you used, and how similar your results are to those reported.
+
+
+"The top 3,000 most variable genes, by median absolute deviation, were selected from prostate tumor mRNA-seq. Expression data were log2 transformed and gene median centered. Consensus average linkage hierarchical clustering (ConsensusClusterPlus; Wilkerson et al., 2010) supported the presence of 3 clusters."
+
+```{r, echo=FALSE, message=FALSE}
+rafalib::mypar(mar=c(0, 2.5, 1.6, 1.1))
+
+medians <- apply(subt.eset, 1, median)
+
+distanti <- data.frame(values=sapply(rownames(subt.eset), function(gene){
+  dif<-unlist(lapply(subt.eset[gene,], function(sample){
+    abs(sample-medians[[gene]])
+  }))
+  max(dif)
+}))
+
+
+first3000 <- order(distanti, decreasing = T)[1:3000]
+first3000.genes <- rownames(distanti)[first3000]
+
+first3000.genes.log <- log2((subt.eset[first3000.genes,])+1)
+
+hc.pearson <- as.dist(1-(cor(first3000.genes.log)))
+hc.pearson.done <- (hclust(hc.pearson))
+rafalib::myplclust(hc.pearson.done, labels=condition, lab.col=as.numeric(factor(condition)), main="1 - PCC Distance Cluster Dendrogram", cex=0.5)
+legend("topright", legend=levels(factor(condition)), pch = 19, col=1:length(unique(condition)), bty="n")
+abline(h=0.35, lw=2, lty=1)
+
+hclusters <- cutree(hc.pearson.done, h=0.35)
+table(true=condition, cluster=hclusters)
+#we can observe 4 clusters, but one is composed of one single sample
+
+pheatmap::pheatmap(first3000.genes.log, scale = "row", show_rownames = F, show_colnames = F, main = "Hierarchical clustering - reproducing paper's results", color = palette, annotation_col = annot, annotation_colors = annot.col, cluster_cols = hc.pearson.done, cluster_rows = hclusters, cutree_cols = 4)
+
+#alternative with kmeans
+km <- kmeans(t(first3000.genes.log), centers= 3)
+table(km$cluster, condition)
+chisq.test(km$cluster, condition, simulate.p.value = TRUE)
+```
+
+Some differences can be observed when comparing the obtained heatmap with the heatmap presented in the paper (Supplementary fig. 4C). Even though the paper's dendrogram and the dendrogram produced here look very similar, paper's authors were able to observe clusters that are not highlighted in the analyses reported here.
+
+#Batch effects
+
+```{r, message=FALSE}
+rafalib::mypar(1, 1, las=2)
+d.cor <- as.dist(1-(cor(standardize.fast)))
+mds <- cmdscale(d.cor)
+plot(mds, col=rank(phenotype$batch_number))
+```
+
+According to this MDS plot, some batch effects can be observed, although no clear clustering is present.
