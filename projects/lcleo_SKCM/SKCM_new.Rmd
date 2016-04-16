@@ -1,0 +1,190 @@
+---
+title: "SKCM_new"
+author: "lcleo"
+date: "30 March 2016"
+output: html_document
+---
+
+      
+# Question 1: 
+**How many genes and samples are there?**
+
+```{r,message=FALSE} 
+setwd("/Users/kleontid/Desktop/Applied_Statistics/Final_project/SKCM_complete")
+library(Biobase)
+library(plyr)
+eset <- readRDS("SKCM_RNAseq2_complete.rds")
+dim(eset)
+```
+There are **`r nrow(eset)`** genes and **`r ncol(eset)`** samples.
+
+
+# Question 2:
+**For each gene, calculate the number of samples where it has at least one count. How many genes have at least one count in at least 10% of the samples?**
+```{r,message=FALSE} 
+genexprs <-exprs(eset)   ##provides the expression data
+subtypes <- read.csv('SKCM_RNAseqSubtypes.csv') #provides the subtype calls 
+
+#Matching the samples names
+genexprs <- exprs(eset)[, sampleNames(eset) %in% tolower(substr(subtypes$Name, 1, 12))] 
+#colnames(genexprs)
+match <- colnames(genexprs) == tolower(substr(subtypes$Name, 1, 12))
+subtypes <- read.csv('SKCM_RNAseqSubtypes_s.csv') #Substracting the 12 first characters from 'genexprs' names, there are 2 replicates. From 'match' we see that there is also one sample name for which there is no information about the subtype. The new csv has only the sample names which match to the 'subtypes' names
+#subtypes$Names
+match2 <- colnames(genexprs) == tolower(substr(subtypes$Name, 1, 12))
+
+#Counts
+ncounts <- apply(genexprs, 1, function(x) sum(x > 0))
+sumgen <- sum(ncounts > ncol(genexprs) /10)
+```
+**`r sumgen`** genes have at least 1 count in 10 % of the samples
+
+**Plot these percentages as a histogram**
+```{r,message=FALSE} 
+hist_ncounts <- hist(ncounts/ncol(genexprs)*100, xlab="ncounts", main="Histogram of ncounts")
+```
+
+
+# Question 3:
+**Create a single boxplot showing the expression counts of 16 randomly selected genes. Do the data appear normally distributed?**
+```{r,message=FALSE} 
+set.seed(17)
+gen16 <- genexprs [sample(1:nrow(genexprs),16),]
+boxplot(as.vector(gen16), main="gene-expression values")
+```
+
+**No**, the data is not normally distributed
+ 
+
+ 
+# Question 4: 
+**Create another boxplot for the same genes, after adding 1 and taking base-2 logarithm of the expression counts. Is this more  normally distributed? If so, use this transformed version of the dataset for further exploratory analysis.**
+```{r,message=FALSE} 
+gen16log <-log2(gen16+1)
+boxplot(as.vector(gen16log), main="log-transformed values")
+```
+
+**Yes** they appear to be more normally distributed. 
+
+
+
+# Question 5:
+**For another look at these gene expression distributions, make 16 histograms on a 4x4 grid.**
+```{r,message=FALSE} 
+par(mfrow=c(4,4), mar=c(3,3,3,3))
+for (i in 1:16){
+hist(unlist(gen16log[i,]), main=rownames(gen16log)[i],ylab=NA)  
+}
+```
+
+
+# Question 6:
+**Using whichever transformation between 3 and 4 resulted in a more nearly normal distribution, create a boxplot showing expression values for each sample. Do any samples look like outliers?**
+```{r,message=FALSE} 
+par(mfrow=c(1,1),mar=c(7,7,7,7), cex=.5, las=2)
+boxplot(t(gen16log))
+```
+
+We can see that sample **ABCB11** doesn't have the first quantile.
+
+
+#Cluster Analysis
+```{r,message=FALSE}
+
+#Data
+setwd("/Users/kleontid/Desktop/Applied_Statistics/Final_project/SKCM_complete")
+eset <- readRDS("SKCM_RNAseq2_complete.rds")
+genexprs <-exprs(eset) ##provides the expression data 
+sampleInfo <- pData(eset) ##provides “phenotype” data, in this case clinical data
+namesample <- sampleNames(eset) #provides patient identifiers 
+subtypes <- read.csv('SKCM_RNAseqSubtypes_s.csv') #provides the subtype calls 
+genenames <- featureNames(eset) ##provides gene symbols 
+
+#Match the samples with the supplementary information
+genexprs <- exprs(eset)[, sampleNames(eset) %in% tolower(substr(subtypes$Name, 1, 12))]
+pheno <- pData(eset)[row.names(pData(eset)) %in% tolower(substr(subtypes$Name, 1, 12)),]
+
+#For the cluster analysis we will remove any genes that have non-zero counts in fewer than 10% of the samples
+ncounts <- apply(genexprs, 1, function(x) sum(x > 0))
+ncounts2 <-(ncounts > ncol(genexprs) /10)
+genexprs_df<-as.data.frame(genexprs)
+genexprs_df$bool <- unlist(ncounts2)
+subset <-genexprs_df[which(genexprs_df$bool==TRUE),1:(length(genexprs_df[1,])-1)]
+genexprs<-as.matrix(subset,nrow(subset),ncol(subset))
+
+##For the cluster analysis we will use the log transformed data
+genexprs_log <-log2(genexprs+1)
+length(genexprs_log[,1])
+dim(genexprs_log)
+```
+
+#PCA
+```{r,message=FALSE}
+e.standardize.fast <- t(scale(t(genexprs_log), scale=TRUE))
+p <- princomp(e.standardize.fast)
+
+par(mar=c(2,5,2,2),cex=1)
+plot(p$sdev^2/sum(p$sdev^2)*100, ylab='% variance explained', main="Screeplot")
+plot(p$loadings[,1:2], xlab='PC1',ylab='PC2')
+colors<-data.frame(RNASEQ.CLUSTER_CONSENHIER=unique(subtypes[,2]),col=c('blue','green','darkgrey','grey'),pcht=c(19,17,18,20))
+cols<-join(subtypes,colors,type="left",by="RNASEQ.CLUSTER_CONSENHIER")[,c('col')]
+pcht<-join(subtypes,colors,type="left",by="RNASEQ.CLUSTER_CONSENHIER")[,c('pcht')]
+par(mfrow=c(1,1), cex=0.6, mar=c(5,5,5,5))
+plot(p$loadings[,1:2], xlab='PC1',ylab='PC2', col=cols, pch=pcht, main="PCA")
+legend(-0.23,-0.06,colors$RNASEQ.CLUSTER_CONSENHIER,col=colors$col,pch=colors$pcht)
+```
+
+From the screeplot, we see that the first two components can explain the **`r sum((p$sdev^2/sum(p$sdev^2)*100)[1:2])`** % of the variance. From a first visual look to the cluster structure we do not observe any clear clustering. 
+
+#MDS
+```{r,message=FALSE}
+d.cor <-  1 - cor(genexprs_log)
+mds <- cmdscale(d.cor)
+colors<-data.frame(RNASEQ.CLUSTER_CONSENHIER=unique(subtypes[,2]),col=c('blue','green','darkgrey','grey'),pcht=c(19,17,18,20))
+cols<-join(subtypes,colors,type="left",by="RNASEQ.CLUSTER_CONSENHIER")[,c('col')]
+pcht<-join(subtypes,colors,type="left",by="RNASEQ.CLUSTER_CONSENHIER")[,c('pcht')]
+par(mfrow=c(1,1), cex=0.6, mar=c(4,5,4,4))
+plot(mds, col=cols, pch=pcht, main="MDS")
+legend(-0.2,-0.05,colors$RNASEQ.CLUSTER_CONSENHIER,col=colors$col,pch=colors$pcht)
+```
+
+
+With multi-dimensional scaling we have again clustering of the immune and MITF-low groups, while keratin is in all clusters.
+
+#Hierarchical clustering
+```{r,message=FALSE}
+d<-dist(t(genexprs_log))
+hc <- hclust(d)
+par(cex=0.3)
+plot (as.dendrogram(hc))
+abline(h=370, lw=3, lty=2)
+hclusters <- cutree(hc, h=370)
+table(true=subtypes[,2], cluster=hclusters)
+```
+
+The hierarchical clustering gave 5 clusters, in which MITF-low is in the first cluster, immune is in the first and third cluster, while keratin is in all clusters.
+
+#K-means clustering
+```{r,message=FALSE}
+km <- kmeans(t(genexprs_log), centers=length(unique(subtypes$RNASEQ.CLUSTER_CONSENHIER)))
+table(km$cluster, subtypes$RNASEQ.CLUSTER_CONSENHIER)
+chisq.test(km$cluster, subtypes$RNASEQ.CLUSTER_CONSENHIER)
+```
+
+The results from k-means clustering are similar to the ones before.
+
+
+
+#Heatmap
+```{r,message=FALSE}
+library(pheatmap)
+rv <- genefilter::rowVars(genexprs_log)
+idx <- order(-rv)[1:1000]
+annot <- data.frame(RNASEQ.CLUSTER_CONSENHIER=factor(subtypes$RNASEQ.CLUSTER_CONSENHIER))
+rownames(annot) <- colnames(genexprs_log)
+ann_colors <- list(RNASEQ.CLUSTER_CONSENHIER = RColorBrewer::brewer.pal(n=4, "Set2"))
+names(ann_colors[[1]]) <- unique(subtypes$RNASEQ.CLUSTER_CONSENHIER)
+pheatmap::pheatmap(genexprs_log[idx, ], show_rownames = F, show_colnames = F, annotation_colors = ann_colors, annotation_col = annot, scale="row")
+```
+
+From the heatmap we see that there is a cluster of genes with high gene expression, that belong to the group of the keratin (similar result to the paper)
