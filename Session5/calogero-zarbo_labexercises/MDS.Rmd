@@ -1,0 +1,105 @@
+---
+title: "MDS"
+author: "Calogero Zarbo"
+date: "April 17, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Using the z we computed in exercise 4 of the previous exercises.
+Build mds plot
+Use `cmdscale` on the original data
+What is the absolute value of the correlation between the first dimension of z and the first dimension in mds?
+
+
+
+```{r}
+library(tissuesGeneExpression)
+data(tissuesGeneExpression)
+y = e - rowMeans(e)
+s = svd(y)
+z = s$d * t(s$v)
+
+library(rafalib)
+ftissue = factor(tissue)
+mypar(1, 1)
+plot(z[1,], z[2,], col=as.numeric(ftissue))
+legend("topleft", levels(ftissue), col=seq_along(ftissue), pch=1)
+
+d = dist(t(e))
+mds = cmdscale(d)
+
+abs(cor(z[1,], mds[,1]))
+```
+
+What is the absolute value of the correlation between the second dimension of z and the second dimension in mds?
+
+```{r}
+abs(cor(z[2,], mds[,2]))
+```
+
+
+Load the following dataset:
+
+```{r}
+library(devtools)
+install_github("genomicsclass/GSE5859Subset")
+library(GSE5859Subset)
+data(GSE5859Subset)
+```
+
+Compute the svd and compute z.
+Which dimension of `z` most correlates with the outcome `sampleInfo$group`?
+
+```{r}
+s = svd(geneExpression-rowMeans(geneExpression))
+z = s$d * t(s$v)
+
+which.max(cor(t(z), sampleInfo$group))
+```
+
+
+What is this max correlation?
+
+```{r}
+max(cor(t(z), sampleInfo$group))
+```
+
+
+Which dimension of `z` has the second highest correlation with the outcome `sampleInfo$group`?
+
+```{r}
+max.second <- sort(cor(t(z), sampleInfo$group), decreasing=T)[2]
+which(cor(t(z), sampleInfo$group) == max.second)
+```
+
+
+Note these measurements were made during two months:
+
+```{r}
+sampleInfo$date
+```
+
+We can extract the month this way:
+
+```{r}
+month = format(sampleInfo$date, "%m")
+month = factor(month)
+```
+
+Which dimension of `z` has the second highest correlation with the outcome `month`?
+
+```{r}
+second.month <- which(cor(t(z), as.numeric(month)) == sort(cor(t(z), as.numeric(month)), decreasing=T)[2])
+second.month
+```
+
+
+What is this correlation?
+
+```{r}
+cor(t(z), as.numeric(month))[second.month]
+```

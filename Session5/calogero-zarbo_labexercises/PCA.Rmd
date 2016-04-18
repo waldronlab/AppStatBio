@@ -1,0 +1,42 @@
+---
+title: "PCA"
+author: "Calogero Zarbo"
+date: "April 5, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Installation of Bioconductor}
+
+#source("https://bioconductor.org/biocLite.R")
+#biocLite()
+#biocLite("devtools")
+#biocLite("genomicsclass/tissuesGeneExpression")
+```
+```{r}
+library(tissuesGeneExpression)
+data(tissuesGeneExpression)
+
+
+#Slow and Fast
+system.time(e.standardize.slow <- t(apply(e, 1, function(x) x - mean(x) )))
+system.time(e.standardize.fast <- t(scale(t(e), scale=FALSE)))
+
+
+#SVD
+svd_1 <- svd(e.standardize.fast)
+
+
+#Scale or NoScale
+no_scale <- princomp(e.standardize.fast)
+scale <- princomp(e.standardize.fast, cor=TRUE)
+
+#Plotting both
+plot(no_scale$sdev^2 / sum(no_scale$sdev^2)*100, ylab="% variance explained", main="No Scale")
+
+plot(scale$sdev^2 / sum(scale$sdev^2)*100, ylab="% variance explained", main="Scale")
+```
+
