@@ -13,7 +13,7 @@ output:
 ```{r}
 suppressMessages(library(Biobase))
 
-setwd("~/University/Courses/Applied Statistic for High-Throughput Biology/AppStatTrento/projects/franz89_Lung_Adenocarcinoma")
+# setwd("~/University/Courses/Applied Statistic for High-Throughput Biology/AppStatTrento/projects/franz89_Lung_Adenocarcinoma")
 
 eset <- readRDS("LUAD/LUAD_RNAseq2.rds") ## eset and filename are examples
 # exprs(eset) ## provides the expression data
