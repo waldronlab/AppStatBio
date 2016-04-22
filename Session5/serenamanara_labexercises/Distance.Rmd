@@ -7,8 +7,8 @@ output: html_document
 
 
 ```{r}
-source("https://bioconductor.org/biocLite.R")
-biocLite()
+#source("https://bioconductor.org/biocLite.R")
+#biocLite()
 library(devtools)
 biocLite("genomicsclass/tissuesGeneExpression")
 library(tissuesGeneExpression)
