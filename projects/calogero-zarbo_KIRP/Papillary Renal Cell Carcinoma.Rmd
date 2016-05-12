@@ -6,7 +6,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache=FALSE)
 ```
 
 
@@ -24,7 +24,7 @@ First, introduce yourself to the dataset:
 1) How many genes and samples are there?
 
 2) For each gene, calculate the number of samples where it has at least one count. How many genes have at least one count in at least 10% of the samples? Present a histogram of the % of samples in which each gene has 1 or more counts.
-```{r}
+```{r, eval=FALSE}
 gene_presence <- data.frame(Gene = c(),N_Samples=c(), Percentage = c())
 for (i in 1:length(features)){
   c_sample = 0
@@ -49,16 +49,8 @@ hist(gene_presence$Percentage)
 3) Create a single boxplot showing the expression counts of 16 randomly selected genes. Do the data appear normally distributed?
 ```{r}
 set.seed(1)
-smpl <- sample(expr, 16)
-smpl <- data.frame(t(smpl))
-single_col = data.frame(Expr = c())
-
-for (i in 1:ncol(smpl)){
-  col <- data.frame(Expr = smpl[,i])
-  single_col <- rbind(single_col, col)
-  
-}
-
+smpluntrans <- sample(expr, 16)
+smpl <- data.frame(t(smpluntrans))
 boxplot(single_col)
 ```
 
@@ -66,7 +58,6 @@ boxplot(single_col)
 
 4) Create another boxplot for the same genes, after adding 1 and taking base-2 logarithm of the expression counts. Is this more normally distributed? If so, use this transformed version of the dataset for further exploratory analysis.
 ```{r}
-
 log_single_col <- log(1+single_col)
 boxplot(log_single_col)
 
@@ -277,6 +268,8 @@ hc_euc <- dist(first_expr_clean_subtypes)
 hc <- (hclust(hc_euc))
 
 pheatmap::pheatmap(t(first_expr_clean_subtypes), scale = "row", show_rownames = F, show_colnames = F, main = "Hierarchical clustering", color = palette, annotation_col = annot, annotation_colors = annot.col, cluster_cols = hc)
+
+pheatmap::pheatmap(t(first_expr_clean_subtypes), scale = "row", show_rownames = F, show_colnames = F, main = "Hierarchical clustering", color = palette, annotation_col = annot, annotation_colors = annot.col[[1]], cluster_cols = hc)
 
 
 ```

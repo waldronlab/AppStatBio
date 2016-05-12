@@ -5,14 +5,19 @@ date: "30 March 2016"
 output: html_document
 ---
 
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+library(Biobase)
+library(plyr)
+library(pheatmap)
+```
+
       
 # Question 1: 
 **How many genes and samples are there?**
 
 ```{r,message=FALSE} 
-setwd("/Users/kleontid/Desktop/Applied_Statistics/Final_project/SKCM_complete")
-library(Biobase)
-library(plyr)
+##setwd("/Users/kleontid/Desktop/Applied_Statistics/Final_project/SKCM_complete")
 eset <- readRDS("SKCM_RNAseq2_complete.rds")
 dim(eset)
 ```
@@ -92,7 +97,7 @@ We can see that sample **ABCB11** doesn't have the first quantile.
 ```{r,message=FALSE}
 
 #Data
-setwd("/Users/kleontid/Desktop/Applied_Statistics/Final_project/SKCM_complete")
+##setwd("/Users/kleontid/Desktop/Applied_Statistics/Final_project/SKCM_complete")
 eset <- readRDS("SKCM_RNAseq2_complete.rds")
 genexprs <-exprs(eset) ##provides the expression data 
 sampleInfo <- pData(eset) ##provides “phenotype” data, in this case clinical data
@@ -177,7 +182,6 @@ The results from k-means clustering are similar to the ones before.
 
 #Heatmap
 ```{r,message=FALSE}
-library(pheatmap)
 rv <- genefilter::rowVars(genexprs_log)
 idx <- order(-rv)[1:1000]
 annot <- data.frame(RNASEQ.CLUSTER_CONSENHIER=factor(subtypes$RNASEQ.CLUSTER_CONSENHIER))

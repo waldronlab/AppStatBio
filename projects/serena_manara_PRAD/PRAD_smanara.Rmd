@@ -5,13 +5,20 @@ date: "17 marzo 2016"
 output: html_document
 ---
 
+```{r, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+library(DESeq2)
+library(Biobase)
+library(pheatmap)
+library(RColorBrewer)
+```
+
 
 ```{r, message=FALSE}
 
 #setwd("C:/Users/Sere/Desktop/AppStatTrento/projects/serena_manara_PRAD")
 
 eset <- readRDS("PRAD_RNAseq2.rds")   ## eset and filename are examples
-library(Biobase)
 #exprs(eset)   ##provides the expression data
 #pData(eset)  ##provides “phenotype” data, in this case clinical data
 #sampleNames(eset) ##provides patient identifiers
@@ -156,7 +163,6 @@ Use the DESeq2 Bioconductor package to assess differential expression of each ge
 ```{r, echo=FALSE, message=FALSE}
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("DESeq2")
-library(DESeq2)
 phenotype <- pData(eset)[row.names(pData(eset)) %in% subtypes$PATIENT_ID,]
 subtypes.sort <- subtypes[order(subtypes$PATIENT_ID),]
 subtypes.sort.clean <- subtypes.sort[subtypes.sort$PATIENT_ID %in% colnames(subt.eset10), ]
@@ -195,8 +201,6 @@ Focusing on the non-permuted data, we can notice that after Bonferroni correctio
 Create a clustered heatmap of the top 1000 differentially expressed genes, ranked by p-value, with rows (genes) scaled to unit variance (row scaling is an automatic option available in most heatmap plotting functions. Create a column sidebar, for example by using the annotation_col argument of pheatmap::pheatmap().
 
 ```{r, echo=FALSE, message=FALSE}
-library(pheatmap)
-library(RColorBrewer)
 top1000 <- order(res$padj, decreasing = T)[1:1000]
 palette <- RColorBrewer::brewer.pal(12, "Paired")
 
