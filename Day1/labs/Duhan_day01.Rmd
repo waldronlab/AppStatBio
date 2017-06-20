@@ -1,0 +1,76 @@
+---
+title: "Duhan_day1"
+author: "ODT"
+date: "6/20/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+```
+
+## Download the data
+
+In this R chunk we read the data:
+
+```{r}
+library(downloader) 
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleMiceWeights.csv"
+filename <- "femaleMiceWeights.csv" 
+download(url, destfile=filename)
+```
+
+## Load the data
+
+```{r}
+library(readr)
+femaleMiceWeights <- read_csv("femaleMiceWeights.csv")
+summary(femaleMiceWeights)
+```
+
+## Question 1: Read in the file femaleMiceWeights.csv and report the body weight of the mouse in the exact name of the column containing the weights.
+
+
+```{r}
+femaleMiceWeights$Bodyweight
+```
+
+## Question 2: The [ and ] symbols can be used to extract specific rows and specific columns of the table. What is the entry in the 12th row and second column?
+
+
+```{r}
+femaleMiceWeights[12,2]
+```
+
+## Question 3: You should have learned how to use the $ character to extract a column from a table and return it as a vector. Use $ to extract the weight column and report the weight of the mouse in the 11th row.
+
+```{r}
+femaleMiceWeights$Bodyweight[11]
+
+
+```
+## Question 4: The length function returns the number of elements in a vector. How many mice are included in our dataset?
+
+```{r}
+length(femaleMiceWeights$Bodyweight)
+## this gives me the total number of observations from variables (2 in this case)
+```
+## Question 5: To create a vector with the numbers 3 to 7, we can use seq(3,7) or, because they are consecutive, 3:7. View the data and determine what rows are associated with the high fat or hf diet. Then use the mean function to compute the average weight of these mice.
+
+```{r}
+## View(femaleMiceWeights$Diet) allows me to observe the rows, namely from 13 through 24.
+mean(femaleMiceWeights$Bodyweight[13:24])
+
+## with this above code, I can take the mean of hf only
+```
+
+## Question 6: One of the functions we will be using often is sample. Read the help file for sample using ?sample. Now take a random sample of size 1 from the numbers 13 to 24 and report back the weight of the mouse represented by that row. Make sure to type set.seed(1) to ensure that everybody gets the same answer.
+
+
+```{r}
+?sample
+set.seed(1)
+sample(femaleMiceWeights$Bodyweight [13:24], 1)
+## this should be fine hopefully.
+
+```
