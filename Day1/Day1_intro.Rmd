@@ -73,26 +73,49 @@ The [source][] R Markdown is also available from Github.
 
 Normally distributed random variable with mean $\mu = 0$ / standard deviation $\sigma = 1$, and a sample of $n=100$
 
-<img src="Day1_intro_files/figure-slidy/unnamed-chunk-1-1.png" width="768" />
+```{r, echo=FALSE}
+x=rnorm(100)
+res=hist(x, main="Standard Normal Distribution\n mean 0, std. dev. 1", prob=TRUE)
+xdens = seq(min(res$breaks), max(res$breaks), by=0.01)
+lines(xdens, dnorm(xdens))
+```
 
 ## Random Variables - examples
 
 Poisson distributed random variable ($\lambda = 2$), and a sample of $n=100$.
 
-<img src="Day1_intro_files/figure-slidy/unnamed-chunk-2-1.png" width="768" />
+```{r, echo=FALSE}
+x=rpois(100, lambda=2)
+res=hist(x, main="Poisson Distribution", prob=FALSE, col="lightgrey",
+     breaks=seq(-0.5, round(max(x))+0.5, by=0.5))
+xdens = seq(min(x), max(x), by=1)
+lines(xdens, length(x) * dpois(xdens, lambda=2), lw=2)
+```
 
 ## Random Variables - examples
 
 Negative Binomially distributed random variable ($size=30, \mu=2$), and a sample of $n=100$.
 
-<img src="Day1_intro_files/figure-slidy/unnamed-chunk-3-1.png" width="768" />
+```{r, echo=FALSE}
+x=rnbinom(100, size=30, mu=2)
+res=hist(x, main="Negative Binomial Distribution", prob=FALSE, col="lightgrey",
+     breaks=seq(-0.5, round(max(x))+0.5, by=0.5))
+xdens = seq(min(x), max(x), by=1)
+lines(xdens, length(x) * dnbinom(xdens, size=30, mu=2), lw=2)
+```
 
 ## Random Variables - examples
 
 - Binomial Distribution random variable ($size=20, prob=0.25$), and a sample of $n=100$.
     - We will _only_ use for binary outcomes
     
-<img src="Day1_intro_files/figure-slidy/unnamed-chunk-4-1.png" width="768" />
+```{r, echo=FALSE}
+x=rbinom(100, size=20, prob=0.25)
+res=hist(x, main="Binomial Distribution", prob=FALSE, col="lightgrey",
+     breaks=seq(-0.5, round(max(x))+0.5, by=0.5))
+xdens = seq(min(x), max(x), by=1)
+lines(xdens, length(x) * dbinom(xdens, size=20, prob=0.25), lw=2)
+```
 
 # R - basic usage
 
@@ -116,8 +139,7 @@ browseVignettes("packagename")                | browseVignettes("dplyr")
 
 Pseudo code: 
 
-
-```r
+```{r, eval = FALSE}
 source("https://bioconductor.org/biocLite.R")
 packages <- c("packagename", "githubuser/repository", "biopackage")
 BiocInstaller::biocLite(packages)
@@ -159,415 +181,173 @@ BiocInstaller::biocLite(packages)
 - Must start with a letter or a dot not followed by a number
 - No reserve words, No spaces
 
-
-```r
+```{r}
 x <- 5
 x * 2
-```
-
-```
-## [1] 10
-```
-
-```r
 x <- x + 1
 y <- 4
 x * y
 ```
 
-```
-## [1] 24
-```
-
 ## Basic Data Types
 
 - numeric (set seed to sync random number generator):
-
-```r
+```{r}
 set.seed(1)
 rnorm(5)
 ```
-
-```
-## [1] -0.6264538  0.1836433 -0.8356286  1.5952808  0.3295078
-```
 - integer:
-
-```r
+```{r}
 1:5
-```
-
-```
-## [1] 1 2 3 4 5
-```
-
-```r
 sample( 1:5 )
-```
-
-```
-## [1] 2 1 3 4 5
 ```
 
 ## Basic Data Types (cont'd)
 
 - character:
-
-```r
+```{r}
 c("yes", "no")
 ```
-
-```
-## [1] "yes" "no"
-```
 - factor (play with this to show character/integer properties):
-
-```r
+```{r}
 factor(c("yes", "no"))
-```
-
-```
-## [1] yes no 
-## Levels: no yes
 ```
 
 ## Basic Data Types (cont'd)
 
 - ordered factor:
-
-```r
+```{r}
 factor(c("good", "very good", "poor"), 
        levels=c("poor", "good", "very good"), 
        ordered=TRUE)
 ```
-
-```
-## [1] good      very good poor     
-## Levels: poor < good < very good
-```
 - logical:
-
-```r
+```{r}
 1:5 %in% 4:5
-```
-
-```
-## [1] FALSE FALSE FALSE  TRUE  TRUE
 ```
 
 ## Basic Data Types (cont'd)
 
 - Missing Values and others - **IMPORTANT**
-
-```r
+```{r}
 c(NA, NaN, -Inf, Inf)
-```
-
-```
-## [1]   NA  NaN -Inf  Inf
 ```
 
 `class()` to find the class of a variable.
 
 ## Vectors Must Be of One Data Mode
 
-
-```r
+```{r}
 c( 1, "2", FALSE)
-```
-
-```
-## [1] "1"     "2"     "FALSE"
-```
-
-```r
 c( 1, FALSE )
-```
-
-```
-## [1] 1 0
 ```
 
 ## Selecting Vector Elements
 
 - One element
-
-```r
+```{r}
 x <- 1:4
 x[ 2 ]
 ```
-
-```
-## [1] 2
-```
 - A slice of a vector
-
-```r
+```{r}
 x <- 1:10
 x[ 4:7 ]
-```
-
-```
-## [1] 4 5 6 7
 ```
 
 ## Selecting Vector Elements (cont'd)
 
 - Multiple elements ( not contiguous )
-
-```r
+```{r}
 x <- c( "a", "b", "c", "d", "e", "f" )
 x[ c(5,3,1) ]
 ```
-
-```
-## [1] "e" "c" "a"
-```
 - Removing elements
-
-```r
+```{r}
 x[ -1 ]
-```
-
-```
-## [1] "b" "c" "d" "e" "f"
-```
-
-```r
 x[-1:-2]
-```
-
-```
-## [1] "c" "d" "e" "f"
 ```
 
 ## Selecting Vector Elements (cont'd)
 
 - Using logical vector
-
-```r
+```{r}
 x <- 1:10
 y <- x%%2 == 0
 x[y]
 ```
 
-```
-## [1]  2  4  6  8 10
-```
-
 ## 2-Dimensional Vectors are Matrices
 
-
-```r
+```{r}
 matrix( 1:20, nrow = 5, ncol = 4 )
-```
-
-```
-##      [,1] [,2] [,3] [,4]
-## [1,]    1    6   11   16
-## [2,]    2    7   12   17
-## [3,]    3    8   13   18
-## [4,]    4    9   14   19
-## [5,]    5   10   15   20
 ```
 
 ## Indexing Matrices
 
 - matrix[ r, c ]
-
-```r
+```{r}
 boring.matrix <- matrix( 1:20, nrow = 5, ncol = 4 )
 dim( boring.matrix )
-```
-
-```
-## [1] 5 4
-```
-
-```r
 boring.matrix[ ,1 ]
-```
-
-```
-## [1] 1 2 3 4 5
-```
-
-```r
 boring.matrix[ 2, 1 ]
-```
-
-```
-## [1] 2
-```
-
-```r
 boring.matrix[ 2, ]
-```
-
-```
-## [1]  2  7 12 17
 ```
 
 ## Indexing Matrices (cont'd)
 
-
-```r
+```{r}
 boring.matrix
-```
-
-```
-##      [,1] [,2] [,3] [,4]
-## [1,]    1    6   11   16
-## [2,]    2    7   12   17
-## [3,]    3    8   13   18
-## [4,]    4    9   14   19
-## [5,]    5   10   15   20
-```
-
-```r
 boring.matrix[ boring.matrix[ ,1 ] ==3,]
-```
-
-```
-## [1]  3  8 13 18
 ```
 
 ## Matrix Operations
 
 - Transpose
-
-```r
+```{r}
 boring.matrix <- matrix(1:9, nrow = 3)
 boring.matrix
-```
-
-```
-##      [,1] [,2] [,3]
-## [1,]    1    4    7
-## [2,]    2    5    8
-## [3,]    3    6    9
-```
-
-```r
 t(boring.matrix)
-```
-
-```
-##      [,1] [,2] [,3]
-## [1,]    1    2    3
-## [2,]    4    5    6
-## [3,]    7    8    9
 ```
 
 ## Matrix Operations (cont'd)
 
 - Adding (note _vectorization_)
-
-```r
+```{r}
 boring.matrix + 1
-```
-
-```
-##      [,1] [,2] [,3]
-## [1,]    2    5    8
-## [2,]    3    6    9
-## [3,]    4    7   10
-```
-
-```r
 boring.matrix + 1:3
-```
-
-```
-##      [,1] [,2] [,3]
-## [1,]    2    5    8
-## [2,]    4    7   10
-## [3,]    6    9   12
 ```
 
 ## Matrix Operations (cont'd)
 
 - Adding
-
-```r
+```{r}
 boring.matrix
-```
-
-```
-##      [,1] [,2] [,3]
-## [1,]    1    4    7
-## [2,]    2    5    8
-## [3,]    3    6    9
-```
-
-```r
 boring.matrix + boring.matrix
-```
-
-```
-##      [,1] [,2] [,3]
-## [1,]    2    8   14
-## [2,]    4   10   16
-## [3,]    6   12   18
 ```
 
 ## Matrix Operations (cont'd)
 
 - Multiplying
-
-```r
+```{r}
 boring.matrix * boring.matrix
-```
-
-```
-##      [,1] [,2] [,3]
-## [1,]    1   16   49
-## [2,]    4   25   64
-## [3,]    9   36   81
-```
-
-```r
 boring.matrix %*% boring.matrix
-```
-
-```
-##      [,1] [,2] [,3]
-## [1,]   30   66  102
-## [2,]   36   81  126
-## [3,]   42   96  150
 ```
 
 ## Naming rows and columns
 
-
-```r
+```{r}
 colnames(boring.matrix) <- c("col.1", "col.2", "col.3")
 rownames(boring.matrix) <- c("row.1", "row.2", "row.3")
 boring.matrix
-```
-
-```
-##       col.1 col.2 col.3
-## row.1     1     4     7
-## row.2     2     5     8
-## row.3     3     6     9
-```
-
-```r
 boring.matrix["row.1", ]
-```
-
-```
-## col.1 col.2 col.3 
-##     1     4     7
 ```
 
 ## Lists are Like Filing Cabinets
 
 * e.g. if we have 5 medical measurements, 10 self-reported measurements, a sex, two parent names:
 
-
-```r
+```{r}
 measurements <- c( 1.3, 1.6, 3.2, 9.8, 10.2 )
 self.reporting <- c( 13, 6, 4, 7, 6, 5, 8, 9, 7, 4 )
 sex <- FALSE
@@ -576,75 +356,30 @@ parents <- c( "Parent1.name", "Parent2.name" )
 
 ## Lists are Like Filing Cabinets (cont'd)
 
-
-```r
+```{r}
 my.person <- list( measurements, self.reporting, 
                    sex, parents)
 my.person
 ```
 
-```
-## [[1]]
-## [1]  1.3  1.6  3.2  9.8 10.2
-## 
-## [[2]]
-##  [1] 13  6  4  7  6  5  8  9  7  4
-## 
-## [[3]]
-## [1] FALSE
-## 
-## [[4]]
-## [1] "Parent1.name" "Parent2.name"
-```
-
 ## Lists are Like Filing Cabinets (cont'd)
 
 * Single bracket accessing
-
-```r
+```{r}
 my.person[1:2]
 ```
-
-```
-## [[1]]
-## [1]  1.3  1.6  3.2  9.8 10.2
-## 
-## [[2]]
-##  [1] 13  6  4  7  6  5  8  9  7  4
-```
 * Double bracket accessing
-
-```r
+```{r}
 my.person[[1]]
-```
-
-```
-## [1]  1.3  1.6  3.2  9.8 10.2
 ```
 
 ## Lists are Like Filing Cabinets (cont'd)
 
-
-```r
+```{r}
 my.person <- list( measure = measurements, 
                    parents = parents )
 my.person
-```
-
-```
-## $measure
-## [1]  1.3  1.6  3.2  9.8 10.2
-## 
-## $parents
-## [1] "Parent1.name" "Parent2.name"
-```
-
-```r
 my.person$parents
-```
-
-```
-## [1] "Parent1.name" "Parent2.name"
 ```
 
 ## The `data.frame` object
@@ -653,85 +388,40 @@ my.person$parents
   + a matrix with columns of potentially different data types, and
   + a `list` with vector elements of equal length
 
-
-```r
+```{r}
 x <- 11:16
 y <- seq(0,1,.2)
 z <- c( "one", "two", "three", "four", "five", "six" )
 a <- factor( z )
 ```
-
-```r
+```{r}
 test.dataframe <- data.frame(x,y,z,a)
 ```
  
 ## Accessing `data.frame` elements
 
-
-```r
+```{r}
 test.dataframe[[4]]
-```
-
-```
-## [1] one   two   three four  five  six  
-## Levels: five four one six three two
-```
-
-```r
 test.dataframe$parents
-```
-
-```
-## NULL
 ```
 
 ## Columns of a `data.frame` May Contain Different Data Modes
 
-
-```r
+```{r}
 class( test.dataframe[[1]] )
-```
-
-```
-## [1] "integer"
-```
-
-```r
 class( test.dataframe[[2]] )
-```
-
-```
-## [1] "numeric"
-```
-
-```r
 class( test.dataframe[[3]] )
-```
-
-```
-## [1] "factor"
 ```
 
 ## Combining Data Frames
 
 * binding columns with common row names
-
-```r
+```{r}
 mini.frame.one <- data.frame( "one" = 1:5 )
 mini.frame.two <- data.frame( "two" = 6:10 )
 ```
-
-```r
+```{r}
 cbind( mini.frame.one, mini.frame.two )
-```
-
-```
-##   one two
-## 1   1   6
-## 2   2   7
-## 3   3   8
-## 4   4   9
-## 5   5  10
 ```
 Alternatively: ```c( mini.frame.one, mini.frame.two )```
 
@@ -741,28 +431,10 @@ Alternatively: ```c( mini.frame.one, mini.frame.two )```
 
 \small
 
-
-```r
+```{r}
 test.dataframe[[1]]
-```
-
-```
-## [1] 11 12 13 14 15 16
-```
-
-```r
 test.dataframe[[1]] = 21:26
 test.dataframe
-```
-
-```
-##    x   y     z     a
-## 1 21 0.0   one   one
-## 2 22 0.2   two   two
-## 3 23 0.4 three three
-## 4 24 0.6  four  four
-## 5 25 0.8  five  five
-## 6 26 1.0   six   six
 ```
 
 ## The `DataFrame` class
@@ -811,8 +483,7 @@ test.dataframe
 6. arrange (re-order observations)
 
 ## `dplyr` example
-
-```r
+```{r, message=FALSE}
 library(nycflights13)
 library(dplyr)
 delays <- flights %>% 
@@ -823,12 +494,9 @@ delays <- flights %>%
 ```
 
 ## `dplyr` example (cont'd)
-
-```r
+```{r}
 hist(delays$delay, main="Mean hourly delay", xlab="Delay (hours)")
 ```
-
-<img src="Day1_intro_files/figure-slidy/unnamed-chunk-41-1.png" width="768" />
 
 # Lab
 
