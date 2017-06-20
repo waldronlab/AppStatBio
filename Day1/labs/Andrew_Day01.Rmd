@@ -5,7 +5,7 @@ date: "6/20/2017"
 output: html_document
 ---
 
-## Random Variables Exercises
+# Random Variables Exercises
 
 ```{r, echo = TRUE}
 library(downloader) 
@@ -33,10 +33,10 @@ abs( mean(x) - mean(rnorm(5)))
 ```
 
 4. Why are the answers from 2 and 3 different?
-A) Because we made a coding mistake.
-B) Because the average of the x is random.
-C) Because the average of the samples is a random variable.
-D) All of the above.
++ A) Because we made a coding mistake.
++ B) Because the average of the x is random.
++ C) Because the average of the samples is a random variable.
++ D) All of the above.
 
 ```{r, echo = TRUE}
 "Answer is C."
@@ -64,7 +64,8 @@ for (i in 1:10000){
 (length(which(mice.averages > (mean(x) - 1) | mice.averages > (mean(x) + 1))) / 10000) * 100
 ```
 
-7. Note that the answers to 4 and 5 barely changed. This is expected. The way we think about the random value distributions is as the distribution of the list of values obtained if we repeated the experiment an infinite number of times. On a computer, we can???t perform an infinite number of iterations so instead, for our examples, we consider 1,000 to be large enough, thus 10,000 is as well. Now if instead we change the sample size, then we change the random variable and thus its distribution.
+7. Note that the answers to 4 and 5 barely changed. This is expected. The way we think about the random value distributions is as the distribution of the list of values obtained if we repeated the experiment an infinite number of times. On a computer, we can't perform an infinite number of iterations so instead, for our examples, we consider 1,000 to be large enough, thus 10,000 is as well. Now if instead we change the sample size, then we change the random variable and thus its distribution.
+
 Set the seed at 1, then using a for-loop take a random sample of 50 mice 1,000 times. Save these averages. What percent of these 1,000 averages are more than 1 ounce away from the average of x ?
 
 ```{r, echo = TRUE}
@@ -77,10 +78,10 @@ for (i in 1:1000){
 ```
 
 8. Use a histogram to ???look??? at the distribution of averages we get with a sample size of 5 and a sample size of 50. How would you say they differ?
-A) They are actually the same.
-B) They both look roughly normal, but with a sample size of 50 the spread is smaller.
-C) They both look roughly normal, but with a sample size of 50 the spread is larger.
-D) The second distribution does not look normal at all.
++ A) They are actually the same.
++ B) They both look roughly normal, but with a sample size of 50 the spread is smaller.
++ C) They both look roughly normal, but with a sample size of 50 the spread is larger.
++ D) The second distribution does not look normal at all.
 
 ```{r, echo = TRUE}
 set.seed(1)
@@ -117,7 +118,7 @@ numbers <- rnorm(1000, mean = 23.9, sd = 0.43)
 (length(which(numbers > 23 & numbers < 25)) / 1000) * 100
 ```
 
-## dpylr exercises
+# dpylr exercises
 
 1. Read in the msleep_ggplot2.csv file with the function read.csv and use the function class to determine what type of object is returned.
 
