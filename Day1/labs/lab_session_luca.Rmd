@@ -1,0 +1,65 @@
+---
+title: "lab_session_1"
+author: "Luca"
+date: "20 giugno 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting Started Exercises
+
+```{r}
+fem_mice_weigths = read.csv('../femaleMiceWeights.csv')
+```
+
+  * Read in the file femaleMiceWeights.csv and report the body weight of the mouse in the exact name of the column containing the weights.
+
+```{r}
+fem_mice_weigths[['Bodyweight']]
+```
+
+  * The [ and ] symbols can be used to extract specific rows and specific columns of the table. What is the entry in the 12th row and second column?
+
+```{r}
+fem_mice_weigths[c(12,2),]
+```
+
+
+You should have learned how to use the $ character to extract a column from a table and return it as a vector. Use $ to extract the weight column and report the weight of the mouse in the 11th row.
+
+```{r}
+fem_mice_weigths$Bodyweight[11]
+```
+
+The length function returns the number of elements in a vector. How many mice are included in our dataset?
+
+```{r}
+dim(fem_mice_weigths)[1]
+```
+
+To create a vector with the numbers 3 to 7, we can use seq(3,7) or, because they are consecutive, 3:7. View the data and determine what rows are associated with the high fat or hf diet. Then use the mean function to compute the average weight of these mice.
+
+```{r}
+fem_mice_weigths[3:7,]
+
+hf_diet = fem_mice_weigths$Diet == 'hf'
+avg_weight.hf_diet = mean(fem_mice_weigths[hf_diet,]$Bodyweight)
+avg_weight.hf_diet
+```
+
+One of the functions we will be using often is sample. Read the help file for sample using ?sample. Now take a random sample of size 1 from the numbers 13 to 24 and report back the weight of the mouse represented by that row. Make sure to type set.seed(1) to ensure that everybody gets the same answer.
+
+```{r}
+set.seed(1)
+x = sample(13:24, 1)
+
+fem_mice_weigths[x,]
+```
+
+
+## Random Variables Exercises
+
+
