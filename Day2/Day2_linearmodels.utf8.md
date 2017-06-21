@@ -48,39 +48,54 @@ Textbook sources:
 - Does the difference between pulling and pushing friction coefficients vary by leg pair?
 </div>
 
-```{r, echo=FALSE}
-url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/spider_wolff_gorb_2013.csv"
-filename <- "spider_wolff_gorb_2013.csv"
-library(downloader)
-if (!file.exists(filename))
-    download(url, filename)
-spider <- read.csv(filename, skip=1)
-```
+
 
 ## Example: friction of spider legs
 
-```{r}
+
+```r
 table(spider$leg,spider$type)
+```
+
+```
+##     
+##      pull push
+##   L1   34   34
+##   L2   15   15
+##   L3   52   52
+##   L4   40   40
+```
+
+```r
 summary(spider)
 ```
 
+```
+##  leg        type        friction     
+##  L1: 68   pull:141   Min.   :0.1700  
+##  L2: 30   push:141   1st Qu.:0.3900  
+##  L3:104              Median :0.7600  
+##  L4: 80              Mean   :0.8217  
+##                      3rd Qu.:1.2400  
+##                      Max.   :1.8400
+```
+
 ## Example: friction of spider legs
 
-```{r, fig.align='center'}
+
+```r
 boxplot(spider$friction ~ spider$type * spider$leg,
         col=c("grey90","grey40"), las=2,
         main="Friction coefficients of different leg pairs")
 ```
 
+<img src="Day2_linearmodels_files/figure-slidy/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;" />
+
 ## Example: friction of spider legs
 
 <div class="columns-2">
 
-```{r, fig.align='center', echo=FALSE}
-boxplot(spider$friction ~ spider$type * spider$leg,
-        col=c("grey90","grey40"), las=2,
-        main="Friction coefficients of \n different leg pairs")
-```
+<img src="Day2_linearmodels_files/figure-slidy/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;" />
 
 Notes:
 
@@ -187,20 +202,51 @@ Model formula for simple linear regression:
 
 Friction coefficient for leg type of first leg pair:
 
-```{r, results='show'}
+
+```r
 spider.sub <- spider[spider$leg=="L1", ]
 fit <- lm(friction ~ type, data=spider.sub)
 summary(fit)
+```
+
+```
+## 
+## Call:
+## lm(formula = friction ~ type, data = spider.sub)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.33147 -0.10735 -0.04941 -0.00147  0.76853 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  0.92147    0.03827  24.078  < 2e-16 ***
+## typepush    -0.51412    0.05412  -9.499  5.7e-14 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.2232 on 66 degrees of freedom
+## Multiple R-squared:  0.5776,	Adjusted R-squared:  0.5711 
+## F-statistic: 90.23 on 1 and 66 DF,  p-value: 5.698e-14
 ```
 
 ## Regression on spider leg type
 
 Regression coefficients for `friction ~ type` for first set of spider legs:
 
-```{r, results="asis", echo=TRUE}
+
+```r
 fit.table <- xtable::xtable(fit, label=NULL)
 print(fit.table, type="html")
 ```
+
+<!-- html table generated in R 3.4.0 by xtable 1.8-2 package -->
+<!-- Wed Jun 21 09:51:01 2017 -->
+<table border=1>
+<tr> <th>  </th> <th> Estimate </th> <th> Std. Error </th> <th> t value </th> <th> Pr(&gt;|t|) </th>  </tr>
+  <tr> <td align="right"> (Intercept) </td> <td align="right"> 0.9215 </td> <td align="right"> 0.0383 </td> <td align="right"> 24.08 </td> <td align="right"> 0.0000 </td> </tr>
+  <tr> <td align="right"> typepush </td> <td align="right"> -0.5141 </td> <td align="right"> 0.0541 </td> <td align="right"> -9.50 </td> <td align="right"> 0.0000 </td> </tr>
+   </table>
 
 <p></p>
 * How to interpret this table?
@@ -210,34 +256,34 @@ print(fit.table, type="html")
 
 ## Interpretation of spider leg type coefficients
 
-```{r spider_main_coef, fig.cap="Diagram of the estimated coefficients in the linear model. The green arrow indicates the Intercept term, which goes from zero to the mean of the reference group (here the 'pull' samples). The orange arrow indicates the difference between the push group and the pull group, which is negative in this example. The circles show the individual samples, jittered horizontally to avoid overplotting.",echo=FALSE}
-set.seed(1) #same jitter in stripchart
-stripchart(split(spider.sub$friction, spider.sub$type), 
-           vertical=TRUE, pch=1, method="jitter", las=2, xlim=c(0,3), ylim=c(0,2))
-coefs <- coef(fit)
-a <- -0.25
-lgth <- .1
-library(RColorBrewer)
-cols <- brewer.pal(3,"Dark2")
-abline(h=0)
-arrows(1+a,0,1+a,coefs[1],lwd=3,col=cols[1],length=lgth)
-abline(h=coefs[1],col=cols[1])
-arrows(2+a,coefs[1],2+a,coefs[1]+coefs[2],lwd=3,col=cols[2],length=lgth)
-abline(h=coefs[1]+coefs[2],col=cols[2])
-legend("right",names(coefs),fill=cols,cex=.75,bg="white")
-```
+<div class="figure">
+<img src="Day2_linearmodels_files/figure-slidy/spider_main_coef-1.png" alt="Diagram of the estimated coefficients in the linear model. The green arrow indicates the Intercept term, which goes from zero to the mean of the reference group (here the 'pull' samples). The orange arrow indicates the difference between the push group and the pull group, which is negative in this example. The circles show the individual samples, jittered horizontally to avoid overplotting." width="768" />
+<p class="caption">Diagram of the estimated coefficients in the linear model. The green arrow indicates the Intercept term, which goes from zero to the mean of the reference group (here the 'pull' samples). The orange arrow indicates the difference between the push group and the pull group, which is negative in this example. The circles show the individual samples, jittered horizontally to avoid overplotting.</p>
+</div>
 
 ## regression on spider leg **position**
 
 Remember there are positions 1-4
-```{r}
+
+```r
 fit <- lm(friction ~ leg, data=spider)
 ```
 
-```{r, results="asis", echo=TRUE, message=FALSE}
+
+```r
 fit.table <- xtable::xtable(fit, label=NULL)
 print(fit.table, type="html")
 ```
+
+<!-- html table generated in R 3.4.0 by xtable 1.8-2 package -->
+<!-- Wed Jun 21 09:51:02 2017 -->
+<table border=1>
+<tr> <th>  </th> <th> Estimate </th> <th> Std. Error </th> <th> t value </th> <th> Pr(&gt;|t|) </th>  </tr>
+  <tr> <td align="right"> (Intercept) </td> <td align="right"> 0.6644 </td> <td align="right"> 0.0538 </td> <td align="right"> 12.34 </td> <td align="right"> 0.0000 </td> </tr>
+  <tr> <td align="right"> legL2 </td> <td align="right"> 0.1719 </td> <td align="right"> 0.0973 </td> <td align="right"> 1.77 </td> <td align="right"> 0.0784 </td> </tr>
+  <tr> <td align="right"> legL3 </td> <td align="right"> 0.1605 </td> <td align="right"> 0.0693 </td> <td align="right"> 2.32 </td> <td align="right"> 0.0212 </td> </tr>
+  <tr> <td align="right"> legL4 </td> <td align="right"> 0.2813 </td> <td align="right"> 0.0732 </td> <td align="right"> 3.84 </td> <td align="right"> 0.0002 </td> </tr>
+   </table>
 
 - Interpretation of the dummy variables legL2, legL3, legL4 ?
 
@@ -254,14 +300,27 @@ Note that "+" does not have its usual meaning, which would be achieved by:
 ## Regression on spider leg **type** and **position**
 
 Remember there are positions 1-4
-```{r}
+
+```r
 fit <- lm(friction ~ type + leg, data=spider)
 ```
 
-```{r, results="asis", echo=TRUE, message=FALSE}
+
+```r
 fit.table <- xtable::xtable(fit, label=NULL)
 print(fit.table, type="html")
 ```
+
+<!-- html table generated in R 3.4.0 by xtable 1.8-2 package -->
+<!-- Wed Jun 21 09:51:02 2017 -->
+<table border=1>
+<tr> <th>  </th> <th> Estimate </th> <th> Std. Error </th> <th> t value </th> <th> Pr(&gt;|t|) </th>  </tr>
+  <tr> <td align="right"> (Intercept) </td> <td align="right"> 1.0539 </td> <td align="right"> 0.0282 </td> <td align="right"> 37.43 </td> <td align="right"> 0.0000 </td> </tr>
+  <tr> <td align="right"> typepush </td> <td align="right"> -0.7790 </td> <td align="right"> 0.0248 </td> <td align="right"> -31.38 </td> <td align="right"> 0.0000 </td> </tr>
+  <tr> <td align="right"> legL2 </td> <td align="right"> 0.1719 </td> <td align="right"> 0.0457 </td> <td align="right"> 3.76 </td> <td align="right"> 0.0002 </td> </tr>
+  <tr> <td align="right"> legL3 </td> <td align="right"> 0.1605 </td> <td align="right"> 0.0325 </td> <td align="right"> 4.94 </td> <td align="right"> 0.0000 </td> </tr>
+  <tr> <td align="right"> legL4 </td> <td align="right"> 0.2813 </td> <td align="right"> 0.0344 </td> <td align="right"> 8.18 </td> <td align="right"> 0.0000 </td> </tr>
+   </table>
 
 * this model still doesn't represent how the friction differences between different leg positions are modified by whether it is pulling or pushing
 
@@ -358,46 +417,145 @@ $$
 * there are multiple possible and reasonable design matrices for a given study design
 * the model formula encodes a default model matrix, e.g.:
 
-```{r}
+
+```r
 group <- factor( c(1, 1, 2, 2) )
 model.matrix(~ group)
+```
+
+```
+##   (Intercept) group2
+## 1           1      0
+## 2           1      0
+## 3           1      1
+## 4           1      1
+## attr(,"assign")
+## [1] 0 1
+## attr(,"contrasts")
+## attr(,"contrasts")$group
+## [1] "contr.treatment"
 ```
 
 ## Choice of design matrix
 
 What if we forgot to code group as a factor?
-```{r}
+
+```r
 group <- c(1, 1, 2, 2)
 model.matrix(~ group)
 ```
 
+```
+##   (Intercept) group
+## 1           1     1
+## 2           1     1
+## 3           1     2
+## 4           1     2
+## attr(,"assign")
+## [1] 0 1
+```
+
 ## More groups, still one variable
 
-```{r}
+
+```r
 group <- factor(c(1,1,2,2,3,3))
 model.matrix(~ group)
 ```
 
+```
+##   (Intercept) group2 group3
+## 1           1      0      0
+## 2           1      0      0
+## 3           1      1      0
+## 4           1      1      0
+## 5           1      0      1
+## 6           1      0      1
+## attr(,"assign")
+## [1] 0 1 1
+## attr(,"contrasts")
+## attr(,"contrasts")$group
+## [1] "contr.treatment"
+```
+
 ## Changing the baseline group
 
-```{r}
+
+```r
 group <- factor(c(1,1,2,2,3,3))
 group <- relevel(x=group, ref=3)
 model.matrix(~ group)
 ```
 
+```
+##   (Intercept) group1 group2
+## 1           1      1      0
+## 2           1      1      0
+## 3           1      0      1
+## 4           1      0      1
+## 5           1      0      0
+## 6           1      0      0
+## attr(,"assign")
+## [1] 0 1 1
+## attr(,"contrasts")
+## attr(,"contrasts")$group
+## [1] "contr.treatment"
+```
+
 ## More than one variable
 
-```{r}
+
+```r
 diet <- factor(c(1,1,1,1,2,2,2,2))
 sex <- factor(c("f","f","m","m","f","f","m","m"))
 model.matrix(~ diet + sex)
 ```
 
+```
+##   (Intercept) diet2 sexm
+## 1           1     0    0
+## 2           1     0    0
+## 3           1     0    1
+## 4           1     0    1
+## 5           1     1    0
+## 6           1     1    0
+## 7           1     1    1
+## 8           1     1    1
+## attr(,"assign")
+## [1] 0 1 2
+## attr(,"contrasts")
+## attr(,"contrasts")$diet
+## [1] "contr.treatment"
+## 
+## attr(,"contrasts")$sex
+## [1] "contr.treatment"
+```
+
 ## With an interaction term
 
-```{r}
+
+```r
 model.matrix(~ diet + sex + diet:sex)
+```
+
+```
+##   (Intercept) diet2 sexm diet2:sexm
+## 1           1     0    0          0
+## 2           1     0    0          0
+## 3           1     0    1          0
+## 4           1     0    1          0
+## 5           1     1    0          0
+## 6           1     1    0          0
+## 7           1     1    1          1
+## 8           1     1    1          1
+## attr(,"assign")
+## [1] 0 1 2 3
+## attr(,"contrasts")
+## attr(,"contrasts")$diet
+## [1] "contr.treatment"
+## 
+## attr(,"contrasts")$sex
+## [1] "contr.treatment"
 ```
 
 ## Summary: applications of model matrices
@@ -515,19 +673,7 @@ $$
 
 `dbinom()` Negative Binomial Distribution has two parameters: # of trials n, and probability of success p
 
-```{r, echo=FALSE}
-plot(x=0:40, y=dnbinom(0:40, size=10, prob=0.5), 
-     type="b", lwd=2, ylim=c(0, 0.15),
-     xlab="Counts (k)", ylab="Probability density")
-lines(x=0:40, y=dnbinom(0:40, size=20, prob=0.5), 
-      type="b", lwd=2, lty=2, pch=2)
-lines(x=0:40, y=dnbinom(0:40, size=10, prob=0.3),
-      type="b", lwd=2, lty=3, pch=3)
-lines(x=0:40, y=dpois(0:40, lambda=9), col="red")
-lines(x=0:40, y=dpois(0:40, lambda=20), col="red")
-legend("topright", lwd=c(2,2,2,1), lty=c(1:3,1), pch=c(1:3,-1), col=c(rep("black", 3), "red"),
-       legend=c("n=10, p=0.5", "n=20, p=0.5", "n=10, p=0.3", "Poisson"))
-```
+<img src="Day2_linearmodels_files/figure-slidy/unnamed-chunk-17-1.png" width="768" />
 
 ## Additive vs. multiplicative models
 
@@ -565,7 +711,8 @@ legend("topright", lwd=c(2,2,2,1), lty=c(1:3,1), pch=c(1:3,-1), col=c(rep("black
     * correction for the smallest p-value is the same as the Bonferroni correction
     * correction for larger p-values becomes less stringent
 
-```{r, eval=FALSE}
+
+```r
 p.adjust(p, method = p.adjust.methods)
 ```
 
