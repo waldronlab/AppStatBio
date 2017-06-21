@@ -22,7 +22,7 @@ class(tlp)
 Now use the filter function to select only the primates. How many animals in the table are primates? Hint: the nrow function gives you the number of rows of a data frame or matrix.
 
 ```{r}
-onlyPrimates <- filter(tlp,order=='Primates')
+onlyPrimates <- filter(tlp, order=='Primates')
 nrow(onlyPrimates)
 ```
 
@@ -35,14 +35,20 @@ class(onlyPrimates)
 Now use the select function to extract the sleep (total) for the primates. What class is this object? Hint:  to pipe the results of the filter function to select.
 
 ```{r}
-sleepPrimates <- select(filter(tlp,order=='Primates'),'sleep_total')
+filter(tlp,order=='Primates') %>%
+    select(sleep_total) -> sleepPrimates
+select(filter(tlp,order=='Primates'), sleep_total) #equivalent
 class(sleepPrimates)
 ```
 
 Now we want to calculate the average amount of sleep for primates (the average of the numbers computed above). One challenge is that the mean function requires a vector so, if we simply apply it to the output above, we get an error. Look at the help file for unlist and use it to compute the desired average.
 
 ```{r}
-mean(unlist(sleepPrimates))
+filter(tlp,order=='Primates') %>%
+    select(sleep_total) %>%
+    unlist %>%
+    mean
+mean(unlist(sleepPrimates)) #equivalent
 ```
 
 For the last exercise, we could also use the dplyr summarize function. We have not i#ntroduced this function, but you can read the help file and repeat exercise 5, this time using just filter and summarize to get the answer.
@@ -50,5 +56,5 @@ For the last exercise, we could also use the dplyr summarize function. We have n
 ```{r}
 tlp %>%
   filter(order=='Primates') %>%
-  summarise(average_total_sleep=mean(sleep_total))
+    summarise(., mean(sleep_total))
 ```

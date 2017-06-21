@@ -109,6 +109,7 @@ The following are examples of linear models:
 
 1. $Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$ (simple linear regression)
 2. $Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i$ (quadratic regression)
+3. $Y_i = \beta_0 + \beta_1 x_i + \beta_2 \times 2^{x_i} + \varepsilon_i$ (2^{x_i} is a new transformed variable)
 
 ## Multiple linear regression model
 
@@ -593,7 +594,7 @@ p.adjust(p, method = p.adjust.methods)
 ## Lab
 
 * http://genomicsclass.github.io/book/pages/expressing_design_formula_exercises.html
-* http://genomicsclass.github.io/book/pages/interactions_and_contrasts_exercises.html (skip question 3)
+* http://genomicsclass.github.io/book/pages/interactions_and_contrasts_exercises.html (skip questions 3 and 5)
 
 ## Links
 

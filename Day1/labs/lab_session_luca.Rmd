@@ -12,7 +12,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Getting Started Exercises
 
 ```{r}
-fem_mice_weigths = read.csv('../femaleMiceWeights.csv')
+library(downloader) 
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleMiceWeights.csv"
+filename <- "femaleMiceWeights.csv" 
+download(url, destfile=filename)
+```
+
+```{r}
+fem_mice_weigths = read.csv('femaleMiceWeights.csv')
 ```
 
   * Read in the file femaleMiceWeights.csv and report the body weight of the mouse in the exact name of the column containing the weights.
@@ -24,7 +31,7 @@ fem_mice_weigths[['Bodyweight']]
   * The [ and ] symbols can be used to extract specific rows and specific columns of the table. What is the entry in the 12th row and second column?
 
 ```{r}
-fem_mice_weigths[c(12,2),]
+fem_mice_weigths[12, 2]
 ```
 
   * You should have learned how to use the $ character to extract a column from a table and return it as a vector. Use $ to extract the weight column and report the weight of the mouse in the 11th row.
@@ -37,6 +44,8 @@ fem_mice_weigths$Bodyweight[11]
 
 ```{r}
 dim(fem_mice_weigths)[1]
+nrow(fem_mice_weigths)
+length(fem_mice_weigths$Bodyweight)
 ```
 
   * To create a vector with the numbers 3 to 7, we can use seq(3,7) or, because they are consecutive, 3:7. View the data and determine what rows are associated with the high fat or hf diet. Then use the mean function to compute the average weight of these mice.
@@ -45,7 +54,7 @@ dim(fem_mice_weigths)[1]
 fem_mice_weigths[3:7,]
 
 hf_diet = fem_mice_weigths$Diet == 'hf'
-avg_weight.hf_diet = mean(fem_mice_weigths[hf_diet,]$Bodyweight)
+avg_weight.hf_diet = mean(fem_mice_weigths[hf_diet, ]$Bodyweight)
 avg_weight.hf_diet
 ```
 
