@@ -17,8 +17,6 @@ output:
 * Generalized Linear Models
     + Linear, logistic, log-Linear links
     + Poisson, Negative Binomial error distributions
-    + Zero inflation
-* Multiple testing
 
 Textbook sources:
 
@@ -538,37 +536,6 @@ legend("topright", lwd=c(2,2,2,1), lty=c(1:3,1), pch=c(1:3,-1), col=c(rep("black
 * Logistic and log-linear models are _multiplicative_:
     + If $x_1=1$ and $x_2=1$, this adds 3.0 to $log(\frac{P}{1-P})$
     + Odds-ratio $\frac{P}{1-P}$ increases 20-fold: $exp(1.5+1.5)$ or $exp(1.5) * exp(1.5)$
-
-
-# Inference in high dimensions
-
-## Inference in high dimensions
-
-* Conceptually similar to what we have already done
-    * $Y_i$ expression of a gene, etc
-* Just repeated many times, e.g.:
-    * is the mean expression of a gene different between two groups (t-test)
-    * is the mean expression of a gene different between any of several groups (1-way ANOVA)
-    * do this simple analysis thousands of times
-    * *note*: for small sample sizes, some Bayesian improvements can be made (i.e. LIMMA package)
-* It is in prediction and machine learning where $Y$ is a label like patient outcome, and we can have high-dimensional predictors
-
-## Multiple testing
-
-* When testing thousands of true null hypotheses with $\alpha = 0.05$, you expect a 5\% type I error rate
-* What p-values are even smaller than you expect by chance from multiple testing?
-* Two mainstream approaches for controlling type I error rate:
-
-1. Family-wise error rate (*e.g.*, Bonferroni correction). 
-    * Controlling FWER at 0.05 ensures that the probably of _any_ type I errors is < 0.05.
-2. False Discovery Rate (*e.g.*, Benjamini-Hochberg correction)
-    * Controlling FDR at 0.05 ensures that fraction of type I errors is < 0.05.
-    * correction for the smallest p-value is the same as the Bonferroni correction
-    * correction for larger p-values becomes less stringent
-
-```{r, eval=FALSE}
-p.adjust(p, method = p.adjust.methods)
-```
 
 ## Summary
 
