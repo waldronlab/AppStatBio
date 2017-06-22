@@ -111,12 +111,12 @@ sum(sample_deviations>1) / times * 100
 times = 10000
 
 set.seed(1)
-sample_deviations = numeric(times)
+sample_deviations_5 = numeric(times)
 for (i in 1:times){
   s = sample(seq_along(x),5)
-  sample_deviations[i] = abs(mean(x[s]) - avg)
+  sample_deviations_5[i] = abs(mean(x[s]) - avg)
 }
-sum(sample_deviations>1)  / times * 100
+sum(sample_deviations_5>1)  / times * 100
 ```
 
 7. Note that the answers to 4 and 5 barely changed. This is expected. The way we think about the random value distributions is as the distribution of the list of values obtained if we repeated the experiment an infinite number of times. On a computer, we can’t perform an infinite number of iterations so instead, for our examples, we consider 1,000 to be large enough, thus 10,000 is as well. Now if instead we change the sample size, then we change the random variable and thus its distribution.
@@ -142,6 +142,11 @@ sum(sample_deviations>1)  / times * 100
 + C) They both look roughly normal, but with a sample size of 50 the spread is larger.
 + D) The second distribution does not look normal at all.
 For the last set of averages, the ones obtained from a sample size of 50, what percent are between 23 and 25?
+
+```{r}
+hist(sample_deviations)
+hist(sample_deviations_5)
+```
 
 10. Now ask the same question of a normal distribution with average 23.9 and standard deviation 0.43.
 
