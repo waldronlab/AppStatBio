@@ -23,13 +23,13 @@ mean(x)
 2. After setting the seed at 1, set.seed(1) take a random sample of size 5. What is the absolute value (use abs) of the difference between the average of the sample and the average of all the values?
 ```{r, echo = TRUE}
 set.seed(1)
-abs( mean(x) - mean(rnorm(5)))
+abs( mean(x) - mean(sample(x, 5)))
 ```
 
 3. After setting the seed at 5, set.seed(5) take a random sample of size 5. What is the absolute value of the difference between the average of the sample and the average of all the values?
 ```{r, echo = TRUE}
 set.seed(5)
-abs( mean(x) - mean(rnorm(5)))
+abs( mean(x) - mean(sample(x, 5)))
 ```
 
 4. Why are the answers from 2 and 3 different?
@@ -46,22 +46,22 @@ abs( mean(x) - mean(rnorm(5)))
 
 ```{r, echo = TRUE}
 set.seed(1)
-mice.averages <- rep(NA, 1000)
+mice.averages <- numeric(1000)
 for (i in 1:1000){
   mice.averages[i] <- mean(sample(x, size = 5))
 }
-(length(which(mice.averages > (mean(x) - 1) | mice.averages > (mean(x) + 1))) / 1000) * 100
+sum(abs(mice.averages - mean(x)) > 1) / 10
 ```
 
 6. We are now going to increase the number of times we redo the sample from 1,000 to 10,000. Set the seed at 1, then using a for-loop take a random sample of 5 mice 10,000 times. Save these averages. What percent of these 10,000 averages are more than 1 ounce away from the average of x ?
 
 ```{r, echo = TRUE}
 set.seed(1)
-mice.averages <- rep(NA, 10000)
+mice.averages <- numeric(10000)
 for (i in 1:10000){
   mice.averages[i] <- mean(sample(x, size = 5))
 }
-(length(which(mice.averages > (mean(x) - 1) | mice.averages > (mean(x) + 1))) / 10000) * 100
+sum(abs(mice.averages - mean(x)) > 1) / 100
 ```
 
 7. Note that the answers to 4 and 5 barely changed. This is expected. The way we think about the random value distributions is as the distribution of the list of values obtained if we repeated the experiment an infinite number of times. On a computer, we can't perform an infinite number of iterations so instead, for our examples, we consider 1,000 to be large enough, thus 10,000 is as well. Now if instead we change the sample size, then we change the random variable and thus its distribution.
@@ -70,11 +70,11 @@ Set the seed at 1, then using a for-loop take a random sample of 50 mice 1,000 t
 
 ```{r, echo = TRUE}
 set.seed(1)
-mice.averages <- rep(NA, 1000)
+mice.averages50 <- numeric(1000)
 for (i in 1:1000){
-  mice.averages[i] <- mean(sample(x, size = 50))
+  mice.averages50[i] <- mean(sample(x, size = 50))
 }
-(length(which(mice.averages > (mean(x) - 1) | mice.averages > (mean(x) + 1))) / 1000) * 100
+sum(abs(mice.averages50 - mean(x)) > 1) / 10
 ```
 
 8. Use a histogram to "look" at the distribution of averages we get with a sample size of 5 and a sample size of 50. How would you say they differ?
@@ -84,22 +84,12 @@ for (i in 1:1000){
 + D) The second distribution does not look normal at all.
 
 ```{r, echo = TRUE}
-set.seed(1)
-mice.averages.5 <- rep(NA, 1000)
-for (i in 1:1000){
-  mice.averages.5[i] <- mean(sample(x, size = 5))
-}
-set.seed(1)
-mice.averages.50 <- rep(NA, 1000)
-for (i in 1:1000){
-  mice.averages.50[i] <- mean(sample(x, size = 50))
-}
 par(mfrow=c(1,2))
-hist(mice.averages.5)
-hist(mice.averages.50)
+hist(mice.averages)
+hist(mice.averages50)
+```
 
 "Answer is (C) They both look roughly normal, but with a sample size of 50 the spread is larger. "
-```
 
 9. For the last set of averages, the ones obtained from a sample size of 50, what percent are between 23 and 25?
 

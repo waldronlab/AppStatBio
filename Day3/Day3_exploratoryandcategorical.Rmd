@@ -1,0 +1,441 @@
+
+---
+title: "Applied Statistics for High-throughput Biology: Day 3"
+author: "Levi Waldron"
+date: "June 22, 2017"
+output:
+  slidy_presentation: default
+---
+
+## Day 3 outline
+
+- Hypothesis testing for categorical variables
+    - Fisher's Exact Test and Chi-square Test
+
+- Inference in high dimensions: multiple testing
+
+- Exploratory data analysis
+
+- Chapter 1 - Inference
+- Chapter 2 - Exploratory Data Analysis
+- Chapter 5 - Inference for High Dimensional Data
+    + Basic exploratory data analysis
+
+
+# Hypothesis testing for categorical variables
+
+## Hypothesis testing for categorical variables
+
+- Hypothesis testing and confidence intervals for one or two continuous variables: 
+    - *Z-test, t-test, correlation*
+
+- Two binary variables:
+    - Fisher's Exact Test
+    - Pearson's Chi-square Test
+
+## Lady Tasting Tea
+
+- The Lady in question claimed to be able to tell whether the tea or the milk was added first to a cup
+- Fisher proposed to give her eight cups, four of each variety, in random order
+    - the Lady is **fully informed** of the experimental method
+    - $H_0$: the Lady has no ability to tell which was added first
+
+<center>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Nice_Cup_of_Tea.jpg/330px-Nice_Cup_of_Tea.jpg" alt="Lady tasting tea" align="middle" style="height: 200px;">
+</center>
+
+Source: https://en.wikipedia.org/wiki/Lady_tasting_tea
+
+## Fisher's Exact Test
+
+p-value is the probability of the observed number of successes, or more, under $H_0$
+
+<table>
+<caption>Tea-Tasting Distribution</caption>
+<tr>
+<th scope="col">Success count</th>
+<th scope="col">Permutations of selection</th>
+<th scope="col">Number of permutations</th>
+</tr>
+<tr>
+<td>0</td>
+<td>oooo</td>
+<td>1 × 1 = 1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>ooox, ooxo, oxoo, xooo</td>
+<td>4 × 4 = 16</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ooxx, oxox, oxxo, xoxo, xxoo, xoox</td>
+<td>6 × 6 = 36</td>
+</tr>
+<tr>
+<td>3</td>
+<td>oxxx, xoxx, xxox, xxxo</td>
+<td>4 × 4 = 16</td>
+</tr>
+<tr>
+<td>4</td>
+<td>xxxx</td>
+<td>1 × 1 = 1</td>
+</tr>
+<tr>
+<th colspan="2" scope="row">Total</th>
+<td>70</td>
+</tr>
+</table>
+
+What do you notice about all these combinations?
+
+## Notes on Fisher's Exact Test
+
+- Can also be applied to rxc tables
+- Remember that the margins of the table are *fixed by design*
+- Also referred to as the Hypergeometric Test
+- Exact p-values are difficult (and unnecessary) for large samples
+    - `fisher.test(x, y = NULL, etc, simulate.p.value = FALSE)`
+
+## Notes on Fisher's Exact Test (cont'd)
+
+- Has been applied (**with peril!**) to gene set analysis, e.g.:
+    - 10 of my top 100 genes are annotated with the cytokinesis GO term
+    - 465 of 21,000 human genes are annotated with the cytokinesis GO term
+    - Are my top 100 genes enriched for cytokinesis process?
+- Problems with this analysis:
+    - Main problem: top-n genes tend to be correlated, so their selections are not independent trials
+    - Secondary: does not match design for $H_0$
+- Alternative: permutation test repeating all steps
+
+## Chi-squared test
+
+- Test of independence for rxc table (two categorical variables)
+- Does not assume the margins are fixed by design
+    - i.e., the number of cups of tea with milk poured first can be random, and the Lady doesn't know how many
+    - more common in practice
+    - classic genomics example is GWAS
+- $H_0$: the two variables are independent
+- $H_A$: there is an association between the variables
+
+## Application to GWAS
+
+* Interested in association between disease and some potential causative factor
+* In a case-control study, the numbers of cases and controls are fixed, but the other variable is not
+* In a prospective or longitudinal cohort study, neither the number of cases or the other variable are fixed
+
+```{r, echo=TRUE}
+disease=factor(c(rep(0,180),rep(1,20),rep(0,40),rep(1,10)),
+               labels=c("control","cases"))
+genotype=factor(c(rep("AA/Aa",204),rep("aa",46)),
+                levels=c("AA/Aa","aa"))
+dat <- data.frame(disease, genotype)
+dat <- dat[sample(nrow(dat)),] #shuffle them up 
+summary(dat)
+```
+
+## Application to GWAS (cont'd)
+
+```{r}
+table(disease, genotype)
+chisq.test(disease, genotype)
+chisq.test(disease, genotype, simulate.p.value = TRUE)
+```
+
+## Application to GWAS (cont'd)
+
+Note that the result says nothing about *how* the departure from independence occurs
+
+```{r}
+library(epitools)
+epitools::oddsratio(genotype, disease, method="wald")$measure
+```
+
+## Note on factor reference levels
+
+Use the `relevel()` function if you want to change the reference level of a factor:
+```{r}
+epitools::oddsratio(relevel(genotype, "aa"), disease)$measure
+```
+
+(the default is whichever level is first alphabetically!)
+
+## Summary - two categorical variables
+
+- Choice between Fisher's Exact Test and Chi-square test is determined by experimental design
+- If any counts in the table are less than 5, can use `simulate.p.value=TRUE` to get a more accurate p-value from the chi-square test
+- Both assume independent observations (important!!)
+- In a GWAS, correction for multiple testing is required
+- Can also use logistic regression for two categorical variables
+
+# Inference in high dimensions
+
+## Inference in high dimensions
+
+* Conceptually similar to what we have already done
+    * $Y_i$ expression of a gene, etc
+* Just repeated many times, e.g.:
+    * is the mean expression of a gene different between two groups? (t-test, linear model)
+    * is a gene variant associated with disease? (chi-square test, logistic regression)
+    * do this simple analysis thousands of times
+    * *note*: for small sample sizes, some Bayesian improvements can be made (i.e. LIMMA, DESeq2, EdgeR)
+
+## Multiple testing
+
+* When testing thousands of true null hypotheses with $\alpha = 0.05$, you expect a 5\% type I error rate
+* What p-values are even smaller than you expect by chance from multiple testing?
+* Two mainstream approaches for controlling type I error rate:
+
+1. Family-wise error rate (*e.g.*, Bonferroni correction). 
+    * Controlling FWER at 0.05 ensures that the probably of _any_ type I errors is < 0.05.
+2. False Discovery Rate (*e.g.*, Benjamini-Hochberg correction)
+    * Controlling FDR at 0.05 ensures that fraction of type I errors is < 0.05.
+    * correction for the smallest p-value is the same as the Bonferroni correction
+    * correction for larger p-values becomes less stringent
+
+```{r, eval=FALSE}
+p.adjust(p, method = p.adjust.methods)
+```
+
+## Visualizing False Discovery Rate
+
+![](images/FDR_histogram.png)
+
+Benjamini and Hochberg: one visualization
+
+# Exploratory data analysis
+
+## Introduction
+
+> “The greatest value of a picture is when it forces us to notice what we never expected to see.” - John W. Tukey
+
+- Discover biases, systematic errors and unexpected variability in data
+- Graphical approach to detecting these issues
+- Represents a first step in data analysis and guides hypothesis testing
+- Opportunities for discovery in the outliers
+
+## Quantile Quantile Plots
+
+- Quantiles divide a distribution into equally sized bins
+- Division into 100 bins gives percentiles
+- Quantiles of a theoretical distribution are plotted against an experimental distribution
+    - alternatively, quantiles of two experimental distributions
+- Given a perfect fit, $x=y$
+- Useful in determining data distribution (normal, t, etc.)
+
+## Quantile Quantile Plots
+
+```{r echo=FALSE, fig.width=8}
+suppressPackageStartupMessages(library(UsingR))
+suppressPackageStartupMessages(library(rafalib))
+# height qq plot
+x <- father.son$fheight
+ps <- (seq(0,99) + 0.5 ) / 100
+qs <- quantile(x, ps)
+normalqs <- qnorm(ps, mean(x), popsd(x))
+par(mfrow=c(1,3))
+plot(normalqs, qs, xlab = "Normal Percentiles", ylab = "Height Percentiles", main = "Height Q-Q Plot")
+abline(0,1)
+# t-distributed for 12 df
+x <- rt(1000, 12)
+qqnorm(x, xlab="t quantiles", main = "T Quantiles (df=12) Q-Q Plot", ylim=c(-6,6))
+qqline(x)
+# t-distributed for 3 df
+x <- rt(1000, 3)
+qqnorm(x, xlab="t quantiles", main = "T Quantiles (df=3) Q-Q Plot", ylim=c(-6,6))
+qqline(x)
+```
+
+## Boxplots
+
+- Provide a graph that is easy to interpret where data is not normally distributed
+- Would be an appropriate choice to explore income data, as distribution is highly skewed
+- Particularly informative in relation to outliers and range
+- Possible to compare multiple distributions side by side
+
+## Boxplots
+
+```{r echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow=c(1, 3))
+hist(exec.pay, main = "CEO Compensation")
+qqnorm(exec.pay, main = "CEO Compensation")
+boxplot(exec.pay, ylab="10,000s of dollars", ylim=c(0,400), main = "CEO Compensation")
+```
+<center>
+Three different views of a continuous variable
+</center>
+
+## Scatterplots And Correlation
+
+- For two continuous variables, scatter plot and calculation of correlation is useful
+- Provides a graphical and numeric estimation of relationships
+- Quick and easy with `plot()` and `cor()`
+
+## Scatterplots And Correlation
+
+```{r echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow=c(1,3))
+plot(father.son$fheight, father.son$sheight,xlab="Father's height in inches",ylab="Son's height in inches",main=paste("correlation =",signif(cor(father.son$fheight, father.son$sheight),2)))
+plot(cars$speed, cars$dist,xlab="Speed",ylab="Stopping Distance",main=paste("correlation =",signif(cor(cars$speed, cars$dist),2)))
+plot(faithful$eruptions, faithful$waiting,xlab="Eruption Duration",ylab="Waiting Time",main=paste("correlation =",signif(cor(faithful$eruptions, faithful$waiting),2)))
+```
+
+## Exploratory data analysis in high dimensions
+
+<font size="2">
+```{r, eval=FALSE}
+library(BiocInstaller)
+biocLite("genomicsclass/GSE5859Subset")  #install from Github
+```
+
+```{r}
+library(GSE5859Subset)
+data(GSE5859Subset) ##this loads three tables
+c(class(geneExpression), class(sampleInfo))
+rbind(dim(geneExpression), dim(sampleInfo))
+head(sampleInfo)
+```
+</font>
+
+## Volcano plots
+
+T-test for every row (gene) of gene expression matrix:
+```{r, message=FALSE}
+library(genefilter)
+g <- factor(sampleInfo$group)
+system.time(results <- rowttests(geneExpression,g))
+pvals <- results$p.value
+```
+
+Note that these 8,793 tests are done in about 0.01s
+
+## Volcano plots
+
+```{r, fig.height=3, fig.width=6}
+par(mar=c(4, 4, 0, 0))
+plot(results$dm, -log10(results$p.value),
+     xlab="Effect size (difference in group means)",
+     ylab="- log (base 10) p-values")
+abline(h=-log10(0.05 / nrow(geneExpression)), col="red")
+legend("bottomright", lty=1, col="red", legend="Bonferroni = 0.05")
+```
+
+## Volcano plots (summary)
+
+- Many small p-values with small effect size indicate low within-group variability
+- Inspect for asymmetry
+- Can color points by significance threshold
+
+## P-value histograms
+
+- If all null hypotheses are true, expect a flat histogram of p-values:
+
+```{r}
+m <- nrow(geneExpression)
+n <- ncol(geneExpression)
+set.seed(1); randomData <- matrix(rnorm(n*m),m,n)
+nullpvals <- rowttests(randomData,g)$p.value
+```
+
+```{r, echo=FALSE, fig.height=3}
+par(mfrow=c(1, 2))
+hist(pvals,ylim=c(0,1400))
+hist(nullpvals,ylim=c(0,1400))
+```
+
+## P-value histograms
+
+Note that permuting these data doesn't produce an ideal null p-value histogram due to batch effects:
+
+```{r, fig.height=3}
+permg <- sample(g)
+permresults <- rowttests(geneExpression, permg)
+hist(permresults$p.value)
+```
+
+## P-value histograms (summary)
+
+- Give a quick look at how many significant p-values there may be
+- When using permuted labels, can expose non-independence among the samples
+    + can be due to batch effects or family structure
+- Most common approaches for correcting batch effects are:
+    + including batch in your model formula
+    + `ComBat`: corrects for known batch effects by linear model), and 
+    + `sva`: creates surrogate variables for unknown batch effects, corrects the structure of permutation p-values
+    + correction using control (housekeeping) genes
+
+All are available from the [sva](https://www.bioconductor.org/packages/sva) Bioconductor package
+
+## MA plot
+
+- just a scatterplot rotated 45$^o$
+
+```{r, fig.height=3}
+rafalib::mypar(1,2)
+pseudo <- apply(geneExpression, 1, median)
+plot(geneExpression[, 1], pseudo)
+plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
+```
+
+## MA plot (summary)
+
+- useful for quality control of high-dimensional data
+- plot all data values for a sample against another sample or a median "pseudosample"
+- `affyPLM::MAplots` better MA plots
+    - adds a smoothing line to highlight departures from horizontal line
+    - plots a "cloud" rather than many data points
+
+## Heatmaps
+
+Detailed representation of high-dimensional dataset
+
+```{r, fig.height=4}
+ge = geneExpression[sample(1:nrow(geneExpression), 200), ]
+pheatmap::pheatmap(ge, scale="row", show_colnames = F, show_rownames = F)
+```
+
+## Heatmaps
+
+- Clustering becomes slow and memory-intensivefor thousands of rows
+    - probably too detailed for thousands of rows
+- can show co-expressed genes, groups of samples
+
+## Colors
+
+- Types of color pallettes: 
+    - **sequential**: shows a gradient
+    - **diverging**: goes in two directions from a center
+    - **qualitative**: for categorical variables
+- Keep color blindness in mind (10% of all men)
+
+## Colors (cont'd)
+
+Combination of `RColorBrewer` package and `colorRampPalette()` can create anything you want
+
+```{r, fig.height=5, echo=FALSE}
+rafalib::mypar(1, 1)
+RColorBrewer::display.brewer.all(n=7)
+```
+
+## Plots To Avoid
+
+> "Pie charts are a very bad way of displaying information." - R Help
+
+- Always avoid pie charts
+- Avoid doughnut charts too
+- Avoid pseudo 3D and most Excel defaults
+- Effective graphs use color judiciously
+
+
+## Lab
+
+Exploratory Data Analysis: http://genomicsclass.github.io/book/pages/exploratory_data_analysis_exercises.html
+
+## Links
+
+- A built [html][] version of this lecture is available.
+- The [source][] R Markdown is also available from Github.
+
+[html]: http://rpubs.com/lwaldron/TrentoDay3_2017
+[source]: https://github.com/lwaldron/AppStatTrento
