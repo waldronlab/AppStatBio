@@ -7,12 +7,12 @@ output:
   slidy_presentation: default
 ---
 
-## Session 4 outline
-
-- Inference in high dimensions: multiple testing
+## Day 3 outline
 
 - Hypothesis testing for categorical variables
     - Fisher's Exact Test and Chi-square Test
+
+- Inference in high dimensions: multiple testing
 
 - Exploratory data analysis
 
@@ -21,35 +21,6 @@ output:
 - Chapter 5 - Inference for High Dimensional Data
     + Basic exploratory data analysis
 
-# Inference in high dimensions
-
-## Inference in high dimensions
-
-* Conceptually similar to what we have already done
-    * $Y_i$ expression of a gene, etc
-* Just repeated many times, e.g.:
-    * is the mean expression of a gene different between two groups (t-test)
-    * is the mean expression of a gene different between any of several groups (1-way ANOVA)
-    * do this simple analysis thousands of times
-    * *note*: for small sample sizes, some Bayesian improvements can be made (i.e. LIMMA package)
-* It is in prediction and machine learning where $Y$ is a label like patient outcome, and we can have high-dimensional predictors
-
-## Multiple testing
-
-* When testing thousands of true null hypotheses with $\alpha = 0.05$, you expect a 5\% type I error rate
-* What p-values are even smaller than you expect by chance from multiple testing?
-* Two mainstream approaches for controlling type I error rate:
-
-1. Family-wise error rate (*e.g.*, Bonferroni correction). 
-    * Controlling FWER at 0.05 ensures that the probably of _any_ type I errors is < 0.05.
-2. False Discovery Rate (*e.g.*, Benjamini-Hochberg correction)
-    * Controlling FDR at 0.05 ensures that fraction of type I errors is < 0.05.
-    * correction for the smallest p-value is the same as the Bonferroni correction
-    * correction for larger p-values becomes less stringent
-
-```{r, eval=FALSE}
-p.adjust(p, method = p.adjust.methods)
-```
 
 # Hypothesis testing for categorical variables
 
@@ -154,7 +125,7 @@ What do you notice about all these combinations?
 * In a case-control study, the numbers of cases and controls are fixed, but the other variable is not
 * In a prospective or longitudinal cohort study, neither the number of cases or the other variable are fixed
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 disease=factor(c(rep(0,180),rep(1,20),rep(0,40),rep(1,10)),
                labels=c("control","cases"))
 genotype=factor(c(rep("AA/Aa",204),rep("aa",46)),
@@ -197,6 +168,41 @@ epitools::oddsratio(relevel(genotype, "aa"), disease)$measure
 - Both assume independent observations (important!!)
 - In a GWAS, correction for multiple testing is required
 - Can also use logistic regression for two categorical variables
+
+# Inference in high dimensions
+
+## Inference in high dimensions
+
+* Conceptually similar to what we have already done
+    * $Y_i$ expression of a gene, etc
+* Just repeated many times, e.g.:
+    * is the mean expression of a gene different between two groups? (t-test, linear model)
+    * is a gene variant associated with disease? (chi-square test, logistic regression)
+    * do this simple analysis thousands of times
+    * *note*: for small sample sizes, some Bayesian improvements can be made (i.e. LIMMA, DESeq2, EdgeR)
+
+## Multiple testing
+
+* When testing thousands of true null hypotheses with $\alpha = 0.05$, you expect a 5\% type I error rate
+* What p-values are even smaller than you expect by chance from multiple testing?
+* Two mainstream approaches for controlling type I error rate:
+
+1. Family-wise error rate (*e.g.*, Bonferroni correction). 
+    * Controlling FWER at 0.05 ensures that the probably of _any_ type I errors is < 0.05.
+2. False Discovery Rate (*e.g.*, Benjamini-Hochberg correction)
+    * Controlling FDR at 0.05 ensures that fraction of type I errors is < 0.05.
+    * correction for the smallest p-value is the same as the Bonferroni correction
+    * correction for larger p-values becomes less stringent
+
+```{r, eval=FALSE}
+p.adjust(p, method = p.adjust.methods)
+```
+
+## Visualizing False Discovery Rate
+
+![](images/FDR_histogram.png)
+
+Benjamini and Hochberg: one visualization
 
 # Exploratory data analysis
 
@@ -351,9 +357,10 @@ hist(permresults$p.value)
 ## P-value histograms (summary)
 
 - Give a quick look at how many significant p-values there may be
-- When using permuted labels, can exposes non-independence among the samples
+- When using permuted labels, can expose non-independence among the samples
     + can be due to batch effects or family structure
 - Most common approaches for correcting batch effects are:
+    + including batch in your model formula
     + `ComBat`: corrects for known batch effects by linear model), and 
     + `sva`: creates surrogate variables for unknown batch effects, corrects the structure of permutation p-values
     + correction using control (housekeeping) genes
