@@ -18,7 +18,7 @@ The InsectSprays data set is included in R. The dataset reports the counts of in
 ```{r}
 InsectSprays
 summary(InsectSprays)
-boxplot(count ~ spray, data = InsectSprays, main="count vs insecticide")
+boxplot(count ~ spray, data = InsectSprays, main="count vs insecticide", notch=TRUE, var.width=TRUE)
 
 ```
 * Treatment C seems to be the most effective in eliminating insetcs.
@@ -27,7 +27,8 @@ boxplot(count ~ spray, data = InsectSprays, main="count vs insecticide")
 Download and load this dataset into R. Use exploratory data analysis tools to determine which two columns are different from the rest. Which is the column that is positively skewed?
 
 ```{r}
-load("/Users/Duhan/Desktop/skew.RData")
+load(url("http://courses.edx.org/c4x/HarvardX/PH525.1x/asset/skew.RData"))
+##load("/Users/Duhan/Desktop/skew.RData")
 boxplot(dat, main = "skew_data")
 
 ```
@@ -62,12 +63,8 @@ boxplot(time ~ gender, data = nym.2002, main = "finish time vs gender")
 Use dplyr to create two new data frames: males and females, with the data for each gender. For males, what is the Pearson correlation between age and time to finish?
 
 ```{r}
-nym.2002 %>%
-  select(gender, age, time)
-  filter(nym.2002, gender=="Male")
-  chisq.test(male$age, male$time, simulate.p.value = TRUE)
-  
-  cor(male$age, male$time, method="pearson")
+filter(nym.2002, gender=="Male") %>%
+  summarise(PearsonCor = cor(age, time))
 ```
 
 * I don't know why two different method values are always different. 

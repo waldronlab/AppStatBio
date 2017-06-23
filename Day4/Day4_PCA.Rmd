@@ -304,7 +304,7 @@ plot(s$u[, 1] ~ p$rotation[, 1])
 ## PCA interpretation: loadings
 
 ```{r}
-plot(p$rotation[, 1], xlab="Index of genes", ylab="Scores of PC1", 
+plot(p$rotation[, 1], xlab="Index of genes", ylab="Loadings of PC1", 
      main="Scores of PC1") #or, predict(p)
 abline(h=c(-0.03, 0.04), col="red")
 ```
@@ -314,7 +314,7 @@ abline(h=c(-0.03, 0.04), col="red")
 Genes with high PC1 loadings:
 
 ```{r, fig.height=3.5}
-e.pc1genes <- e.standardize.fast[p$rotation[, 1] < -0.03 | p$rotation[, 1] > 0.04, ]
+e.pc1genes <- e.standardize.fast[p$rotation[, 1] < -0.03 | p$rotation[, 1] > 0.03, ]
 pheatmap::pheatmap(e.pc1genes, scale="none", show_rownames=TRUE, 
                   show_colnames = FALSE)
 ```
@@ -480,7 +480,7 @@ table(hcclass, year)
 
 Your project for the course will be to:
 
-1. run [this RNA-seq analysis workflow]((https://github.com/Bioconductor/CSAMA/tree/2017/lab/2-tuesday/lab-03-rnaseq)) provided in the R Markdown file on your own computer. Make sure to set the knitr option {cache=TRUE} is set to speed up subsequent compiling of this R Markdown script.
+1. run [this RNA-seq analysis workflow](https://github.com/Bioconductor/CSAMA/tree/2017/lab/2-tuesday/lab-03-rnaseq) provided in the R Markdown file on your own computer. Make sure to set the knitr option {cache=TRUE} is set to speed up subsequent compiling of this R Markdown script.
 
 2. Remove the text provided in this Rmd file, and replace it with your own basic explanations of what is going on. You do not need to explain things that we didn't cover in class, although you are welcome to do so. For things that we did cover in class, write a short explanation that would be appropriate to someone at your own level before you started the course. You don't need to write an essay here, the point is for you to identify familiar methods in this workflow and show that you've learned something about how to interpret their use in practice.
 

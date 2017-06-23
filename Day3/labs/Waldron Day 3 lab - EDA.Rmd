@@ -2,7 +2,6 @@
 title: "Day 3 lab"
 output:
   html_document: default
-  html_notebook: default
 ---
 
 From: http://genomicsclass.github.io/book/pages/exploratory_data_analysis_exercises.html
@@ -14,7 +13,7 @@ From: http://genomicsclass.github.io/book/pages/exploratory_data_analysis_exerci
 
 Given the above histogram, how many people are between the ages of 35 and 45?
 
-*Looks like 2 to me.*
+*Looks like 6 to me.*
 
 # Question 2
 
@@ -137,7 +136,7 @@ p <- ggplot(nym.2002, aes(x=agegroup, y=time)) +
 p + facet_grid(gender ~ .)
 ```
 
-I think *The optimal age to run a marathon is 20-25.*?
+We start getting slower at ~45.
 
 # Question 9
 
