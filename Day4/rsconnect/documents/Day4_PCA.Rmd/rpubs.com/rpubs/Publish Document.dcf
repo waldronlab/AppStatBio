@@ -1,0 +1,8 @@
+name: Publish Document
+title:
+account: rpubs
+server: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/286897/041b1febb7e441fba6cd06e275f31d61
+bundleId: https://api.rpubs.com/api/v1/document/286897/041b1febb7e441fba6cd06e275f31d61
+url: http://rpubs.com/lwaldron/286897
+when: 1498204920.3927
