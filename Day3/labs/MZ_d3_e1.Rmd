@@ -1,0 +1,115 @@
+---
+title: "MZ_d3_e1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Given the above histogram, how many people are between the ages of 35 and 45?
+
+
+
+
+The InsectSprays data set is included in R. The dataset reports the counts of insects in agricultural experimental units treated with different insecticides. Make a boxplot and determine which insecticide appears to be most effective.
+
+```{r}
+iSpray <- InsectSprays
+boxplot(count ~ spray, data = iSpray)
+```
+
+Download and load this dataset into R. Use exploratory data analysis tools to determine which two columns are different from the rest. Which is the column that is positively skewed?
+
+```{r}
+#download.file('http://courses.edx.org/c4x/HarvardX/PH525.1x/asset/skew.RData','skew.RData')
+load('./skew.RData')
+
+skew = data.frame(dat)
+
+for (n in attributes(skew)$names)
+{
+  print (n)
+  qqnorm(skew[,n],main=n)
+  qqline(skew[,n])
+  hist(skew[,n],main=paste("Hist of ",n))
+}
+
+```
+
+Which is the column that is negatively skewed?
+
+**X9 and X4**
+
+Let’s consider a random sample of finishers from the New York City Marathon in 2002. This dataset can be found in the UsingR package. Load the library and then load the nym.2002 dataset.
+
+```{r}
+library('UsingR')
+NYM <- data.frame(nym.2002)
+```
+
+r library(dplyr) data(nym.2002, package="UsingR")
+
+Use boxplots and histograms to compare the finishing times of males and females. Which of the following best describes the difference?
+
+```{r}
+library('dplyr')
+boxplot(time ~ gender, data = NYM)
+
+```
+```{r}
+
+males = filter(NYM,gender=='Male')
+hist(males$time,main=paste("Hist of Males, mean: ",mean(males$time)))
+qqnorm(males$time)
+qqline(males$time)
+
+females = filter(NYM,gender=='Female')
+hist(females$time,main=paste("Hist of Women, mean: ",mean(females$time)))
+qqnorm(females$time)
+qqline(females$time)
+```
+A) Males and females have the same distribution.
+B) Most males are faster than most women.
+C) Male and females have similar right skewed distributions with the former, 20 minutes shifted to the left.
+D) Both distribution are normally distributed with a difference in mean of about 30 minutes.
+
+
+Use dplyr to create two new data frames: males and females, with the data for each gender
+
+
+.For males, what is the Pearson correlation between age and time to finish?
+
+```{r}
+plot(males$time, males$age,xlab="Time (Males)",ylab="Age (Males)",main=paste("correlation =",signif(cor(males$time, males$age,method="pearson"),3)))
+```
+For females, what is the Pearson correlation between age and time to finish?
+
+```{r}
+plot(females$time, females$age,xlab="Time (females)",ylab="Age (females)",main=paste("correlation =",signif(cor(females$time, females$age,method="pearson"),3)))
+```
+
+If we interpret these correlations without visualizing the data, we would conclude that the older we get, the slower we run marathons, regardless of gender. Look at scatterplots and boxplots of times stratified by age groups (20-25, 25-30, etc..). After examining the data, what is a more reasonable conclusion?
+
+```{r}
+
+
+
+```
+
+A) Finish times are constant up until about our 40s, then we get slower.
+B) On average, finish times go up by about 7 minutes every five years.
+C) The optimal age to run a marathon is 20-25.
+D) Coding errors never happen: a five year old boy completed the 2012 NY city marathon.
+
+When is it appropriate to use pie charts or donut charts?
+**A) When you are hungry.**
+B) To compare percentages.
+C) To compare values that add up to 100%.
+D) Never.
+
+The use of pseudo-3D plots in the literature mostly adds:
+A) Pizzazz.
+B) The ability to see three dimensional data.
+C) Ability to discover.
+**D) Confusion.**

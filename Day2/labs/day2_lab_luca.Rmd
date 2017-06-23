@@ -47,7 +47,7 @@ model.matrix(~ species + condition)
 A) 0  0  1
 B) 0 -1  0
 C) 0  1  1
-D) 0  1 -1
+D) 0  1 -1  *
 E) 0 -1  1
 F) 1  0  1
 

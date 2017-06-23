@@ -66,7 +66,7 @@ Reports will be assessed for quality of analysis and clarity of presentation.
 2. linear modeling
     + linear and generalized linear modeling
     + model matrix and model formulae
-3. analysis of categorical variables, exploratory data analysis
+3. analysis of categorical variables, exploratory data analysis, multiple testing
 4. unsupervised analysis
     + distance in high dimensions
     + principal componenets analysis and multidimensional scaling

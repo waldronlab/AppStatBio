@@ -72,8 +72,8 @@ What is the t-statistic for the contrast of leg pair L4 vs. leg pair L2?
 **Solution**
 
 ```{r}
-spider$leg <- relevel(spider$leg, ref = "L2")
-summary(lm(friction ~ type + leg, data=spider))
+spider$legrelevel <- relevel(spider$leg, ref = "L2")
+summary(lm(friction ~ type + legrelevel, data=spider))
 ```
 
 t-statistic in the legL4 row is 2.452.
@@ -145,8 +145,10 @@ This is the coefficient for legL2, `r round(coef(fit2)["legL2"], 2)`
 
 What is the L2 vs. L1 estimate in log2(friction) for the push samples? Remember, because of the interaction terms, this is not the same as the L2 vs L1 difference for the pull samples. If you’re not sure use the contrast function. Another hint: consider the arrows plot for the model with interactions.
 
+** Solution **
+
 For the push samples, we have to take the answer from Question 6 and add the interaction term `typepush:legL2`: 
 
-`round(coef(fit2)["legL2"] + coef(fit2)["typepush:legL2"], 2)`.
+`r round(coef(fit2)["legL2"] + coef(fit2)["typepush:legL2"], 2)`.
 
 
