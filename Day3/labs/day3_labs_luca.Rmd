@@ -84,11 +84,20 @@ group_by(nym.2002, gender) %>%
 + B) On average, finish times go up by about 7 minutes every five years.
 + C) The optimal age to run a marathon is 20-25.
 + D) Coding errors never happen: a five year old boy completed the 2012 NY city marathon.
+
+```{r}
+nym.2002$agegroup = cut(nym.2002$age, breaks=seq(0, max(nym.2002$age) + 1, by=5))
+
+boxplot(time ~ agegroup, data = nym.2002)
+```
+
+
 9. When is it appropriate to use pie charts or donut charts?
 + A) When you are hungry.
 + B) To compare percentages.
 + C) To compare values that add up to 100%.
 + D) Never.
+
 10. The use of pseudo-3D plots in the literature mostly adds:
 + A) Pizzazz.
 + B) The ability to see three dimensional data.
