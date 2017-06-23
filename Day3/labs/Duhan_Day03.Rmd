@@ -1,0 +1,107 @@
+---
+title: "Duhan_Day3"
+author: "ODT"
+date: "6/22/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Question 1: 
+Given the above histogram, how many people are between the ages of 35 and 45?
+* 6
+
+# Question 2: 
+The InsectSprays data set is included in R. The dataset reports the counts of insects in agricultural experimental units treated with different insecticides. Make a boxplot and determine which insecticide appears to be most effective.
+
+```{r}
+InsectSprays
+summary(InsectSprays)
+boxplot(count ~ spray, data = InsectSprays, main="count vs insecticide")
+
+```
+* Treatment C seems to be the most effective in eliminating insetcs.
+
+# Question 3: 
+Download and load this dataset into R. Use exploratory data analysis tools to determine which two columns are different from the rest. Which is the column that is positively skewed?
+
+```{r}
+load("/Users/Duhan/Desktop/skew.RData")
+boxplot(dat, main = "skew_data")
+
+```
+* 4 is positively skewed and 9 is negatively skewed.
+
+# Question 4: 
+Which is the column that is negatively skewed?
+
+* 9
+
+# Question 5: 
+Let’s consider a random sample of finishers from the New York City Marathon in 2002. This dataset can be found in the UsingR package. Load the library and then load the nym.2002 dataset.
+
+r library(dplyr) data(nym.2002, package="UsingR")
+
+Use boxplots and histograms to compare the finishing times of males and females. Which of the following best describes the difference?
+
+A) Males and females have the same distribution.
+B) Most males are faster than most women.
+C) Male and females have similar right skewed distributions with the former, 20 minutes shifted to the left.
+D) Both distribution are normally distributed with a difference in mean of about 30 minutes.
+
+```{r}
+library(dplyr)
+data(nym.2002, package = "UsingR")
+summary(nym.2002)
+boxplot(time ~ gender, data = nym.2002, main = "finish time vs gender")
+```
+* The answer seems to be C
+
+# Question 6: 
+Use dplyr to create two new data frames: males and females, with the data for each gender. For males, what is the Pearson correlation between age and time to finish?
+
+```{r}
+nym.2002 %>%
+  select(gender, age, time)
+  filter(nym.2002, gender=="Male")
+  chisq.test(male$age, male$time, simulate.p.value = TRUE)
+  
+  cor(male$age, male$time, method="pearson")
+```
+
+* I don't know why two different method values are always different. 
+chisq.test with p value simulation gives 0.3343, whereas cor analysis gives 0.2432273
+
+# Question 7: For females
+
+```{r}
+nym.2002 %>%
+  select(gender, age, time)
+  filter(nym.2002, gender=="Female")
+  
+  chisq.test(female$age, female$time, simulate.p.value = TRUE)
+  
+  cor(female$age, female$time, method="pearson")
+```
+
+* chisq.test with p value simulation gives 0.5352, whereas cor analysis gives 0.2443156
+
+
+# Question 8: 
+If we interpret these correlations without visualizing the data, we would conclude that the older we get, the slower we run marathons, regardless of gender. Look at scatterplots and boxplots of times stratified by age groups (20-25, 25-30, etc..). After examining the data, what is a more reasonable conclusion?
+A) Finish times are constant up until about our 40s, then we get slower.
+B) On average, finish times go up by about 7 minutes every five years.
+C) The optimal age to run a marathon is 20-25.
+D) Coding errors never happen: a five year old boy completed the 2012 NY city marathon.
+```{r}
+boxplot(time ~ age, data = nym.2002, main= "finish time vs age")
+
+```
+* the answer is C
+
+# Question 9:
+* never
+
+# Question 10: 
+* confusion
