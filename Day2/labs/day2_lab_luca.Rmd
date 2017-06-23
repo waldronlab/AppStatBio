@@ -47,7 +47,7 @@ model.matrix(~ species + condition)
 A) 0  0  1
 B) 0 -1  0
 C) 0  1  1
-D) 0  1 -1
+D) 0  1 -1  *
 E) 0 -1  1
 F) 1  0  1
 
@@ -103,9 +103,8 @@ What is the t-statistic for the interaction of type push and leg L4? If this t-s
 
 ```{r}
 spider.pull = spider[spider$type=='pull',]
-leg.l4 <- relevel(x=spider.pull$leg, ref='L4')
 
-fit <- lm(friction ~ type + leg.l4, data = spider.pull)
+fit <- lm(log2friction ~ leg, data = spider.pull)
 fit.table <- xtable::xtable(fit, label=NULL)
 summary(fit)
 ```
