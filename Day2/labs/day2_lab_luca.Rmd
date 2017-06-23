@@ -12,7 +12,7 @@ Suppose we have an experiment with the following design: on three different days
 |condition/day	| A	| B	| C |
 | ------------- | - | - | - |
 |treatment	    | 2	| 2	| 2 |
-|control	      | 2	| 2	| 2 |
+|control        | 2	| 2	| 2 |
 
 1. Given the factors we have defined above and without defining any new ones, which of the following R formula will produce a design matrix (model matrix) that lets us analyze the effect of condition, controlling for the different days?
   + A) `~ day + condition`
@@ -52,7 +52,11 @@ E) 0 -1  1
 F) 1  0  1
 
 ```{r}
-model.matrix(~ species + condition)
+set.seed(1)
+
+y = rnorm(4)
+fit = lm(y ~ species + condition)
+coef(fit) # contrast of the variables
 ```
 
 
@@ -70,7 +74,7 @@ spider <- read.csv(filename, skip=1)
 ```
 
 ```{r}
-leg.l4 <- relevel(x=spider$leg, ref='L4')
+spider$leg.l4 <- relevel(x=spider$leg, ref='L4')
 
 fit <- lm(friction ~ type + leg.l4, data = spider)
 fit.table <- xtable::xtable(fit, label=NULL)
@@ -99,13 +103,17 @@ What is the t-statistic for the interaction of type push and leg L4? If this t-s
 
 5. Using the same analysis of log2 transformed data, What is the F-value for all of the type:leg interaction terms in an ANOVA? If this value is sufficiently large, we would reject the null hypothesis that the push vs. pull effect on log2(friction) is the same for all leg pairs.
 
+```{r}
+fit = lm()
+```
+
+
 6. What is the L2 vs. L1 estimate in log2(friction) for the pull samples?
 
 ```{r}
 spider.pull = spider[spider$type=='pull',]
-leg.l4 <- relevel(x=spider.pull$leg, ref='L4')
 
-fit <- lm(friction ~ type + leg.l4, data = spider.pull)
+fit <- lm(log2friction ~ leg, data = spider.pull)
 fit.table <- xtable::xtable(fit, label=NULL)
 summary(fit)
 ```

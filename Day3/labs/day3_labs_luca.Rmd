@@ -40,7 +40,7 @@ library(dplyr)
 
 data(nym.2002, package="UsingR")
 
-nym.2002$
+nym.2002
 ```
 
 6. Use boxplots and histograms to compare the finishing times of males and females. Which of the following best describes the difference?
@@ -73,6 +73,9 @@ cor(males$time, males$age)
 7. For females, what is the Pearson correlation between age and time to finish?
 ```{r}
 cor(females$time, females$age)
+
+group_by(nym.2002, gender) %>%
+  summarise(cor(time, age))
 ```
 
 
