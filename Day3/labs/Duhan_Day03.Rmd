@@ -73,13 +73,8 @@ chisq.test with p value simulation gives 0.3343, whereas cor analysis gives 0.24
 # Question 7: For females
 
 ```{r}
-nym.2002 %>%
-  select(gender, age, time)
-  filter(nym.2002, gender=="Female")
-  
-  chisq.test(female$age, female$time, simulate.p.value = TRUE)
-  
-  cor(female$age, female$time, method="pearson")
+filter(nym.2002, gender=="Female") %>%
+  summarise(PearsonCor = cor(age, time))
 ```
 
 * chisq.test with p value simulation gives 0.5352, whereas cor analysis gives 0.2443156

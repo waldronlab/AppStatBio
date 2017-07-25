@@ -1,0 +1,23 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+#RANDOM VARIABLES EXERCISE
+
+```{r}
+library(downloader) 
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleControlsPopulation.csv"
+filename <- basename(url)
+download(url, destfile=filename)
+x <- unlist( read.csv(filename) )
+```
+
+Here x represents the weights for the entire population.
+
+#What is the average of these weights?
+
+```{r}
+mean(x)
+```
+Good start!

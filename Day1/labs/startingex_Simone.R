@@ -1,3 +1,4 @@
+## Looks OK, use Rmd to show and give some text for answers.
 library(downloader) 
 url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/femaleMiceWeights.csv"
 filename <- "femaleMiceWeights.csv" 

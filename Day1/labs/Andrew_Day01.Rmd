@@ -114,7 +114,7 @@ numbers <- rnorm(1000, mean = 23.9, sd = 0.43)
 
 ```{r, echo = TRUE}
 library(dplyr)
-setwd("Desktop/AppStat/")
+## setwd("Desktop/AppStat/") #causes error on other computers
 link <- 'https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/msleep_ggplot2.csv'
 download.file(link, destfile = "msleep_ggplot2.csv")
 data <- read.csv("msleep_ggplot2.csv", header = T, stringsAsFactors = F)

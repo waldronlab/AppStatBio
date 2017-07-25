@@ -90,19 +90,6 @@ Notes:
 
 ## What are linear models?
 
-- Linear models model a response variable $Y_i$ as a linear combination of predictors, plus randomly distributed noise.
-- Which of the following are examples of linear models?
-
-1. $Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$
-2. $Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i$
-3. $Y_i = \beta_0 + \beta_1 x_i + \beta_2 \times 2^{x_i} + \varepsilon_i$
-
-Where: $i=1,\dots,N$
-
-Assumption: $\varepsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)$
-
-## What are linear models?
-
 The following are examples of linear models:
 
 1. $Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$ (simple linear regression)

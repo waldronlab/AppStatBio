@@ -70,6 +70,7 @@ fem_mice_weigths[x,]
 
 ## Random Variables Exercises
 
+Following causes error, then further examples use the previously defined x:
 ```{r}
 x <- unlist( read.csv('../femaleControlsPopulation.csv') )
 ```
