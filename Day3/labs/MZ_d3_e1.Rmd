@@ -22,7 +22,7 @@ boxplot(count ~ spray, data = iSpray)
 Download and load this dataset into R. Use exploratory data analysis tools to determine which two columns are different from the rest. Which is the column that is positively skewed?
 
 ```{r}
-#download.file('http://courses.edx.org/c4x/HarvardX/PH525.1x/asset/skew.RData','skew.RData')
+download.file('http://courses.edx.org/c4x/HarvardX/PH525.1x/asset/skew.RData','skew.RData')
 load('./skew.RData')
 
 skew = data.frame(dat)
@@ -93,7 +93,7 @@ If we interpret these correlations without visualizing the data, we would conclu
 
 ```{r}
 
-
+## empty
 
 ```
 

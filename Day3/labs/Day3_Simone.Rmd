@@ -13,7 +13,7 @@ boxplot(count ~ spray, InsectSprays)
 Download and load this dataset into R. Use exploratory data analysis tools to determine which two columns are different from the rest. Which is the column that is positively skewed?
 Which is the column that is negatively skewed?
 ```{r}
-load("C:/Users/simon/Downloads/skew.RData")
+load("C:/Users/simon/Downloads/skew.RData") ##not reproducible on other machines
 boxplot(dat)
 #4 is positevly skewed
 #9 is negatevily skewed
@@ -31,7 +31,8 @@ r library(dplyr) data(nym.2002, package="UsingR")
 Use boxplots and histograms to compare the finishing times of males and females. Which of the following best describes the difference?
 ```{r}
 boxplot(time ~ gender, data_marathon)
-hist(time, data_marathon) #???
+hist(data_marathon[data_marathon$gender == "Male", "time"]) #??? -> just one at a time
+hist(data_marathon[data_marathon$gender == "Female", "time"]) #??? -> just one at a time
 ```
 
 
