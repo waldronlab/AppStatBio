@@ -103,8 +103,8 @@ What is the t-statistic for the interaction of type push and leg L4? If this t-s
 
 5. Using the same analysis of log2 transformed data, What is the F-value for all of the type:leg interaction terms in an ANOVA? If this value is sufficiently large, we would reject the null hypothesis that the push vs. pull effect on log2(friction) is the same for all leg pairs.
 
-```{r}
-fit = lm()
+```{r, eval=FALSE}
+fit = lm() ##incomplete
 ```
 
 

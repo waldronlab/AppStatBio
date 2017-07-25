@@ -86,7 +86,7 @@ What is the L2 vs. L1 estimate in log2(friction) for the pull samples?
 ```{r}
 library(dplyr)
 pull <- filter(spider, type == "pull")
-fit_pull <- lm(log2friction ~ leg, pull)
+fit_pull <- lm(log2friction ~ leg, pull) ##log2friction variable hasn't been defined
 summary(fit_pull)
 #-0.34681
 ```

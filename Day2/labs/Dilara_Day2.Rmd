@@ -57,6 +57,15 @@ F) 1 0 1
 
 2. Use the Rmd script to load the spider dataset. Suppose we build a model using two variables: ~ type + leg.
 
+```{r, echo=FALSE}
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/spider_wolff_gorb_2013.csv"
+filename <- "spider_wolff_gorb_2013.csv"
+library(downloader)
+if (!file.exists(filename))
+    download(url, filename)
+spider <- read.csv(filename, skip=1)
+```
+
 What is the t-statistic for the contrast of leg pair L4 vs. leg pair L2?
 
 ```{r}
@@ -70,12 +79,12 @@ summary(lm(friction ~ type + legrelevel, data=spider))
 
 Add a new variable log2friction to the spider dataframe:
 ```{r}
-r spider$log2friction <- log2(spider$friction)
+spider$log2friction <- log2(spider$friction)
 ```
 
 The Y values now look like:
 ```{r}
-r boxplot(log2friction ~ type*leg, data=spider)
+boxplot(log2friction ~ type*leg, data=spider)
 ```
 
 Run a linear model of log2friction with type, leg and interactions between type and leg.
