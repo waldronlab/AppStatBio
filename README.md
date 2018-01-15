@@ -7,26 +7,25 @@ Assistant Professor of Biostatistics
 City University of New York School Graduate of Public Health and Health Policy  
 New York, NY, U.S.A.  
 
-Location: Povo 1, room A214
 Email: lwaldron.research@gmail.com  
 Hangouts: lwaldron.research  
 Skype: levi.waldron  
 
 ## Times and Places
 
-Classes will take place in Povo 1 room A214 every day starting Tuesday, June 20 and ending on Friday, June 23, from 10h to 13h. 
+Classes will take place on March 6, 8, and 13 (times and rooms to be announced). 
 
-All course materials will be available from https://github.com/waldronlab/AppStatTrento/.
+All course materials will be available from https://github.com/waldronlab/AppStatBio/.
 
 ## Preparation
 
-Try to come to the first class with the following installed:
+Please come to the first class with the following installed:
 
 * Bioconductor www.bioconductor.org/install
 * R Studio: https://www.rstudio.com/products/rstudio/download3/
-* Github desktop client (or any other Github client): https://desktop.github.com/
+* A command-line or desktop git client. GitHub's desktop client is one of the simplest (https://desktop.github.com/). My own favorite is SourceTree.
 
-Additionally, please create an account at www.github.com, and use it to introduce yourself at https://github.com/waldronlab/AppStatTrento/issues. 
+Please create an account at www.github.com, and use it to introduce yourself at https://github.com/waldronlab/AppStatTrento/issues. 
 
 
 ## Summary
@@ -62,12 +61,15 @@ Reports will be assessed for quality of analysis and clarity of presentation.
 1. introduction
     + random variables
     + distributions
-    + introduction to R
+    + hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
+    + hypothesis testing for categorical variables (Fisher's Test, Chi-square test)
+    + data manipulation using dplyr
 2. linear modeling
     + linear and generalized linear modeling
     + model matrix and model formulae
-3. analysis of categorical variables, exploratory data analysis, multiple testing
-4. unsupervised analysis
+    + multiple testing
+3. unsupervised analysis
+    + graphics for exploratory data analysis
     + distance in high dimensions
     + principal componenets analysis and multidimensional scaling
     + unsupervised clustering
