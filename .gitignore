@@ -15,3 +15,7 @@
 .Rproj.user
 README.html
 *rsession/*
+*cache*
+*figure-html/*
+*figure-slidy/*
+*figure/*
