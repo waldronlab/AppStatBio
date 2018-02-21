@@ -13,9 +13,13 @@ Skype: levi.waldron
 
 ## Times and Places
 
-Classes will take place on March 6, 8, and 13 (times and rooms to be announced). 
+Classes will take place on March 6, 8, and 13:
 
-All course materials will be available from https://github.com/waldronlab/AppStatBio/.
+|date   | time   |  place |
+|-------|--------|--------|
+| 6 Marc 2018 | 08:30 - 11:30  | Gamma [Borgo Roma - Ca' Vignal 2] | 
+|  8 Marc 2018 |  08:30 - 11:30 |  G [Borgo Roma - Ca' Vignal 2] | 
+|  13 Marc 2018 |  08:30 - 11:30 |  Gamma [Borgo Roma - Ca' Vignal 2] | 
 
 ## Preparation
 
@@ -57,6 +61,8 @@ A project will be handed out before the final class, that will involve analysing
 Reports will be assessed for quality of analysis and clarity of presentation.
 
 ## Session detail by day
+
+All course materials will be available from https://github.com/waldronlab/AppStatBio/.
 
 1. introduction
     + random variables
