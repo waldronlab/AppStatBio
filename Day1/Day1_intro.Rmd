@@ -1,0 +1,307 @@
+---
+title: 'Applied Statistics for High-throughput Biology: Session 1'
+author: "Levi Waldron"
+date: "Mar 6, 2018"
+output:
+  slidy_presentation: default
+---
+
+## Welcome and outline
+
+- Some essential R classes and related Bioconductor classes
+- Introduction to `dplyr`
+- Random variables and distributions
+- hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
+- hypothesis testing for categorical variables (Fisher's Test, Chi-square test)
+    
+- Book sections:
+    - Chapter 0
+    - Chapter 1 - section Random Variables
+    
+A built [html][] version of this lecture is available.
+
+The [source][] R Markdown is also available from Github.
+
+## Learning objectives
+
+- Define random variables and distinguish them from non-random ones
+- Recognize some important random distributions from their probability density plots:
+    + Normal, Poisson, Negative Binomial, Binomial
+- Perform basic data manipulation/exploration in R and dplyr
+    + load data from a csv file
+    + generate random numbers using `sample()`
+    + understand use of `set.seed()`
+    + generate histograms
+- Clone and contribute to the class [Github](https://github.com/waldronlab/AppStatTrento) repo
+- Do an analysis using R Markdown
+
+## A bit about me - research interests
+
+* High-dimensional statistics (more variables than observations)
+* Predictive modeling and methodology for validation
+* Metagenomic profiling of the human microbiome
+* Cancer genomics
+* HIV treatment effectiveness
+* http://www.waldronlab.org
+
+
+# R - basic usage
+
+## Tips for learning R
+
+Pseudo code                                   |   Example code
+--------------------------------------------  |   -------------------
+library(packagename)                          | library(dplyr)
+?functionname                                 | ?select
+?package::functionname                        | ?dplyr::select
+? 'Reserved keyword or symbol' \color{blue}{(or backticks)} | ? '%>%'
+??searchforpossiblyexistingfunctionandortopic | ??simulate
+help(package = "loadedpackage")               | help("dplyr")
+browseVignettes("packagename")                | browseVignettes("dplyr")
+
+\tiny Slide credit: Marcel Ramos
+
+## Installing Packages the Bioconductor Way
+
+- See the [Bioconductor](http://www.bioconductor.org/) site for more info
+
+Pseudo code: 
+
+```{r, eval = FALSE}
+source("https://bioconductor.org/biocLite.R")
+packages <- c("packagename", "githubuser/repository", "biopackage")
+BiocInstaller::biocLite(packages)
+```
+
+- Works for CRAN, GitHub, and Bioconductor packages!
+
+## Note about installing `devtools`
+
+- Useful for building packages
+- Download and install from GitHub, directly or via BiocInstaller::biocLite()
+- Installation dependent on OS ([Rtools](https://cran.r-project.org/bin/windows/Rtools/) for Windows)
+
+# Introduction to the R language
+
+## Base R Data Types: atomic vectors
+
+`numeric` (set seed to sync random number generator):
+```{r}
+set.seed(1)
+rnorm(5)
+```
+
+`integer`:
+```{r}
+sample( 1:5 )
+```
+
+`logical`:
+```{r}
+1:3 %in% 3
+```
+
+`character`:
+```{r}
+c("yes", "no")
+```
+
+`factor`:
+```{r}
+factor(c("yes", "no"))
+```
+
+Demo: integer-like properties, `relevel()`
+
+## Base R Data Types: missingness
+
+- Missing Values and others - **IMPORTANT**
+```{r}
+c(NA, NaN, -Inf, Inf)
+```
+
+`class()` to find the class of a variable.
+
+## Base R Data Types: matrix, list, data.frame
+
+`matrix`:
+```{r}
+matrix(1:9, nrow = 3)
+```
+
+The `list` is a non-atomic vector:
+```{r}
+measurements <- c( 1.3, 1.6, 3.2, 9.8, 10.2 )
+parents <- c( "Parent1.name", "Parent2.name" )
+my.list <- list( measurements, parents)
+my.list
+```
+
+
+The `data.frame` has list-like and matrix-like properties:
+```{r}
+x <- 11:16
+y <- seq(0,1,.2)
+z <- c( "one", "two", "three", "four", "five", "six" )
+a <- factor( z )
+my.df <- data.frame(x,y,z,a, stringsAsFactors = FALSE)
+```
+
+## Bioconductor S4 vectors: DataFrame
+
+- Bioconductor (www.bioconductor.org) defines its own set of vectors using the S4 formal class system
+`DataFrame`: like a `data.frame` but more flexible. columns can be any atomic vector type:
+    - `GenomicRanges` objects
+    - `Rle` (run-length encoding)
+```{r}
+suppressPackageStartupMessages(library(S4Vectors))
+df <- DataFrame(var1 = Rle(c("a", "a", "b")),
+          var2 = 1:3)
+metadata(df) <- list(father="Levi is my father")
+df
+```
+
+## Bioconductor S4 vectors: List and derived classes
+
+```{r}
+List(my.list)
+str(List(my.list))
+```
+
+```{r}
+suppressPackageStartupMessages(library(IRanges))
+IntegerList(var1=1:26, var2=1:100)
+CharacterList(var1=letters[1:100], var2=LETTERS[1:26])
+LogicalList(var1=1:100 %in% 5, var2=1:100 %% 2)
+```
+
+## Bioconductor S4 vectors: Biostrings
+```{r}
+suppressPackageStartupMessages(library(Biostrings))
+bstring = BString("I am a BString object")
+bstring
+```
+
+```{r}
+dnastring = DNAString("TTGAAA-CTC-N")
+dnastring
+str(dnastring)
+```
+
+```{r}
+alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
+```
+
+# dplyr
+
+## Data Manipulation using `dplyr`
+
+* `dplyr` convention aims to ease cognitive burden
+* Function names are easy to remember:
+1. select (Y)
+2. mutate/transmute (add Ys / new Y)
+3. filter (get Xs based on condition)
+4. slice (get Xs specified)
+5. summarise (reduce to single observation) 
+6. arrange (re-order observations)
+
+## `dplyr` example
+```{r, message=FALSE}
+library(nycflights13)
+library(dplyr)
+delays <- flights %>% 
+  filter(!is.na(dep_delay)) %>%
+  group_by(year, month, day, hour) %>%
+  summarise(delay = mean(dep_delay), n = n()) %>%
+  filter(n > 10)
+```
+
+## `dplyr` example (cont'd)
+```{r}
+hist(delays$delay, main="Mean hourly delay", xlab="Delay (hours)")
+```
+
+# Random Variables and Distributions
+
+## Random Variables
+
+- **A random variable**: any characteristic that can be measured or categorized, and where any particular outcome is determined at least partially by chance.
+
+> - Examples:
+    - number of new diabetes cases in NYC in a given year
+    - The weight of a randomly selected individual in NYC
+
+> - Types:
+    - Categorical random variable (e.g. disease / healthy)
+    - Discrete random variable (e.g. sequence read counts)
+    - Continuous random variable (e.g. normalized qPCR intensity)
+
+## Probability Distributions
+
+ - We use probability distributions to describe the probability of all possible realizations of a random variable
+ - In public health we use probability distributions to describe hypotheses or inference about the _population_
+    - because we normally cannot observe the entire population
+- In practice we study a _sample_ selected from the population
+
+<center>
+<img src="http://blogs.oregonstate.edu/programevaluation/files/2014/04/ramdom-sample.jpg" alt="Random Sample" align="middle" style="width: 300px;"/>
+</center>
+
+## Random Variables - examples
+
+Normally distributed random variable with mean $\mu = 0$ / standard deviation $\sigma = 1$, and a sample of $n=100$
+
+```{r, echo=FALSE}
+x=rnorm(100)
+res=hist(x, main="Standard Normal Distribution\n mean 0, std. dev. 1", prob=TRUE)
+xdens = seq(min(res$breaks), max(res$breaks), by=0.01)
+lines(xdens, dnorm(xdens))
+```
+
+## Random Variables - examples
+
+Poisson distributed random variable ($\lambda = 2$), and a sample of $n=100$.
+
+```{r, echo=FALSE}
+x=rpois(100, lambda=2)
+res=hist(x, main="Poisson Distribution", prob=FALSE, col="lightgrey",
+     breaks=seq(-0.5, round(max(x))+0.5, by=0.5))
+xdens = seq(min(x), max(x), by=1)
+lines(xdens, length(x) * dpois(xdens, lambda=2), lw=2)
+```
+
+## Random Variables - examples
+
+Negative Binomially distributed random variable ($size=30, \mu=2$), and a sample of $n=100$.
+
+```{r, echo=FALSE}
+x=rnbinom(100, size=30, mu=2)
+res=hist(x, main="Negative Binomial Distribution", prob=FALSE, col="lightgrey",
+     breaks=seq(-0.5, round(max(x))+0.5, by=0.5))
+xdens = seq(min(x), max(x), by=1)
+lines(xdens, length(x) * dnbinom(xdens, size=30, mu=2), lw=2)
+```
+
+## Random Variables - examples
+
+- Binomial Distribution random variable ($size=20, prob=0.25$), and a sample of $n=100$.
+    - We will _only_ use for binary outcomes
+    
+```{r, echo=FALSE}
+x=rbinom(100, size=20, prob=0.25)
+res=hist(x, main="Binomial Distribution", prob=FALSE, col="lightgrey",
+     breaks=seq(-0.5, round(max(x))+0.5, by=0.5))
+xdens = seq(min(x), max(x), by=1)
+lines(xdens, length(x) * dbinom(xdens, size=20, prob=0.25), lw=2)
+```
+
+# Lab
+
+## Lab exercises
+
+1. [Getting Started](http://genomicsclass.github.io/book/pages/getting_started_exercises.html)
+2. [dplyr exercises](http://genomicsclass.github.io/book/pages/dplyr_intro_exercises.html)
+3. [random variables exercises](http://genomicsclass.github.io/book/pages/random_variables_exercises.html)
+
+[html]: http://rpubs.com/lwaldron/TrentoDay1_2017
+[source]: https://github.com/lwaldron/AppStatBio
