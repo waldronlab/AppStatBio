@@ -17,9 +17,9 @@ Classes will take place on March 6, 8, and 13:
 
 |date   | time   |  place |
 |-------|--------|--------|
-| 6 Marc 2018 | 08:30 - 11:30  | Gamma [Borgo Roma - Ca' Vignal 2] | 
-|  8 Marc 2018 |  08:30 - 11:30 |  G [Borgo Roma - Ca' Vignal 2] | 
-|  13 Marc 2018 |  08:30 - 11:30 |  Gamma [Borgo Roma - Ca' Vignal 2] | 
+| 6 Marc 2018 | 09:00 - 11:30  | Gamma [Borgo Roma - Ca' Vignal 2] | 
+|  8 Marc 2018 |  09:00 - 11:30 |  G [Borgo Roma - Ca' Vignal 2] | 
+|  13 Marc 2018 |  09:00 - 11:30 |  Gamma [Borgo Roma - Ca' Vignal 2] | 
 
 ## Preparation
 
@@ -27,9 +27,8 @@ Please come to the first class with the following installed:
 
 * Bioconductor www.bioconductor.org/install
 * R Studio: https://www.rstudio.com/products/rstudio/download3/
-* A command-line or desktop git client. GitHub's desktop client is one of the simplest (https://desktop.github.com/). My own favorite is SourceTree.
 
-Please create an account at www.github.com, and use it to introduce yourself at https://github.com/waldronlab/AppStatTrento/issues. 
+Please create an account at www.github.com, and use it to introduce yourself at https://github.com/waldronlab/AppStatBio/issues. 
 
 
 ## Summary
@@ -46,10 +45,6 @@ This course will provide biologists and bioinformaticians with practical statist
 * Github resources at http://waldronlab.github.io/github/
 * Resources for learning R at http://waldronlab.github.io/learnr/
 * Other resources at http://waldronlab.github.io/
-
-## Evaluation
-
-Two components are required for class completion: 1) completion of lab exercises each day, and 2) completion of a written report of the final project.  See details below.
 
 ### Labs
 
