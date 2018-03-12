@@ -1,0 +1,734 @@
+
+---
+title: 'UNIVR Applied Statistics for High-throughput Biology 2018: Day 3'
+author: "Levi Waldron"
+date: "Mar 13, 2018"
+output: 
+  html_document: 
+    keep_md: yes
+    number_sections: yes
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE, cache=TRUE)
+```
+
+# Day 3 outline
+
+Book Chapter 2:
+- Basic data analysis
+
+Book chapter 7:
+- Distances in high dimensions
+- Principal Components Analysis
+- Multidimensional Scaling
+- Batch Effects
+
+# Exploratory data analysis
+
+## Introduction
+
+> “The greatest value of a picture is when it forces us to notice what we never expected to see.” - John W. Tukey
+
+- Discover biases, systematic errors and unexpected variability in data
+- Graphical approach to detecting these issues
+- Represents a first step in data analysis and guides hypothesis testing
+- Opportunities for discovery in the outliers
+
+## Quantile Quantile Plots
+
+- Quantiles divide a distribution into equally sized bins
+- Division into 100 bins gives percentiles
+- Quantiles of a theoretical distribution are plotted against an experimental distribution
+    - alternatively, quantiles of two experimental distributions
+- Given a perfect fit, $x=y$
+- Useful in determining data distribution (normal, t, etc.)
+
+## Quantile Quantile Plots
+
+```{r echo=FALSE, fig.width=8}
+suppressPackageStartupMessages(library(UsingR))
+suppressPackageStartupMessages(library(rafalib))
+# height qq plot
+x <- father.son$fheight
+ps <- (seq(0,99) + 0.5 ) / 100
+qs <- quantile(x, ps)
+normalqs <- qnorm(ps, mean(x), popsd(x))
+par(mfrow=c(1,3))
+plot(normalqs, qs, xlab = "Normal Percentiles", ylab = "Height Percentiles", main = "Height Q-Q Plot")
+abline(0,1)
+# t-distributed for 12 df
+x <- rt(1000, 12)
+qqnorm(x, xlab="t quantiles", main = "T Quantiles (df=12) Q-Q Plot", ylim=c(-6,6))
+qqline(x)
+# t-distributed for 3 df
+x <- rt(1000, 3)
+qqnorm(x, xlab="t quantiles", main = "T Quantiles (df=3) Q-Q Plot", ylim=c(-6,6))
+qqline(x)
+```
+
+## Boxplots
+
+- Provide a graph that is easy to interpret where data is not normally distributed
+- Would be an appropriate choice to explore income data, as distribution is highly skewed
+- Particularly informative in relation to outliers and range
+- Possible to compare multiple distributions side by side
+
+## Boxplots
+
+```{r echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow=c(1, 3))
+hist(exec.pay, main = "CEO Compensation")
+qqnorm(exec.pay, main = "CEO Compensation")
+boxplot(exec.pay, ylab="10,000s of dollars", ylim=c(0,400), main = "CEO Compensation")
+```
+<center>
+Three different views of a continuous variable
+</center>
+
+## Scatterplots And Correlation
+
+- For two continuous variables, scatter plot and calculation of correlation is useful
+- Provides a graphical and numeric estimation of relationships
+- Quick and easy with `plot()` and `cor()`
+
+## Scatterplots And Correlation
+
+```{r echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow=c(1,3))
+plot(father.son$fheight, father.son$sheight,xlab="Father's height in inches",ylab="Son's height in inches",main=paste("correlation =",signif(cor(father.son$fheight, father.son$sheight),2)))
+plot(cars$speed, cars$dist,xlab="Speed",ylab="Stopping Distance",main=paste("correlation =",signif(cor(cars$speed, cars$dist),2)))
+plot(faithful$eruptions, faithful$waiting,xlab="Eruption Duration",ylab="Waiting Time",main=paste("correlation =",signif(cor(faithful$eruptions, faithful$waiting),2)))
+```
+
+## Exploratory data analysis in high dimensions
+
+<font size="2">
+```{r, eval=FALSE}
+library(BiocInstaller)
+biocLite("genomicsclass/GSE5859Subset")  #install from Github
+```
+
+```{r}
+library(GSE5859Subset)
+data(GSE5859Subset) ##this loads three tables
+c(class(geneExpression), class(sampleInfo))
+rbind(dim(geneExpression), dim(sampleInfo))
+head(sampleInfo)
+```
+</font>
+
+## Volcano plots
+
+T-test for every row (gene) of gene expression matrix:
+```{r, message=FALSE}
+library(genefilter)
+g <- factor(sampleInfo$group)
+system.time(results <- rowttests(geneExpression,g))
+pvals <- results$p.value
+```
+
+Note that these 8,793 tests are done in about 0.01s
+
+## Volcano plots
+
+```{r, fig.height=3, fig.width=6}
+par(mar=c(4, 4, 0, 0))
+plot(results$dm, -log10(results$p.value),
+     xlab="Effect size (difference in group means)",
+     ylab="- log (base 10) p-values")
+abline(h=-log10(0.05 / nrow(geneExpression)), col="red")
+legend("bottomright", lty=1, col="red", legend="Bonferroni = 0.05")
+```
+
+## Volcano plots (summary)
+
+- Many small p-values with small effect size indicate low within-group variability
+- Inspect for asymmetry
+- Can color points by significance threshold
+
+## P-value histograms
+
+- If all null hypotheses are true, expect a flat histogram of p-values:
+
+```{r}
+m <- nrow(geneExpression)
+n <- ncol(geneExpression)
+set.seed(1); randomData <- matrix(rnorm(n*m),m,n)
+nullpvals <- rowttests(randomData,g)$p.value
+```
+
+```{r, echo=FALSE, fig.height=3}
+par(mfrow=c(1, 2))
+hist(pvals,ylim=c(0,1400))
+hist(nullpvals,ylim=c(0,1400))
+```
+
+## P-value histograms
+
+Note that permuting these data doesn't produce an ideal null p-value histogram due to batch effects:
+
+```{r, fig.height=3}
+permg <- sample(g)
+permresults <- rowttests(geneExpression, permg)
+hist(permresults$p.value)
+```
+
+## P-value histograms (summary)
+
+- Give a quick look at how many significant p-values there may be
+- When using permuted labels, can expose non-independence among the samples
+    + can be due to batch effects or family structure
+- Most common approaches for correcting batch effects are:
+    + including batch in your model formula
+    + `ComBat`: corrects for known batch effects by linear model), and 
+    + `sva`: creates surrogate variables for unknown batch effects, corrects the structure of permutation p-values
+    + correction using control (housekeeping) genes
+
+All are available from the [sva](https://www.bioconductor.org/packages/sva) Bioconductor package
+
+## MA plot
+
+- just a scatterplot rotated 45$^o$
+
+```{r, fig.height=3}
+rafalib::mypar(1,2)
+pseudo <- apply(geneExpression, 1, median)
+plot(geneExpression[, 1], pseudo)
+plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
+```
+
+## MA plot (summary)
+
+- useful for quality control of high-dimensional data
+- plot all data values for a sample against another sample or a median "pseudosample"
+- `affyPLM::MAplots` better MA plots
+    - adds a smoothing line to highlight departures from horizontal line
+    - plots a "cloud" rather than many data points
+
+## Heatmaps
+
+Detailed representation of high-dimensional dataset
+
+```{r, fig.height=4}
+ge = geneExpression[sample(1:nrow(geneExpression), 200), ]
+pheatmap::pheatmap(ge, scale="row", show_colnames = F, show_rownames = F)
+```
+
+## Heatmaps
+
+- Clustering becomes slow and memory-intensivefor thousands of rows
+    - probably too detailed for thousands of rows
+- can show co-expressed genes, groups of samples
+
+## Colors
+
+- Types of color pallettes: 
+    - **sequential**: shows a gradient
+    - **diverging**: goes in two directions from a center
+    - **qualitative**: for categorical variables
+- Keep color blindness in mind (10% of all men)
+
+Combination of `RColorBrewer` package and `colorRampPalette()` can create anything you want
+
+```{r, fig.height=5, echo=FALSE}
+rafalib::mypar(1, 1)
+RColorBrewer::display.brewer.all(n=7)
+```
+
+## Plots To Avoid
+
+> "Pie charts are a very bad way of displaying information." - R Help
+
+- Always avoid pie charts
+- Avoid doughnut charts too
+- Avoid pseudo 3D and most Excel defaults
+- Effective graphs use color judiciously
+
+# Distances in high-dimensional data analysis
+
+## The importance of distance
+
+- High-dimensional data are complex and impossible to visualize in raw form
+- Thousands of dimensions, we can only visualize 2-3
+- Distances can simplify thousands of dimensions
+
+<center>
+<img src="animals.png" alt="animals" align="middle" style="height: 350px;">
+</center>
+
+
+- Distances can help organize samples and genomic features
+
+```{r, echo=FALSE}
+library(GSE5859Subset)
+data(GSE5859Subset) ##this loads three tables
+set.seed(1)
+ge = geneExpression[sample(1:nrow(geneExpression), 200), ]
+pheatmap::pheatmap(ge, scale="row", show_colnames = F, show_rownames = F)
+```
+
+
+- Any clustering or classification of samples and/or genes involves
+combining or identifying objects that are close or similar.
+- Distances or similarities are mathematical representations of what
+we mean by close or similar.
+- The choice of distance is important and requires thought. 
+    - choice is subject-matter specific
+
+<font size="2">
+Source: http://master.bioconductor.org/help/course-materials/2002/Summer02Course/Distance/distance.pdf
+</font>
+
+## Metrics and distances
+
+A **metric** satisfies the following five properties:
+
+1. non-negativity $d(a, b) \ge 0$
+2. symmetry $d(a, b) = d(b, a)$
+3. identification mark $d(a, a) = 0$
+4. definiteness $d(a, b) = 0$ if and only if $a=b$
+5. triangle inequality $d(a, b) + d(b, c) \ge d(a, c)$
+
+- A **distance** is only required to satisfy 1-3.
+- A **similarity function** satisfies 1-2, and **increases** as $a$ and $b$ become more similar
+- A **dissimilarity function** satisfies 1-2, and **decreases** as $a$ and $b$ become more similar
+
+
+## Euclidian distance (metric)
+
+- Remember grade school:
+```{r, echo=FALSE, fig.height=3.5}
+rafalib::mypar()
+plot(c(0,1,1),c(0,0,1),pch=16,cex=2,xaxt="n",yaxt="n",xlab="",ylab="",bty="n",xlim=c(-0.25,1.25),ylim=c(-0.25,1.25))
+lines(c(0,1,1,0),c(0,0,1,0))
+text(0,.2,expression(paste('(A'[x]*',A'[y]*')')),cex=1.5)
+text(1,1.2,expression(paste('(B'[x]*',B'[y]*')')),cex=1.5)
+text(-0.1,0,"A",cex=2)
+text(1.1,1,"B",cex=2)
+```
+<center>
+Euclidean d = $\sqrt{ (A_x-B_x)^2 + (A_y-B_y)^2}$.
+</center>
+
+- **Side note**: also referred to as *$L_2$ norm*
+
+## Euclidian distance in high dimensions
+
+```{r}
+##biocLite("genomicsclass/tissuesGeneExpression")
+library(tissuesGeneExpression)
+data(tissuesGeneExpression)
+dim(e) ##gene expression data
+table(tissue) ##tissue[i] corresponds to e[,i]
+```
+
+Interested in identifying similar *samples* and similar *genes*
+
+### Notes:
+
+- Points are no longer on the Cartesian plane,
+- instead they are in higher dimensions. For example:
+    - sample $i$ is defined by a point in 22,215 dimensional space: $(Y_{1,i},\dots,Y_{22215,i})^\top$. 
+    - feature $g$ is defined by a point in 189 dimensions $(Y_{g,189},\dots,Y_{g,189})^\top$
+
+Euclidean distance as for two dimensions. E.g., the distance between two samples $i$ and $j$ is:
+
+$$ \mbox{dist}(i,j) = \sqrt{ \sum_{g=1}^{22215} (Y_{g,i}-Y_{g,j })^2 } $$
+
+and the distance between two features $h$ and $g$ is:
+
+$$ \mbox{dist}(h,g) = \sqrt{ \sum_{i=1}^{189} (Y_{h,i}-Y_{g,i})^2 } $$
+
+## Matrix algebra notation
+
+The distance between samples $i$ and $j$ can be written as:
+
+$$ \mbox{dist}(i,j) = \sqrt{ (\mathbf{Y}_i - \mathbf{Y}_j)^\top(\mathbf{Y}_i - \mathbf{Y}_j) }$$
+
+with $\mathbf{Y}_i$ and $\mathbf{Y}_j$ columns $i$ and $j$. 
+
+```{r}
+t(matrix(1:3, ncol=1))
+matrix(1:3, ncol=1)
+t(matrix(1:3, ncol=1)) %*% matrix(1:3, ncol=1)
+```
+
+Note: R is very efficient at matrix algebra
+
+## 3 sample example
+
+```{r}
+kidney1 <- e[, 1]
+kidney2 <- e[, 2]
+colon1 <- e[, 87]
+sqrt(sum((kidney1 - kidney2)^2))
+sqrt(sum((kidney1 - colon1)^2))
+```
+
+## 3 sample example using dist()
+
+```{r}
+dim(e)
+(d <- dist(t(e[, c(1, 2, 87)])))
+class(d)
+```
+
+## The dist() function
+
+Excerpt from ?dist:
+
+```{r, eval=FALSE}
+dist(x, method = "euclidean", diag = FALSE, upper = FALSE, p = 2)
+```
+
+- **method:** the distance measure to be used. 
+    - This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". Any unambiguous substring can be given.
+- `dist` class output from `dist()` is used for many clustering algorithms and heatmap functions
+
+*Caution*: `dist(e)` creates a `r nrow(e)` x `r nrow(e)` matrix that will probably crash your R session.
+
+## Note on standardization
+
+- In practice, features (e.g. genes) are typically "standardized", *i.e.* converted to z-score:
+
+$$x_{gi} \leftarrow \frac{(x_{gi} - \bar{x}_g)}{s_g}$$
+
+- This is done because the differences in overall levels between features are often not due to biological effects but technical ones, *e.g.*:
+    - GC bias, PCR amplification efficiency, ...
+- Euclidian distance and $1-r$ (Pearson cor) are related:
+    - $\frac{d_E(x, y)^2}{2m} = 1 - r_{xy}$
+
+# Dimension reduction and PCA
+
+## Motivation for dimension reduction
+
+Simulate the heights of twin pairs:
+```{r}
+library(MASS)
+set.seed(1)
+n <- 100
+y <- t(MASS::mvrnorm(n, c(0,0), matrix(c(1, 0.95, 0.95, 1), 2, 2)))
+dim(y)
+cor(t(y))
+```
+
+### Visualizing twin pairs data
+
+```{r, echo=FALSE}
+z1 = (y[1, ] + y[2, ]) / 2 #the sum 
+z2 = (y[1, ] - y[2, ])   #the difference
+
+z = rbind(z1, z2) #matrix now same dimensions as y
+
+thelim <- c(-3,3)
+rafalib::mypar(1,2)
+
+plot(y[1, ], y[2, ], 
+     xlab="Twin 1 (standardized height)",
+     ylab="Twin 2 (standardized height)",xlim=thelim,
+     ylim=thelim,
+     main="Original twin heights")
+points(y[1, 1:2], y[2, 1:2], col=2, pch=16)
+
+plot(z[1, ], z[2, ], xlim=thelim, ylim=thelim,
+     xlab="Average height", ylab="Difference in height",
+     main="Manual PCA-like projection")
+points(z[1, 1:2] , z[2, 1:2], col=2, pch=16)
+```
+
+### Not much distance is lost in the second dimension
+
+<center>
+```{r, echo=FALSE, fig.height=3.5, fig.width=3.5}
+rafalib::mypar()
+d = dist(t(y))
+d3 = dist(z[1,]) * sqrt(2) ##distance computed using just first dimension mypar(1,1)
+plot(as.numeric(d), as.numeric(d3), xlab="Pairwise distances in 2 dimensions", 
+     ylab="Pairwise distances in 1 dimension")
+abline(0,1, col="red")
+```
+</center>
+
+- Not much loss of height differences when just using average heights of twin pairs.
+    - because twin heights are highly correlated
+
+## Singular Value Decomposition (SVD)
+
+SVD generalizes the example rotation we looked at:
+
+$$\mathbf{Y} = \mathbf{UDV}^\top$$
+
+<center>
+<img src="SVD1.png" alt="SVD" align="middle" style="height: 350px;">
+</center>
+
+- **note**: the above formulation is for $m > n$
+
+- $\mathbf{Y}$: the m rows x n cols matrix of measurements
+- $\mathbf{U}$: m x n matrix relating original scores to PCA scores (**loadings**)
+- $\mathbf{D}$: n x n diagonal matrix (**eigenvalues**)
+- $\mathbf{V}$: n × n *orthogonal* matrix (**eigenvectors or PCA scores**)
+    - orthogonal = unit length and "perpendicular" in 3-D
+
+## SVD of gene expression dataset
+
+Scaling:
+```{r, cache=TRUE}
+system.time(e.standardize.slow <- t(apply(e, 1, function(x) x - mean(x) )))
+system.time(e.standardize.fast <- t(scale(t(e), scale=FALSE)))
+all.equal(e.standardize.slow[, 1], e.standardize.fast[, 1])
+```
+
+SVD:
+```{r}
+s <- svd(e.standardize.fast)
+names(s)
+```
+
+## Components of SVD results
+
+```{r}
+dim(s$u)     # loadings
+length(s$d)  # eigenvalues
+dim(s$v)     # d %*% vT = scores
+```
+<center>
+<img src="SVD1.png" alt="SVD" align="middle" style="height: 200px;">
+</center>
+
+## PCA of gene expression dataset
+
+```{r, cache=TRUE}
+rafalib::mypar()
+p <- prcomp( t(e.standardize.fast) )
+plot(s$u[, 1] ~ p$rotation[, 1])
+```
+
+**Lesson:** u and v can each be multiplied by -1 arbitrarily
+
+## PCA interpretation: loadings
+
+<center>
+<img src="SVD1.png" alt="SVD" align="middle" style="height: 225px;">
+</center>
+
+- $\mathbf{U}$ (**loadings**): relate the *principal component* axes to the original variables
+    - think of principal component axes as a weighted combination of original axes
+
+## Visualizing PCA loadings
+
+```{r}
+plot(p$rotation[, 1], xlab="Index of genes", ylab="Loadings of PC1", 
+     main="Scores of PC1") #or, predict(p)
+abline(h=c(-0.03, 0.04), col="red")
+```
+
+Genes with high PC1 loadings:
+
+```{r, fig.height=3.5}
+e.pc1genes <- e.standardize.fast[p$rotation[, 1] < -0.03 | p$rotation[, 1] > 0.03, ]
+pheatmap::pheatmap(e.pc1genes, scale="none", show_rownames=TRUE, 
+                  show_colnames = FALSE)
+```
+
+## PCA interpretation: eigenvalues
+
+- $\mathbf{D}$ (**eigenvalues**): standard deviation scaling factor that each decomposed variable is multiplied by.
+
+```{r, fig.height=3, fig.width=5, echo=FALSE, fig.align='center'}
+rafalib::mypar()
+plot(p$sdev^2 / sum(p$sdev^2)*100, xlim=c(0, 150), type="b",
+     ylab="% variance explained", main="Screeplot")
+```
+
+Alternatively as cumulative % variance explained (using `cumsum()` function):
+```{r, fig.height=4, echo=FALSE, fig.align='center'}
+rafalib::mypar()
+plot(cumsum(p$sdev^2)/sum(p$sdev^2)*100, 
+  ylab="cumulative % variance explained", ylim=c(0, 100), 
+  type="b", main="Cumulative screeplot")
+```
+
+## PCA interpretation: scores
+
+<center>
+<img src="SVD1.png" alt="SVD" align="middle" style="height: 225px;">
+</center>
+
+- $\mathbf{V}$ (**scores**): The "datapoints" in the reduced prinipal component space
+- In some implementations (like `prcomp()`), scores $\mathbf{D V^T}$
+
+## PCA interpretation: scores
+
+```{r, fig.height=5, echo=FALSE}
+rafalib::mypar()
+plot(p$x[, 1:2], xlab="PC1", ylab="PC2", 
+     main="plot of p$x[, 1:2]",
+     col=factor(tissue), pch=as.integer(factor(tissue)))
+legend("topright", legend=levels(factor(tissue)), col=1:length(unique(tissue)),
+       pch=1:length(unique(tissue)), bty='n')
+```
+
+## Multi-dimensional Scaling (MDS)
+
+- also referred to as Principal Coordinates Analysis (PCoA)
+- a reduced SVD, performed on a distance matrix
+- identify two (or more) eigenvalues/vectors that preserve distances
+
+```{r}
+d <- as.dist(1 - cor(e.standardize.fast))
+mds <- cmdscale(d)
+```
+
+```{r, echo=FALSE, fig.height=5}
+rafalib::mypar()
+plot(mds, col=factor(tissue), pch=as.integer(factor(tissue)))
+legend("topright", legend=levels(factor(tissue)), col=1:length(unique(tissue)),
+       bty='n', pch=1:length(unique(tissue)))
+```
+
+## Summary: distances and dimension reduction
+
+- **Note**: signs of eigenvalues (square to get variances) and eigenvectors (loadings) can be arbitrarily flipped
+- PCA and MDS are useful for dimension reduction when you have **correlated variables**
+- Variables are always centered.  
+- Variables are also scaled unless you know they have the same scale in the population
+- PCA projection can be applied to new datasets if you know the matrix calculations
+- PCA is subject to over-fitting, screeplot can be tested by cross-validation
+
+# Batch Effects
+
+## Batch Effects
+
+- pervasive in genomics (e.g. [Leek *et al.*](https://www.ncbi.nlm.nih.gov/pubmed/?term=20838408) )
+- affect DNA and RNA sequencing, proteomics, imaging, microarray...
+- have caused high-profile problems and retractions
+    - you can't get rid of them
+    - but you can make sure they are not confounded with your experiment
+    
+## Batch Effects - an example
+
+- Nat Genet. 2007 Feb;39(2):226-31. Epub 2007 Jan 7.
+- Title: *Common genetic variants account for differences in gene expression among ethnic groups.*
+    - "The results show that specific genetic variation among populations contributes appreciably to differences in gene expression phenotypes."
+
+```{r, message=FALSE}
+library(Biobase)
+library(genefilter)
+library(GSE5859) ## BiocInstaller::biocLite("genomicsclass/GSE5859")
+data(GSE5859)
+geneExpression = exprs(e)
+sampleInfo = pData(e)
+```
+
+## Date of processing as a proxy for batch
+
+- Sample metadata included *date of processing*:
+
+```{r}
+head(table(sampleInfo$date))
+```
+
+```{r}
+year <-  as.integer(format(sampleInfo$date,"%y") )
+year <- year - min(year)
+month = as.integer( format(sampleInfo$date,"%m") ) + 12*year
+table(year, sampleInfo$ethnicity)
+```
+
+## Visualizing batch effects by PCA
+
+```{r, cache=TRUE, warning=FALSE}
+pc <- prcomp(t(geneExpression), scale.=TRUE)
+boxplot(pc$x[, 1] ~ month, varwidth=TRUE, notch=TRUE,
+        main="PC1 scores vs. month", xlab="Month", ylab="PC1")
+```
+
+## Visualizing batch effects by MDS
+
+A starting point for a color palette:
+```{r, eval=FALSE}
+RColorBrewer::display.brewer.all(n=3, colorblindFriendly = TRUE)
+```
+
+Interpolate one color per month on a quantitative palette:
+```{r}
+col3 <- c(RColorBrewer::brewer.pal(n=3, "Greys")[2:3], "black")
+MYcols <- colorRampPalette(col3, space="Lab")(length(unique(month)))
+```
+
+```{r, fig.height=3.5, fig.align='center'}
+d <- as.dist(1 - cor(geneExpression))
+mds <- cmdscale(d)
+plot(mds, col=MYcols[as.integer(factor(month))],
+     main="MDS shaded by batch")
+```
+
+## The batch effects impact clustering
+
+```{r}
+hcclass <- cutree(hclust(d), k=5)
+table(hcclass, year)
+```
+
+## Batch Effects - summary
+
+- tend to affect many or all measurements by a little bit
+- during experimental design:
+    - keep track of anything that might cause a batch effect for post-hoc analysis
+    - include control samples in each batch
+- batches can be corrected for if randomized in study design
+    - if confounded with treatment or outcome of interest, nothing can help you
+
+# Lab
+
+Exploratory Data Analysis: http://genomicsclass.github.io/book/pages/exploratory_data_analysis_exercises.html
+
+<center>
+<img src="exploratory_data_analysis_exercises-hist_exercise-1.png" alt="hist" align="middle" style="height: 350px;">
+</center>
+
+1. Given the above histogram, how many people are between the ages of 35 and 45?
+
+2. The `InsectSprays` data set is included in R. The dataset reports the counts of insects in agricultural experimental units treated with different insecticides. Make a boxplot and determine which insecticide appears to be most effective.
+
+3. Download and load [this dataset](http://courses.edx.org/c4x/HarvardX/PH525.1x/asset/skew.RData) into R. Use exploratory data analysis tools to determine which two columns are different from the rest. Which is the column that is positively skewed?
+
+4. Which is the column that is negatively skewed?
+
+5. Let’s consider a random sample of finishers from the New York City Marathon in 2002. This dataset can be found in the UsingR package. Load the library and then load the `nym.2002` dataset.
+```{r}
+suppressPackageStartupMessages(library(dplyr))
+data(nym.2002, package="UsingR")
+```
+Use boxplots and histograms to compare the finishing times of males and females. Which of the following best describes the difference?
+
+    A) Males and females have the same distribution.
+    B) Most males are faster than most women.
+    C) Male and females have similar right skewed distributions with the former, 20 minutes shifted to the left.
+    D) Both distribution are normally distributed with a difference in mean of about 30 minutes.
+
+6. Use `dplyr` to create two new data frames: males and females, with the data for each gender. For males, what is the Pearson correlation between age and time to finish?
+
+7. For females, what is the Pearson correlation between age and time to finish?
+
+8. If we interpret these correlations without visualizing the data, we would conclude that the older we get, the slower we run marathons, regardless of gender. Look at scatterplots and boxplots of times stratified by age groups (20-25, 25-30, etc..). After examining the data, what is a more reasonable conclusion?
+
+    A) Finish times are constant up until about our 40s, then we get slower.
+    B) On average, finish times go up by about 7 minutes every five years.
+    C) The optimal age to run a marathon is 20-25.
+    D) Coding errors never happen: a five year old boy completed the 2012 NY city marathon.
+
+9. When is it appropriate to use pie charts or donut charts?
+    A) When you are hungry.
+    B) To compare percentages.
+    C) To compare values that add up to 100%.
+    D) Never.
+
+10. The use of pseudo-3D plots in the literature mostly adds:
+    A) Pizzazz.
+    B) The ability to see three dimensional data.
+    C) Ability to discover.
+    D) Confusion.
