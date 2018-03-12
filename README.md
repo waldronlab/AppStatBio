@@ -72,6 +72,6 @@ All course materials will be available from https://github.com/waldronlab/AppSta
 3. unsupervised analysis
     + graphics for exploratory data analysis
     + distance in high dimensions
-    + principal componenets analysis and multidimensional scaling
+    + principal components analysis and multidimensional scaling
     + unsupervised clustering
     + batch effects
