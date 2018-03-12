@@ -15,10 +15,9 @@ Read in the msleep_ggplot2.csv file with the function read.csv and use the funct
 
 
 ```{r}
-data(sleep)
-class(sleep)
 tlp <- read.csv('https://raw.githubusercontent.com/tidyverse/ggplot2/master/data-raw/msleep.csv')
 class(tlp)
+head(tlp)
 ```
 
 Now use the filter function to select only the primates. How many animals in the table are primates? Hint: the nrow function gives you the number of rows of a data frame or matrix.
@@ -37,9 +36,9 @@ class(onlyPrimates)
 Now use the select function to extract the sleep (total) for the primates. What class is this object? Hint:  to pipe the results of the filter function to select.
 
 ```{r}
-filter(tlp,order=='Primates') %>%
+filter(tlp, order=='Primates') %>%
     select(sleep_total) -> sleepPrimates
-select(filter(tlp,order=='Primates'), sleep_total) #equivalent
+select(filter(tlp, order=='Primates'), sleep_total) #equivalent
 class(sleepPrimates)
 ```
 
