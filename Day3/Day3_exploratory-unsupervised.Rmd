@@ -11,7 +11,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval = FALSE, cache=TRUE)
+knitr::opts_chunk$set(eval = TRUE, cache=TRUE)
 ```
 
 # Day 3 outline
@@ -47,7 +47,7 @@ Book chapter 7:
 
 ## Quantile Quantile Plots
 
-```{r echo=FALSE, fig.width=8}
+```{r echo=TRUE, fig.width=8}
 suppressPackageStartupMessages(library(UsingR))
 suppressPackageStartupMessages(library(rafalib))
 # height qq plot
@@ -77,7 +77,7 @@ qqline(x)
 
 ## Boxplots
 
-```{r echo=FALSE, fig.width=8, fig.height=4}
+```{r echo=TRUE, fig.width=8, fig.height=4}
 par(mfrow=c(1, 3))
 hist(exec.pay, main = "CEO Compensation")
 qqnorm(exec.pay, main = "CEO Compensation")
@@ -95,7 +95,7 @@ Three different views of a continuous variable
 
 ## Scatterplots And Correlation
 
-```{r echo=FALSE, fig.width=8, fig.height=4}
+```{r echo=TRUE, fig.width=8, fig.height=4}
 par(mfrow=c(1,3))
 plot(father.son$fheight, father.son$sheight,xlab="Father's height in inches",ylab="Son's height in inches",main=paste("correlation =",signif(cor(father.son$fheight, father.son$sheight),2)))
 plot(cars$speed, cars$dist,xlab="Speed",ylab="Stopping Distance",main=paste("correlation =",signif(cor(cars$speed, cars$dist),2)))
@@ -159,7 +159,7 @@ set.seed(1); randomData <- matrix(rnorm(n*m),m,n)
 nullpvals <- rowttests(randomData,g)$p.value
 ```
 
-```{r, echo=FALSE, fig.height=3}
+```{r, echo=TRUE, fig.height=3}
 par(mfrow=c(1, 2))
 hist(pvals,ylim=c(0,1400))
 hist(nullpvals,ylim=c(0,1400))
@@ -232,7 +232,7 @@ pheatmap::pheatmap(ge, scale="row", show_colnames = F, show_rownames = F)
 
 Combination of `RColorBrewer` package and `colorRampPalette()` can create anything you want
 
-```{r, fig.height=5, echo=FALSE}
+```{r, fig.height=5, echo=TRUE}
 rafalib::mypar(1, 1)
 RColorBrewer::display.brewer.all(n=7)
 ```
@@ -261,7 +261,7 @@ RColorBrewer::display.brewer.all(n=7)
 
 - Distances can help organize samples and genomic features
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 library(GSE5859Subset)
 data(GSE5859Subset) ##this loads three tables
 set.seed(1)
@@ -299,7 +299,7 @@ A **metric** satisfies the following five properties:
 ## Euclidian distance (metric)
 
 - Remember grade school:
-```{r, echo=FALSE, fig.height=3.5}
+```{r, echo=TRUE, fig.height=3.5}
 rafalib::mypar()
 plot(c(0,1,1),c(0,0,1),pch=16,cex=2,xaxt="n",yaxt="n",xlab="",ylab="",bty="n",xlim=c(-0.25,1.25),ylim=c(-0.25,1.25))
 lines(c(0,1,1,0),c(0,0,1,0))
@@ -416,7 +416,7 @@ cor(t(y))
 
 ### Visualizing twin pairs data
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 z1 = (y[1, ] + y[2, ]) / 2 #the sum 
 z2 = (y[1, ] - y[2, ])   #the difference
 
@@ -441,7 +441,7 @@ points(z[1, 1:2] , z[2, 1:2], col=2, pch=16)
 ### Not much distance is lost in the second dimension
 
 <center>
-```{r, echo=FALSE, fig.height=3.5, fig.width=3.5}
+```{r, echo=TRUE, fig.height=3.5, fig.width=3.5}
 rafalib::mypar()
 d = dist(t(y))
 d3 = dist(z[1,]) * sqrt(2) ##distance computed using just first dimension mypar(1,1)
@@ -537,14 +537,14 @@ pheatmap::pheatmap(e.pc1genes, scale="none", show_rownames=TRUE,
 
 - $\mathbf{D}$ (**eigenvalues**): standard deviation scaling factor that each decomposed variable is multiplied by.
 
-```{r, fig.height=3, fig.width=5, echo=FALSE, fig.align='center'}
+```{r, fig.height=3, fig.width=5, echo=TRUE, fig.align='center'}
 rafalib::mypar()
 plot(p$sdev^2 / sum(p$sdev^2)*100, xlim=c(0, 150), type="b",
      ylab="% variance explained", main="Screeplot")
 ```
 
 Alternatively as cumulative % variance explained (using `cumsum()` function):
-```{r, fig.height=4, echo=FALSE, fig.align='center'}
+```{r, fig.height=4, echo=TRUE, fig.align='center'}
 rafalib::mypar()
 plot(cumsum(p$sdev^2)/sum(p$sdev^2)*100, 
   ylab="cumulative % variance explained", ylim=c(0, 100), 
@@ -562,7 +562,7 @@ plot(cumsum(p$sdev^2)/sum(p$sdev^2)*100,
 
 ## PCA interpretation: scores
 
-```{r, fig.height=5, echo=FALSE}
+```{r, fig.height=5, echo=TRUE}
 rafalib::mypar()
 plot(p$x[, 1:2], xlab="PC1", ylab="PC2", 
      main="plot of p$x[, 1:2]",
@@ -582,7 +582,7 @@ d <- as.dist(1 - cor(e.standardize.fast))
 mds <- cmdscale(d)
 ```
 
-```{r, echo=FALSE, fig.height=5}
+```{r, echo=TRUE, fig.height=5}
 rafalib::mypar()
 plot(mds, col=factor(tissue), pch=as.integer(factor(tissue)))
 legend("topright", legend=levels(factor(tissue)), col=1:length(unique(tissue)),
