@@ -478,3 +478,15 @@ p2 <- c(runif(900), runif(100, min=0, max=0.05))
 
 Create a binary friction variable "binfriction" by splitting friction at its median into "high" and "low". Make sure "low" is the reference category. (One way to do this is with `?cut`). Repeat the above linear regressions using *logistic* regression with "binfriction" as the response variable. Compare the results to what you saw in the linear regressions.
 
+```{r}
+spider$binfriction <- cut(spider$friction, breaks=c(0, median(spider$friction), Inf), labels=c("low", "high"))
+fitbin <- glm(binfriction ~ type + leg, family = binomial(), data=spider)
+summary(fitbin)
+```
+
+Compare to linear regression:
+```{r}
+fit <- lm(friction ~ type + leg, data=spider)
+summary(fit)
+```
+
