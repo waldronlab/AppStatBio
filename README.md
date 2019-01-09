@@ -3,7 +3,7 @@
 ## Instructor
 
 Levi Waldron, PhD  
-Assistant Professor of Biostatistics  
+Associate Professor of Biostatistics  
 City University of New York School Graduate of Public Health and Health Policy  
 New York, NY, U.S.A.  
 
@@ -32,13 +32,11 @@ This course will provide biologists and bioinformaticians with practical statist
 
 ## Related Resources
 
-* Github resources at http://waldronlab.github.io/github/
-* Resources for learning R at http://waldronlab.github.io/learnr/
-* Other resources at http://waldronlab.github.io/
+* http://waldronlab.io/teaching/resources/
 
-### Labs
+## Labs
 
-Each day will include a hands-on lab session, that students should attempt and hand in something before the following class by committing to this Github repository. You are encouraged to work together on lab exercises, but should hand in your own individual work.
+Each day will include a hands-on lab session, that students should attempt in full. 
 
 ## Session detail by day
 
@@ -65,4 +63,4 @@ All course materials will be available from https://github.com/waldronlab/AppSta
     + creating a `MultiAssayExperiment`
     + subsetting, reshaping, growing, and extraction of a MultiAssayExperiment
     + lotting, correlation, and other statistical analyses
-    + [code](https://github.com/waldronlab/MultiAssayExperimentWorkshop), [html](https://bioconductor.github.io/BiocWorkshops/workflow-for-multi-omics-analysis-with-multiassayexperiment.html)
+    + multi'omics lab [code](https://github.com/waldronlab/MultiAssayExperimentWorkshop) and [html](https://bioconductor.github.io/BiocWorkshops/workflow-for-multi-omics-analysis-with-multiassayexperiment.html)
