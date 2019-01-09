@@ -1,7 +1,7 @@
 ---
 title: 'Applied Statistics for High-throughput Biology: Session 1'
 author: "Levi Waldron"
-date: "Mar 6, 2018"
+date: "Jan 9, 2019"
 output: 
   html_document: 
     keep_md: yes
@@ -33,9 +33,8 @@ output:
 * High-dimensional statistics (more variables than observations)
 * Predictive modeling and methodology for validation
 * Metagenomic profiling of the human microbiome
-* Cancer genomics
-* HIV treatment effectiveness
-* http://www.waldronlab.org
+* Multi-omic data analysis for cancer
+* http://www.waldronlab.io
 
 
 # R - basic usage
@@ -56,14 +55,15 @@ browseVignettes("packagename")                | browseVignettes("dplyr")
 
 ## Installing Packages the Bioconductor Way
 
-- See the [Bioconductor](http://www.bioconductor.org/) site for more info
+- See the [Bioconductor](http://www.bioconductor.org/install) site for more info
 
 Pseudo code: 
 
 ```{r, eval = FALSE}
-source("https://bioconductor.org/biocLite.R")
+install.packages("BiocManager") #from CRAN
 packages <- c("packagename", "githubuser/repository", "biopackage")
-BiocInstaller::biocLite(packages)
+BiocManager::install(packages)
+BiocManager::valid()  #check validity of installed packages
 ```
 
 - Works for CRAN, GitHub, and Bioconductor packages!
@@ -71,8 +71,8 @@ BiocInstaller::biocLite(packages)
 ## Note about installing `devtools`
 
 - Useful for building packages
-- Download and install from GitHub, directly or via BiocInstaller::biocLite()
-- Installation dependent on OS ([Rtools](https://cran.r-project.org/bin/windows/Rtools/) for Windows)
+- Download and install from GitHub, directly or via `BiocManager::install()`
+- Installation dependent on OS ([Rtools](https://cran.r-project.org/bin/windows/Rtools/) for Windows, [OSX installation](http://johnmuschelli.com/neuroc/installing_devtools/index.html) requires XCode and Command Line Tools, GNU/Linux "just works")
 
 # Introduction to the R language
 
@@ -438,8 +438,9 @@ disease=factor(c(rep(0,180),rep(1,20),rep(0,40),rep(1,10)),
                labels=c("control","cases"))
 genotype=factor(c(rep("AA/Aa",204),rep("aa",46)),
                 levels=c("AA/Aa","aa"))
+set.seed(1)
+genotype <- sample(genotype)
 dat <- data.frame(disease, genotype)
-dat <- dat[sample(nrow(dat)),] #shuffle them up 
 summary(dat)
 ```
 

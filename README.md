@@ -11,16 +11,6 @@ Email: lwaldron.research@gmail.com
 Hangouts: lwaldron.research  
 Skype: levi.waldron  
 
-## Times and Places
-
-Classes will take place on March 6, 8, and 13:
-
-|date   | time   |  place |
-|-------|--------|--------|
-| 6 Marc 2018 | 09:00 - 11:30  | Gamma [Borgo Roma - Ca' Vignal 2] | 
-|  8 Marc 2018 |  09:00 - 11:30 |  G [Borgo Roma - Ca' Vignal 2] | 
-|  13 Marc 2018 |  09:00 - 11:30 |  Gamma [Borgo Roma - Ca' Vignal 2] | 
-
 ## Preparation
 
 Please come to the first class with the following installed:
@@ -50,11 +40,6 @@ This course will provide biologists and bioinformaticians with practical statist
 
 Each day will include a hands-on lab session, that students should attempt and hand in something before the following class by committing to this Github repository. You are encouraged to work together on lab exercises, but should hand in your own individual work.
 
-### Projects
-
-A project will be handed out before the final class, that will involve analysing a genomics dataset.  Each student will analyse their own dataset and prepare an individual report using R Markdown for reproducible analysis and reporting.
-Reports will be assessed for quality of analysis and clarity of presentation.
-
 ## Session detail by day
 
 All course materials will be available from https://github.com/waldronlab/AppStatBio/.
@@ -75,3 +60,9 @@ All course materials will be available from https://github.com/waldronlab/AppSta
     + principal components analysis and multidimensional scaling
     + unsupervised clustering
     + batch effects
+4. multi'omic data analysis lab session
+    + core data classes in Bioconductor: `GRanges`, `SummarizedExperiment`, `RaggedExperiment`, `MultiAssayExperiment`
+    + creating a `MultiAssayExperiment`
+    + subsetting, reshaping, growing, and extraction of a MultiAssayExperiment
+    + lotting, correlation, and other statistical analyses
+    + [code](https://github.com/waldronlab/MultiAssayExperimentWorkshop), [html](https://bioconductor.github.io/BiocWorkshops/workflow-for-multi-omics-analysis-with-multiassayexperiment.html)
