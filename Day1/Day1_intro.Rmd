@@ -1,12 +1,8 @@
 ---
 title: 'Applied Statistics for High-throughput Biology: Session 1'
 author: "Levi Waldron"
-date: "Jan 9, 2019"
-output: 
-  html_document: 
-    keep_md: yes
-    number_sections: yes
-    toc: yes
+date: "Jan 10, 2019"
+output: slidy_presentation
 ---
 
 # Welcome and outline
@@ -220,11 +216,11 @@ hist(delays$delay, main="Mean hourly delay", xlab="Delay (hours)")
 
 - **A random variable**: any characteristic that can be measured or categorized, and where any particular outcome is determined at least partially by chance.
 
-> - Examples:
-    - number of new diabetes cases in NYC in a given year
-    - The weight of a randomly selected individual in NYC
+- Examples:
+    - number of new diabetes cases in population in a given year
+    - The weight of a randomly selected individual in a population
 
-> - Types:
+- Types:
     - Categorical random variable (e.g. disease / healthy)
     - Discrete random variable (e.g. sequence read counts)
     - Continuous random variable (e.g. normalized qPCR intensity)
@@ -471,6 +467,7 @@ epitools::oddsratio(genotype, disease, method="wald")$measure
 - In a GWAS, correction for multiple testing is required
 - Can also use logistic regression for two categorical variables
 
+# Summary - hypothesis testing
 
 ## Power and type I and II error
 
