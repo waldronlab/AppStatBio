@@ -1,8 +1,8 @@
 
 ---
-title: 'UNIVR Applied Statistics for High-throughput Biology 2018: Day 2'
+title: 'UNIVR Applied Statistics for High-throughput Biology 2019: Day 2'
 author: "Levi Waldron"
-date: "Mar 8, 2018"
+date: "Jan 11, 2019"
 output: 
   html_document: 
     keep_md: yes

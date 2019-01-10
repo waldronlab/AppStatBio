@@ -2,7 +2,12 @@
 title: 'Applied Statistics for High-throughput Biology: Session 1'
 author: "Levi Waldron"
 date: "Jan 10, 2019"
-output: slidy_presentation
+output:
+  html_document:
+    keep_md: yes
+    number_sections: yes
+    toc: yes
+  slidy_presentation: default
 ---
 
 # Welcome and outline
@@ -82,7 +87,7 @@ rnorm(5)
 
 `integer`:
 ```{r}
-sample( 1:5 )
+sample( 1L:5L )
 ```
 
 `logical`:
@@ -203,11 +208,13 @@ delays <- flights %>%
   group_by(year, month, day, hour) %>%
   summarise(delay = mean(dep_delay), n = n()) %>%
   filter(n > 10)
+## dplyr cheatsheet
+## ggplot2 cheatsheet
 ```
 
 ## `dplyr` example (cont'd)
 ```{r}
-hist(delays$delay, main="Mean hourly delay", xlab="Delay (hours)")
+hist(delays$delay, main="Mean hourly delay", xlab="Delay (minutes)")
 ```
 
 # Random Variables and Distributions
