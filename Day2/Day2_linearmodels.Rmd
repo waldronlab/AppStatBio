@@ -148,6 +148,7 @@ Assumptions of linear models: $\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsi
 ## Mini-exercise
 
 Using the `spider` object:
+
 1. Create a new variable `leg2` where `L1` / `L2` are merged, and `L3` / `L4` are merged
 2. Create a new variable `leg3` that is an "ordered" factor (see `?factor`)
 3. Make "push" the reference level for `spider$type` (see `?relevel`)

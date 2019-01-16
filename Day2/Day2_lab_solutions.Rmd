@@ -1,6 +1,10 @@
 ---
 title: "Interactions and Contrasts exercise"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
 ---
 
 
