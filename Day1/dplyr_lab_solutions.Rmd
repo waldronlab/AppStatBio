@@ -52,7 +52,7 @@ filter(tlp,order=='Primates') %>%
 mean(unlist(sleepPrimates)) #equivalent
 ```
 
-For the last exercise, we could also use the dplyr summarize function. We have not i#ntroduced this function, but you can read the help file and repeat exercise 5, this time using just filter and summarize to get the answer.
+For the last exercise, we could also use the dplyr summarize function. We have not introduced this function, but you can read the help file and repeat exercise 5, this time using just filter and summarize to get the answer.
 
 ```{r}
 tlp %>%
