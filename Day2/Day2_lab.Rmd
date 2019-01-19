@@ -12,11 +12,13 @@ editor_options:
 
 http://genomicsclass.github.io/book/pages/expressing_design_formula_exercises.html
 
-Suppose we have an experiment with the following design: on three different days, we perform an experiment with two treated and two control units. We then measure some outcome YiYi, and we want to test the effect of treatment as well the effects of different days (perhaps the temperature in the lab affects the measuring device). Assume that the true condition effect is the same for each day (no interaction between condition and day). We then define factors in R for day and for condition.
+Suppose we have an experiment with the following design: on three different days, we perform an experiment with two treated and two control units. We then measure some outcome $Y_i$, and we want to test the effect of treatment as well the effects of different days (perhaps the temperature in the lab affects the measuring device). Assume that the true condition effect is the same for each day (no interaction between condition and day). We then define factors in R for day and for condition.
 
 * condition/day	A	B	C
 * treatment	2	2	2
 * control	2	2	2
+
+## Question 1
 
 Given the factors we have defined above and without defining any new ones, which of the following R formula will produce a design matrix (model matrix) that lets us analyze the effect of condition, controlling for the different days?
 
@@ -27,11 +29,13 @@ Given the factors we have defined above and without defining any new ones, which
 
 Remember that using the ~ and the names for the two variables we want in the model will produce a design matrix controlling for all levels of day and all levels of condition. We do not use the levels in the design formula.
 
+
+
 # Interactions and contrasts
 
 From: http://genomicsclass.github.io/book/pages/interactions_and_contrasts_exercises.html
 
-## Question 1
+## Question 2
 
 ```{r}
 species <- factor(c("A","A","B","B"))
@@ -44,7 +48,7 @@ You can either figure this question out by looking at the design matrix, or by u
 
 What should the contrast vector be, to obtain the difference between the species B control group and the species A treatment group (species B control - species A treatment)? Assume that the coefficients (columns of design matrix) are: Intercept, speciesB, conditiontreated.
 
-## Question 2
+## Question 3
 
 Use the Rmd script to load the spider dataset. Suppose we build a model using two variables: `~ type + leg`.
 
@@ -84,9 +88,10 @@ fit <- lm(log2friction ~ type*leg, data=spider)
 
 What is the t-statistic for the interaction of type push and leg L4? If this t-statistic is sufficiently large, we would reject the null hypothesis that the push vs. pull effect on log2(friction) is the same in L4 as in L1.
 
+
 ## Question 5
 
-Using the same analysis of log2 transformed data, What is the F-value for all of the type:leg interaction terms in an ANOVA? If this value is sufficiently large, we would reject the null hypothesis that the push vs. pull effect on log2(friction) is the same for all leg pairs.
+Using the same analysis of log2 transformed data, what is the F-value for all of the type:leg interaction terms in an ANOVA? If this value is sufficiently large, we would reject the null hypothesis that the push vs. pull effect on log2(friction) is the same for all leg pairs.
 
 ## Question 6
 

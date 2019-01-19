@@ -13,20 +13,20 @@ output:
 knitr::opts_chunk$set(eval = TRUE, cache=TRUE)
 ```
 
-## Multi-omic data analysis in Bioconductor
+# Multi-omic data analysis in Bioconductor
 
-### Abstract
+## Abstract
 
 This workshop demonstrates data management and analyses of multiple assays associated with a single set of biological specimens, using the `MultiAssayExperiment` data class and methods. It introduces the `RaggedExperiment` data class, which provides efficient and powerful operations for representation of copy number and mutation and variant data that are represented by different genomic ranges for each specimen.
 
-### Outline
+## Outline
 
 * identify appropriate data structures for different 'omics data types
     - `SummarizedExperiment`, `GRanges`, `GRangesList`, `RaggedExperiment`, `MultiAssayExperiment`
 * construct, explore, manipulate, and analyze multi'omics datasets
 * link MultiAssayExperiment data with packages for differential expression, machine learning, and plotting
 
-### R/Bioconductor packages used
+## R/Bioconductor packages used
 
 * [MultiAssayExperiment](https://bioconductor.org/packages/MultiAssayExperiment)
 * [GenomicRanges](https://bioconductor.org/packages/GenomicRanges)
@@ -59,7 +59,7 @@ library(survminer)
 library(pheatmap)
 ```
 
-```{r, echo = FALSE}
+```{r libraries, echo = FALSE}
 suppressPackageStartupMessages({
     library(MultiAssayExperiment)
     library(GenomicRanges)
@@ -80,12 +80,12 @@ suppressPackageStartupMessages({
 })
 ```
 
-## Overview of key data classes
+# Overview of key data classes
 
 This section summarizes three fundamental data classes for the representation of multi-omics
 experiments. 
 
-### `(Ranged)SummarizedExperiment`
+## `(Ranged)SummarizedExperiment`
 
 ```{r, echo = FALSE, fig.cap = "A matrix-like container where rows represent features of interest and columns represent samples. The objects contain one or more assays, each represented by a matrix-like object of numeric or other mode."}
 knitr::include_graphics("figures/SummarizedExperiment.png")
@@ -103,7 +103,7 @@ extends("SingleCellExperiment")
 
 Thus, although `SingleCellExperiment` provides additional methods over `RangedSummarizedExperiment`, it also inherits all the methods of `SummarizedExperiment` and `RangedSummarizedExperiment`, so everything you learn about `SummarizedExperiment` will be applicable to `SingleCellExperiment`.
 
-### `RaggedExperiment`
+## `RaggedExperiment`
 
 `RaggedExperiment` is a flexible data representation for segmented copy number, somatic mutations such as
 represented in `.vcf` files, and other ragged array schema for genomic location data. 
@@ -119,7 +119,7 @@ to matrix format.
 knitr::include_graphics("figures/RaggedExperiment.png")
 ```
 
-### `MultiAssayExperiment`
+## `MultiAssayExperiment`
 
 `MultiAssayExperiment` is an integrative container for coordinating multi-omics experiment data on a
 set of biological specimens. As much as possible, its methods adopt the same vocabulary as `SummarizedExperiment`.
@@ -161,12 +161,12 @@ Note that any data class extending these classes, and in fact any data class sup
 knitr::include_graphics("figures/MultiAssayExperiment.png")
 ```
 
-## Working with RaggedExperiment
+# Working with RaggedExperiment
 
 You can skip this section if you prefer to focus on the functionality of `MultiAssayExperiment`. In most use cases, you would likely convert a `RaggedExperiment`
 to matrix or `RangedSummarizedExperiment` using one of the `Assay` functions below, and either concatenate this rectangular object to the `MultiAssayExperiment` or use it to replace the `RaggedExperiment`.  
 
-### Constructing a `RaggedExperiment` object
+## Constructing a `RaggedExperiment` object
 
 We start with a toy example of two `GRanges` objects, providing ranges on two chromosomes
 in two samples:
@@ -207,7 +207,7 @@ Note that the original ranges are is represented as the `rowRanges` of the `Ragg
 rowRanges(ragexp)
 ```
 
-### *Assay functions
+## *Assay functions
 
 A suite of *Assay operations allow users to resize the matrix-like
 representation of ranges to varying row dimensions
@@ -222,7 +222,7 @@ The four main _Assay_ functions for converting to matrix are:
 
 These each have a corresponding function for conversion to [RangedSummarizedExperiment](#Conversion to RangedSummarizedExperiment).  
 
-#### sparseAssay
+### sparseAssay
 
 The most straightforward matrix representation of a `RaggedExperiment` will
 return a matrix with the number of rows equal to the total number of ranges defined across all
@@ -244,7 +244,7 @@ assay(ragexp, "score")
 assay(ragexp, "type")
 ```
 
-#### compactAssay
+### compactAssay
 
 The dimensions of the `compactAssay` result differ from that of the `sparseAssay` result only 
 if there are identical ranges in different samples. Identical ranges are placed in the same row in
@@ -258,7 +258,7 @@ compactAssay(ragexp, "type")
 Note that row names are constructed from the ranges, and the names of the `GRanges` vectors are 
 lost, unlike in the `sparseAssay` result.
 
-#### disjoinAssay
+### disjoinAssay
 
 This function is similar to `compactAssay` except the rows are _disjoint_[^9] ranges. Elements of the matrix are summarized by applying the `simplifyDisjoin` functional
 argument to assay values of overlapping ranges.
@@ -269,7 +269,7 @@ disjoinAssay(ragexp, simplifyDisjoin = mean)
 
 [^9]: A _disjoint_ set of ranges has no overlap between any ranges of the set.
 
-#### qreduceAssay
+### qreduceAssay
 
 The `qreduceAssay` function is the most complicated but likely the most useful of the `RaggedExperiment`
 *Assay* functions. It requires you to provide a `query` argument that is a `GRanges` vector, and 
@@ -313,7 +313,7 @@ corresponding to the query:
 qreduceAssay(ragexp, query, simplifyReduce = weightedmean)
 ```
 
-### Conversion to RangedSummarizedExperiment
+## Conversion to RangedSummarizedExperiment
 
 These methods all have corresponding methods to return a `RangedSummarizedExperiment` and preserve the `colData`:
 ```{r, results='hide'}
@@ -324,7 +324,7 @@ qreduceSummarizedExperiment(ragexp, query=query, simplify=weightedmean)
 ```
 
 
-## Working with MultiAssayExperiment
+# Working with MultiAssayExperiment
 
 ## API cheat sheet
 
@@ -333,7 +333,7 @@ knitr::include_graphics("figures/MultiAssayExperiment_cheatsheet.png")
 ```
 
 
-### The MultiAssayExperiment miniACC demo object
+## The MultiAssayExperiment miniACC demo object
 
 Get started by trying out `MultiAssayExperiment` using a subset of the TCGA
 adrenocortical carcinoma (ACC) dataset provided with the package. This dataset
@@ -351,7 +351,7 @@ data(miniACC)
 miniACC
 ```
 
-### colData - information biological units
+## colData - information biological units
 
 This slot is a `DataFrame` describing the characteristics of biological units,
 for example clinical data for patients. In the prepared datasets from
@@ -373,7 +373,7 @@ table(miniACC$race)
     + therefore you could treat replicate observations as one or multiple rows of `colData`, and this will result in different behaviors of functions you will learn later like subsetting, `duplicated()`, and `wideFormat()`.
     + multiple time points, or distinct biological replicates, should probably be separate rows of the `colData`.
 
-### ExperimentList - experiment data
+## ExperimentList - experiment data
 
 A base `list` or `ExperimentList` object containing the experimental datasets
 for the set of samples collected. This gets converted into a class
@@ -401,7 +401,7 @@ same patient, or there can be no data for that patient.
 supports: single-bracket subsetting (`[`), `dimnames`, and `dim`. Most data
 classes defined in Bioconductor meet these requirements.
 
-### sampleMap - relationship graph
+## sampleMap - relationship graph
 
 `sampleMap` is a graph representation of the relationship between biological
 units and experimental results. In simple cases where the column names of
@@ -429,7 +429,7 @@ sampleMap(miniACC)
 
 <p style="text-align: right;"> [back to top](#overview-of-key-data-classes) </p>
 
-### metadata
+## metadata
 
 Metadata can be used to keep additional information about patients, assays
 performed on individuals or on the entire cohort, or features such as genes,
@@ -612,8 +612,9 @@ one row per primary identifier (patient). Here, each variable becomes a new
 column:
 
 ```{r}
-wideFormat(miniACC[c("TP53", "CTNNB1"), , ],
+res <- wideFormat(miniACC[c("TP53", "CTNNB1"), , ],
            colDataCols = c("vital_status", "days_to_death"))
+res[1:2, 1:7]
 ```
 
 ## MultiAssayExperiment class construction and concatenation
@@ -667,7 +668,7 @@ The package [cheat sheet](https://bioconductor.org/packages/release/bioc/vignett
 If anything is unclear, please ask a question at
 https://support.bioconductor.org/ or create an issue on the [MultiAssayExperiment issue tracker](https://github.com/waldronlab/MultiAssayExperiment/issues).
 
-## The Cancer Genome Atlas (TCGA) as MultiAssayExperiment objects
+# The Cancer Genome Atlas (TCGA) as MultiAssayExperiment objects
 
 Most unrestricted TCGA data are available as MultiAssayExperiment objects from
 the `curatedTCGAData` package. This represents a lot of harmonization!
@@ -800,7 +801,8 @@ Surv(miniACC$days_to_death, miniACC$vital_status)
 
 And remove any patients missing overall survival information:
 ```{r}
-miniACCsurv <- miniACC[, complete.cases(miniACC$days_to_death, miniACC$vital_status), ]
+miniACCsurv <- miniACC[, complete.cases(miniACC$days_to_death,
+                                        miniACC$vital_status), ]
 ```
 
 ```{r}
