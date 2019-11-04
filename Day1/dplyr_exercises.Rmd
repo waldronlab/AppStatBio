@@ -1,8 +1,9 @@
 ---
 title: "dplyr exercises"
 author: "Levi Waldron"
-date: "Jan 10 2019"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -24,7 +25,7 @@ Read in the msleep_ggplot2.csv file with the function read.csv and use the funct
 Now use the filter function to select only the primates. How many animals in the table are primates? Hint: the nrow function gives you the number of rows of a data frame or matrix.
 
 ```{r}
-library(dplyr)
+suppressPackageStartupMessages(library(dplyr))
 filter(tlp, order == "Primates") %>%
     nrow()
 summary(tlp$order == "Primates")

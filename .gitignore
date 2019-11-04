@@ -19,3 +19,6 @@ README.html
 *figure-html/*
 *figure-slidy/*
 *figure/*
+*.md
+*_files/*
+

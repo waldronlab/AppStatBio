@@ -46,21 +46,20 @@ All course materials will be available from https://github.com/waldronlab/AppSta
     + random variables
     + distributions
     + hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
-    + hypothesis testing for categorical variables (Fisher's Test, Chi-square test)
     + data manipulation using dplyr
-2. linear modeling
+2. non-parametric approaches
+    + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
+    + Monte Carlo simulation
+    + permutation tests
+    + bootstrap simulation
+    + exploratory data analysis
+3. linear modeling
     + linear and generalized linear modeling
     + model matrix and model formulae
     + multiple testing
-3. unsupervised analysis
+4. unsupervised analysis
     + graphics for exploratory data analysis
     + distance in high dimensions
     + principal components analysis and multidimensional scaling
     + unsupervised clustering
     + batch effects
-4. multi'omic data analysis lab session
-    + core data classes in Bioconductor: `GRanges`, `SummarizedExperiment`, `RaggedExperiment`, `MultiAssayExperiment`
-    + creating a `MultiAssayExperiment`
-    + subsetting, reshaping, growing, and extraction of a MultiAssayExperiment
-    + lotting, correlation, and other statistical analyses
-    + multi'omics lab [code](https://github.com/waldronlab/MultiAssayExperimentWorkshop) and [html](https://bioconductor.github.io/BiocWorkshops/workflow-for-multi-omics-analysis-with-multiassayexperiment.html)
