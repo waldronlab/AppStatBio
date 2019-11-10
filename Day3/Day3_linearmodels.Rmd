@@ -1,8 +1,8 @@
 
 ---
-title: 'UNIVR Applied Statistics for High-throughput Biology 2019: Day 2'
+title: 'Applied Statistics for High-throughput Biology Day 3'
 author: "Levi Waldron"
-date: "Jan 11, 2019"
+date: "Nov 11, 2019"
 output: 
   html_document: 
     keep_md: yes
@@ -14,7 +14,7 @@ output:
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-## Day 2 outline
+# Day 2 outline
 
 * Multiple linear regression
     + Continuous and categorical predictors
@@ -475,19 +475,16 @@ p2 <- c(runif(900), runif(100, min=0, max=0.05))
     - count $y$ (log-linear regression with e.g. Poisson or Negative Binomial link functions) 
 - The basis for identifying differential expression / differential abundance
 
-## Lab
+## Exercises
 
-Create a binary friction variable "binfriction" by splitting friction at its median into "high" and "low". Make sure "low" is the reference category. (One way to do this is with `?cut`). Repeat the above linear regressions using *logistic* regression with "binfriction" as the response variable. Compare the results to what you saw in the linear regressions.
+* [Design formula exercises](http://genomicsclass.github.io/book/pages/expressing_design_formula_exercises.html)
+* [Interactions and contrasts](http://genomicsclass.github.io/book/pages/interactions_and_contrasts_exercises.html) All **except 3**
 
-```{r}
-spider$binfriction <- cut(spider$friction, breaks=c(0, median(spider$friction), Inf), labels=c("low", "high"))
-fitbin <- glm(binfriction ~ type + leg, family = binomial(), data=spider)
-summary(fitbin)
-```
 
-Compare to linear regression:
-```{r}
-fit <- lm(friction ~ type + leg, data=spider)
-summary(fit)
-```
+## Links
 
+- A built [html][] version of this lecture is available.
+- The [source][] R Markdown is also available from Github.
+
+[html]: http://rpubs.com/lwaldron/AppStatBio2019_day3
+[source]: https://github.com/waldronlab/AppStatBio
