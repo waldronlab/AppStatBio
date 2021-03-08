@@ -1,17 +1,11 @@
 ---
 title: 'Applied Statistics for High-throughput Biology: Session 1'
 author: "Levi Waldron"
-date: "Nov 4, 2019"
-output:
-  html_document:
-    keep_md: yes
-    number_sections: yes
-    toc: yes
-  slidy_presentation: default
+output: slidy_presentation
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Front matter
@@ -24,44 +18,44 @@ My research interests:
 * Predictive modeling and methodology for validation
 * Metagenomic profiling of the human microbiome
 * Multi-omic data analysis for cancer
-* http://www.waldronlab.io
+* https://www.waldronlab.io
 
 ## The textbook
 
-* [Biomedical Data Science](book) by Irizarry and Love ([ePub version] on Leanpub)
+* [Biomedical Data Science][book] by Irizarry and Love ([ePub version] on Leanpub)
 * [Source repository](https://github.com/genomicsclass/labs)
 
 ![Biomedical Data Science book cover](https://d2sofvawe08yqg.cloudfront.net/dataanalysisforthelifesciences/hero2x?1549465432)
 
 ## Day 1 outline
 
-- Some essential R classes and related Bioconductor classes
-- Introduction to `dplyr`
-- Random variables and distributions
-- Hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
-- Confidence intervals
-- [Book](book) chapters 0 and 1
+* Some essential R classes and related Bioconductor classes
+* Random variables and distributions
+* Hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
+* Confidence intervals
+* Introduction to `dplyr`
+* [Book][book] chapters 0 and 1
 
 ## Learning objectives
 
-- Perform basic data manipulation/exploration in R and dplyr
-- Identify key R and Bioconductor data classes
-- Define random variables and distinguish them from non-random ones
-- Distinguish population from sampling distributions
-- Identify scenarios for use of z-test and t-tests
-- Interpret confidence intervals and Standard Error
+* Perform basic data manipulation/exploration in R and dplyr
+* Identify key R and Bioconductor data classes
+* Define random variables and distinguish them from non-random ones
+* Distinguish population from sampling distributions
+* Identify scenarios for use of z-test and t-tests
+* Interpret confidence intervals and Standard Error
 
 # Random Variables and Distributions
 
 ## Random Variables
 
-- **A random variable**: any characteristic that can be measured or categorized, and where any particular outcome is determined at least partially by chance.
+* **A random variable**: any characteristic that can be measured or categorized, and where any particular outcome is determined at least partially by chance.
 
-- Examples:
+* Examples:
     - number of new diabetes cases in population in a given year
     - The weight of a randomly selected individual in a population
 
-- Types:
+* Types:
     - Categorical random variable (e.g. disease / healthy)
     - Discrete random variable (e.g. sequence read counts)
     - Continuous random variable (e.g. normalized qPCR intensity)
@@ -114,7 +108,7 @@ lines(xdens, length(x) * dnbinom(xdens, size = 30, mu = 2), lw = 2)
 
 ## Random Variables - examples
 
-- Binomial Distribution random variable ($size=20, prob=0.25$), and a sample of $n=100$.
+* Binomial Distribution random variable ($size=20, prob=0.25$), and a sample of $n=100$.
     - use for binary outcomes
     
 ```{r, echo=FALSE}
@@ -134,15 +128,15 @@ lines(xdens, length(x) * dbinom(xdens, size = 20, prob = 0.25), lw = 2)
 
 ## Why hypothesis testing?
 
-- Allows yes/no statements, e.g. whether:
+* Allows yes/no statements, e.g. whether:
     - a population mean has a hypothesized value, or
     - an intervention causes a measurable effect relative to a control group
 
-> - Example questions with yes/no answers:
+* Example questions with yes/no answers:
     - Is a gene differentially expressed between two populations?
     - Do hypertensive, smoking men have the same mean cholesterol level as the general population?
 
-- Hypothesis testing is not the only framework for inferential statistics, e.g.:
+* Hypothesis testing is not the only framework for inferential statistics, e.g.:
     - confidence intervals
     - posterior probabilities (Bayesian statistics)
     - read [p-values are just the tip of the iceberg](http://www.nature.com/news/statistics-p-values-are-just-the-tip-of-the-iceberg-1.17412)
@@ -174,15 +168,15 @@ lines(xdens, length(x) * dbinom(xdens, size = 20, prob = 0.25), lw = 2)
 
 ## Population vs sampling distributions
 
-- Population distributions
+* Population distributions
     + Each realization / point is an individual
     
-- Sampling distributions
+* Sampling distributions
     + Each realization / point is a sample
     + distribution depends on sample size
     + large sample distributions are given by the Central Limit Theorem
 
-- **Hypothesis testing is about sampling distributions**
+* **Hypothesis testing is about sampling distributions**
     + Did my sample likely come from that distribution?
 
 ## Note about the Central Limit Theorem
@@ -207,12 +201,12 @@ These are research hypotheses. What are the corresponding *null hypotheses*?
 
 ## The z-tests
 
-- "$z$" refers to the **Standard Normal Distribution**: $N(\mu=0, \sigma=1)$
-- In a one-sample test, only a single sample is drawn:
+* "$z$" refers to the **Standard Normal Distribution**: $N(\mu=0, \sigma=1)$
+* In a one-sample test, only a single sample is drawn:
     - $H_0: \mu = \mu_0$
-- In a two-sample test, two samples are drawn *independently*:
+* In a two-sample test, two samples are drawn *independently*:
     - $H_0: \mu_1 = \mu_2$
-- A paired test is one sample of paired measurements, e.g.:
+* A paired test is one sample of paired measurements, e.g.:
     - pain level in individuals before and after treatment
        + $H_0: \mu_{before} = \mu_{after}$
     - microbial abundance in upper and lower intestines in same individuals
@@ -243,12 +237,12 @@ TeachingDemos::z.test(
 
 ## The t-tests
 
-- The t-tests are for small samples and do _not_ rely on the Central Limit Theorem
-- In a one-sample test, only a single sample is drawn:
+* The t-tests are for small samples and do _not_ rely on the Central Limit Theorem
+* In a one-sample test, only a single sample is drawn:
     - $H_0: \mu = \mu_0$
-- In a two-sample test, two samples are drawn *independently*:
+* In a two-sample test, two samples are drawn *independently*:
     - $H_0: \mu_1 = \mu_2$
-- A paired test is one sample of paired measurements, e.g.:
+* A paired test is one sample of paired measurements, e.g.:
     - individuals before and after treatment
 
 ## When to use t-tests
@@ -282,14 +276,14 @@ In this particular example the p-value is smaller than from the *z-test*, but in
 
 ## Why confidence intervals?
 
-- The above procedures produced both p-values and confidence intervals
-- p-values are useful only for deciding whether to reject $H_0$
-- p-values do not report effect size (observed difference).
-- p-values only indicate statistical significance which does not guarantee scientific/clinical significance.
+* The above procedures produced both p-values and confidence intervals
+* p-values are useful only for deciding whether to reject $H_0$
+* p-values do not report effect size (observed difference).
+* p-values only indicate statistical significance which does not guarantee scientific/clinical significance.
 
 Confidence intervals provide a **probable range for the true population mean**.
 
-```{r}
+```{r, echo=FALSE}
 set.seed(1)
 reps <- 100
 N <- 30
@@ -315,27 +309,27 @@ for (i in seq(1, reps)) {
 
 ## Intervals for any confidence level
 
-- If the sampling distribution is normal with standard error $SE$, then a confidence interval for the population mean is:
+* If the sampling distribution is normal with standard error $SE$, then a confidence interval for the population mean is:
     - $\bar{X} \pm 1.96 \times SE$ (95% CI, normal sampling distribution)
     - $\bar{X} \pm z_{\alpha / 2}^{crit} \times SE$ (normal sampling distribution)
     - $\bar{X} \pm t_{\alpha / 2, df}^{crit} \times SE$ (t sampling distribution)
-- The part after the $\pm$ is called the _margin of error_
+* The part after the $\pm$ is called the _margin of error_
 
 ## Confidence intervals vs. hypothesis testing
 
-- Confidence intervals can be used for hypothesis testing
+* Confidence intervals can be used for hypothesis testing
     - reject $H_0$ if the "null value" is not contained in the CI
-- Do **not** use overlap between two CIs for hypothesis test
+* Do **not** use overlap between two CIs for hypothesis test
     - for a two sample hypothesis test $H_0: \mu_1 = \mu_2$, must construct a single confidence interval for $\mu_1 - \mu_2$
 
 ## Q & A: confidence intervals
 
 Which of the following are true?
 
-- The 95% CI contains 95% of the values in the population
-- The 95% CI will contain the population mean, 19 times out of 20
-- The 95% CI is 95% probable to contain the population mean
-- The 99% CI will be wider than the 95% CI
+* The 95% CI contains 95% of the values in the population
+* The 95% CI will contain the population mean, 19 times out of 20
+* The 95% CI is 95% probable to contain the population mean
+* The 99% CI will be wider than the 95% CI
 
 # Summary - hypothesis testing
 
@@ -349,25 +343,25 @@ Which of the following are true?
 
 ## Use and mis-use of the p-value
 
-- The p-value is the probability of observing a sample statistic _as or more extreme_ as you did, _assuming that $H_0$ is true_
-- The p-value is a **random variable**:
+* The p-value is the probability of observing a sample statistic _as or more extreme_ as you did, _assuming that $H_0$ is true_
+* The p-value is a **random variable**:
     - **don't** treat it as precise.
     - **don't** do silly things like try to interpret differences or ratios between p-values
     - **don't** lose track of test assumptions such as independence of observations
     - **do** use a moderate p-value cutoff, then use some effect size measure for ranking
-- Small p-values are particularly:
+* Small p-values are particularly:
     - variable under repeated sampling, and
     - sensitive to test assumptions
 
 ## Use and mis-use of the p-value (cont'd)
 
-- If we fail to reject $H_0$, is the probability that $H_0$ is true equal to ($1-\alpha$)?  (Hint: NO NO NO!)
+* If we fail to reject $H_0$, is the probability that $H_0$ is true equal to ($1-\alpha$)?  (Hint: NO NO NO!)
     - Failing to reject $H_0$ does not mean $H_0$ is true
     - "No evidence of difference $\neq$ evidence of no difference"
-- Statistical significance vs. practical significance
+* Statistical significance vs. practical significance
     - As sample size increases, point estimates such as the mean are more precise
     - With large sample size, small differences in means may be statistically significant but not practically significant
-- Although $\alpha = 0.05$ is a common cut-off for the p-value, there is no set border between "significant" and "insignificant," only increasingly strong evidence against $H_0$ (in favor of $H_A$) as the p-value gets smaller.
+* Although $\alpha = 0.05$ is a common cut-off for the p-value, there is no set border between "significant" and "insignificant," only increasingly strong evidence against $H_0$ (in favor of $H_A$) as the p-value gets smaller.
 
 # R - basic usage
 
@@ -387,7 +381,7 @@ browseVignettes("packagename")                | browseVignettes("dplyr")
 
 ## Installing Packages the Bioconductor Way
 
-- See the [Bioconductor](http://www.bioconductor.org/install) site for more info
+* See the [Bioconductor](http://www.bioconductor.org/install) site for more info
 
 Pseudo code: 
 
@@ -398,13 +392,7 @@ BiocManager::install(packages)
 BiocManager::valid()  #check validity of installed packages
 ```
 
-- Works for CRAN, GitHub, and Bioconductor packages!
-
-## Note about installing `devtools`
-
-- Useful for building packages
-- Download and install from GitHub, directly or via `BiocManager::install()`
-- Installation dependent on OS ([Rtools](https://cran.r-project.org/bin/windows/Rtools/) for Windows, [OSX installation](http://johnmuschelli.com/neuroc/installing_devtools/index.html) requires XCode and Command Line Tools, GNU/Linux "just works")
+* Works for CRAN, GitHub, and Bioconductor packages!
 
 # Introduction to the R language
 
@@ -436,11 +424,11 @@ c("yes", "no")
 factor(c("yes", "no"))
 ```
 
-Demo: integer-like properties, `relevel()`
+For real-life recoding of factors, try `dplyr::recode`, `dplyr::recode_factor`
 
 ## Base R Data Types: missingness
 
-- Missing Values and others - **IMPORTANT**
+* Missing Values and others - **IMPORTANT**
 ```{r}
 c(NA, NaN, -Inf, Inf)
 ```
@@ -474,7 +462,7 @@ my.df <- data.frame(x, y, z, a, stringsAsFactors = FALSE)
 
 ## Bioconductor S4 vectors: DataFrame
 
-- Bioconductor (www.bioconductor.org) defines its own set of vectors using the S4 formal class system
+* Bioconductor (www.bioconductor.org) defines its own set of vectors using the S4 formal class system
 `DataFrame`: like a `data.frame` but more flexible. columns can be any atomic vector type:
     - `GenomicRanges` objects
     - `Rle` (run-length encoding)
@@ -501,14 +489,15 @@ LogicalList(var1 = 1:100 %in% 5, var2 = 1:100 %% 2)
 ```
 
 ## Bioconductor S4 vectors: Biostrings
+
 ```{r}
 suppressPackageStartupMessages(library(Biostrings))
-bstring = BString("I am a BString object")
+bstring <- BString("I am a BString object")
 bstring
 ```
 
 ```{r}
-dnastring = DNAString("TTGAAA-CTC-N")
+dnastring <- DNAString("TTGAAA-CTC-N")
 dnastring
 str(dnastring)
 ```
@@ -531,6 +520,7 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 6. arrange (re-order observations)
 
 ## `dplyr` example
+
 ```{r, message=FALSE}
 library(nycflights13)
 library(dplyr)
@@ -544,23 +534,30 @@ delays <- flights %>%
 ```
 
 ## `dplyr` example (cont'd)
+
 ```{r}
-hist(delays$delay, main = "Mean hourly delay", xlab = "Delay (minutes)")
+library(ggplot2)
+ggplot(delays, aes(x=delay)) + 
+  xlab("Delay (minutes)") +
+  labs(title = "Mean hourly flight delay") +
+  geom_histogram()
 ```
 
-# Lab Exercises
+# Lab Exercises and Links
+
+## Lab Exercises
 
 1. [dplyr exercises](http://genomicsclass.github.io/book/pages/dplyr_intro_exercises.html)
 2. [random variables exercises](http://genomicsclass.github.io/book/pages/random_variables_exercises.html)
 
-[book]: http://genomicsclass.github.io/book/
+[book]: https://genomicsclass.github.io/book/
 [ePub version]: https://leanpub.com/dataanalysisforthelifesciences/
 [Source repository]: https://github.com/genomicsclass/labs
 
-# Links
+## Links
 
-- A built [html][] version of this lecture is available.
-- The [source][] R Markdown is also available from Github.
+* A built [html][] version of this lecture is available.
+* The [source][] R Markdown is also available from Github.
 
-[html]: http://rpubs.com/lwaldron/AppStatBio2019_day1
+[html]: http://rpubs.com/lwaldron/AppStatBio2021_day1
 [source]: https://github.com/waldronlab/AppStatBio
