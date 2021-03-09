@@ -1,7 +1,6 @@
 ---
 title: "Random Variables Exercises"
 author: "Levi Waldron"
-date: "Jan 10, 2019"
 output: html_document
 ---
 
