@@ -1,9 +1,7 @@
 ---
 title: "dplyr exercises"
 author: "Levi Waldron"
-output:
-  pdf_document: default
-  html_document: default
+output:  html_document
 ---
 
 ```{r setup, include=FALSE}
