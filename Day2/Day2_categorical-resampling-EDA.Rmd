@@ -2,12 +2,7 @@
 ---
 title: 'Applied Statistics for High-throughput Biology: Session 2'
 author: "Levi Waldron"
-date: "Nov 6, 2019"
-output:
-  html_document:
-    keep_md: yes
-    number_sections: yes
-    toc: yes
+output: slidy_presentation
 ---
 
 ```{r setup, include=FALSE}
@@ -17,16 +12,16 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ## Session 2 outline
 
 - Hypothesis testing for categorical variables
-    - Fisher's Exact Test and Chi-square Test (["Association tests" book section](http://genomicsclass.github.io/book/pages/association_tests.html))
+    - Fisher's Exact Test and Chi-square Test (["Association tests" book section](https://genomicsclass.github.io/book/pages/association_tests.html))
 
 - Resampling methods
-    + ["Permutation Tests" book section](http://genomicsclass.github.io/book/pages/permutation_tests.html)
-    + [Cross-validation book section](http://genomicsclass.github.io/book/pages/crossvalidation.html)
-    + bootstrap simulation ()
+    + ["Permutation Tests" book section](https://genomicsclass.github.io/book/pages/permutation_tests.html)
+    + [Cross-validation book section](https://genomicsclass.github.io/book/pages/crossvalidation.html)
+    + bootstrap simulation (see Introduction to Statistical Learning section 5.2: https://www.statlearning.com/)
 
-- [Exploratory data analysis](http://genomicsclass.github.io/book/pages/exploratory_data_analysis.html)
+- [Exploratory data analysis](https://genomicsclass.github.io/book/pages/exploratory_data_analysis.html)
 
-# Hypothesis testing for categorical variables
+## Hypothesis testing for categorical variables
 
 - Hypothesis testing and confidence intervals for one or two continuous variables: 
     - *Z-test, t-test, correlation*
@@ -128,12 +123,12 @@ What do you notice about all these combinations?
 * In a prospective or longitudinal cohort study, neither the number of cases or the other variable are fixed
 
 ```{r, echo=FALSE}
-disease=factor(c(rep(0,180),rep(1,20),rep(0,40),rep(1,10)),
-               labels=c("control","cases"))
-genotype=factor(c(rep("AA/Aa",204),rep("aa",46)),
-                levels=c("AA/Aa","aa"))
+disease = factor(c(rep(0, 180), rep(1, 20), rep(0, 40), rep(1, 10)),
+                 labels = c("control", "cases"))
+genotype = factor(c(rep("AA/Aa", 204), rep("aa", 46)),
+                  levels = c("AA/Aa", "aa"))
 dat <- data.frame(disease, genotype)
-dat <- dat[sample(nrow(dat)),] #shuffle them up 
+dat <- dat[sample(nrow(dat)), ] #shuffle them up
 summary(dat)
 ```
 
@@ -151,7 +146,7 @@ Note that the result says nothing about *how* the departure from independence oc
 
 ```{r}
 library(epitools)
-epitools::oddsratio(genotype, disease, method="wald")$measure
+epitools::oddsratio(genotype, disease, method = "wald")$measure
 ```
 
 ## Note on factor reference levels
@@ -233,7 +228,7 @@ ISLR Figure 5.2: Variability in 2-fold cross-validation
 <font size="2">
 James, Witten, Hastie, Tibshirani.  An Introduction to Statistical Learning with Applications in R. Springer, 2014. 
 
-http://www-bcf.usc.edu/~gareth/ISL/
+https://www.statlearning.com/
 </font>
 
 ## Cross-validation summary
@@ -288,19 +283,29 @@ suppressPackageStartupMessages(library(UsingR))
 suppressPackageStartupMessages(library(rafalib))
 # height qq plot
 x <- father.son$fheight
-ps <- (seq(0,99) + 0.5 ) / 100
+ps <- (seq(0, 99) + 0.5) / 100
 qs <- quantile(x, ps)
 normalqs <- qnorm(ps, mean(x), popsd(x))
-par(mfrow=c(1,3))
-plot(normalqs, qs, xlab = "Normal Percentiles", ylab = "Height Percentiles", main = "Height Q-Q Plot")
-abline(0,1)
+par(mfrow = c(1, 3))
+plot(normalqs,
+     qs,
+     xlab = "Normal Percentiles",
+     ylab = "Height Percentiles",
+     main = "Height Q-Q Plot")
+abline(0, 1)
 # t-distributed for 12 df
 x <- rt(1000, 12)
-qqnorm(x, xlab="t quantiles", main = "T Quantiles (df=12) Q-Q Plot", ylim=c(-6,6))
+qqnorm(x,
+       xlab = "t quantiles",
+       main = "T Quantiles (df=12) Q-Q Plot",
+       ylim = c(-6, 6))
 qqline(x)
 # t-distributed for 3 df
 x <- rt(1000, 3)
-qqnorm(x, xlab="t quantiles", main = "T Quantiles (df=3) Q-Q Plot", ylim=c(-6,6))
+qqnorm(x,
+       xlab = "t quantiles",
+       main = "T Quantiles (df=3) Q-Q Plot",
+       ylim = c(-6, 6))
 qqline(x)
 ```
 
@@ -340,8 +345,10 @@ plot(faithful$eruptions, faithful$waiting,xlab="Eruption Duration",ylab="Waiting
 
 ## Exploratory data analysis in high dimensions
 
-```{r, eval=FALSE}
-BiocManager("genomicsclass/GSE5859Subset")  #install from Github
+```{r}
+if(!require(GSE5859Subset)){
+  BiocManager::install("genomicsclass/GSE5859Subset")
+}
 ```
 
 ```{r}
@@ -358,7 +365,7 @@ T-test for every row (gene) of gene expression matrix:
 ```{r, message=FALSE}
 library(genefilter)
 g <- factor(sampleInfo$group)
-system.time(results <- rowttests(geneExpression,g))
+system.time(results <- rowttests(geneExpression, g))
 pvals <- results$p.value
 ```
 
@@ -367,12 +374,16 @@ Note that these 8,793 tests are done in about 0.01s
 ## Volcano plots: Example
 
 ```{r, fig.height=3, fig.width=6}
-par(mar=c(4, 4, 0, 0))
-plot(results$dm, -log10(results$p.value),
-     xlab="Effect size (difference in group means)",
-     ylab="- log (base 10) p-values")
-abline(h=-log10(0.05 / nrow(geneExpression)), col="red")
-legend("bottomright", lty=1, col="red", legend="Bonferroni = 0.05")
+par(mar = c(4, 4, 0, 0))
+plot(results$dm,
+     -log10(results$p.value),
+     xlab = "Effect size (difference in group means)",
+     ylab = "- log (base 10) p-values")
+abline(h = -log10(0.05 / nrow(geneExpression)), col = "red")
+legend("bottomright",
+       lty = 1,
+       col = "red",
+       legend = "Bonferroni = 0.05")
 ```
 
 ## Volcano plots: Summary
@@ -388,16 +399,17 @@ legend("bottomright", lty=1, col="red", legend="Bonferroni = 0.05")
 ```{r}
 m <- nrow(geneExpression)
 n <- ncol(geneExpression)
-set.seed(1); randomData <- matrix(rnorm(n*m),m,n)
-nullpvals <- rowttests(randomData,g)$p.value
+set.seed(1)
+randomData <- matrix(rnorm(n * m), m, n)
+nullpvals <- rowttests(randomData, g)$p.value
 ```
 
 ## P-value histograms: Example
 
 ```{r, echo=FALSE, fig.height=3}
-par(mfrow=c(1, 2))
-hist(pvals,ylim=c(0,1400))
-hist(nullpvals,ylim=c(0,1400))
+par(mfrow = c(1, 2))
+hist(pvals, ylim = c(0, 1400))
+hist(nullpvals, ylim = c(0, 1400))
 ```
 
 ## P-value histograms: Example 2 (permutation)
@@ -427,7 +439,7 @@ All are available from the [sva](https://www.bioconductor.org/packages/sva) Bioc
 - just a scatterplot rotated 45$^o$
 
 ```{r, fig.height=3}
-rafalib::mypar(1,2)
+rafalib::mypar(1, 2)
 pseudo <- apply(geneExpression, 1, median)
 plot(geneExpression[, 1], pseudo)
 plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
@@ -446,8 +458,13 @@ plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
 Detailed representation of high-dimensional dataset
 
 ```{r, fig.height=4}
-ge = geneExpression[sample(1:nrow(geneExpression), 200), ]
-pheatmap::pheatmap(ge, scale="row", show_colnames = F, show_rownames = F)
+ge = geneExpression[sample(1:nrow(geneExpression), 200),]
+pheatmap::pheatmap(
+  ge,
+  scale = "row",
+  show_colnames = FALSE,
+  show_rownames = FALSE
+)
 ```
 
 ## Heatmaps: Summary
@@ -470,7 +487,7 @@ Combination of `RColorBrewer` package and `colorRampPalette()` can create anythi
 
 ```{r, fig.height=5, echo=FALSE}
 rafalib::mypar(1, 1)
-RColorBrewer::display.brewer.all(n=7)
+RColorBrewer::display.brewer.all(n = 7)
 ```
 
 ## Plots To Avoid
@@ -493,5 +510,5 @@ RColorBrewer::display.brewer.all(n=7)
 - A built [html][] version of this lecture is available.
 - The [source][] R Markdown is also available from Github.
 
-[html]: http://rpubs.com/lwaldron/AppStatBio2019_day2
+[html]: https://rpubs.com/lwaldron/AppStatBio2019_day2
 [source]: https://github.com/waldronlab/AppStatBio
