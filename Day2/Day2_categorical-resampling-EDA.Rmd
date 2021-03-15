@@ -2,7 +2,9 @@
 ---
 title: 'Applied Statistics for High-throughput Biology: Session 2'
 author: "Levi Waldron"
-output: slidy_presentation
+output:
+  slidy_presentation: default
+  ioslides_presentation: default
 ---
 
 ```{r setup, include=FALSE}
@@ -112,7 +114,7 @@ What do you notice about all these combinations?
 
 - There are many alternative approaches in Gene Set Analysis, but this approach isn't as bad as statisticians thought. See:
 
-Geistlinger, L. _et al._ Toward a gold standard for benchmarking gene set enrichment analysis. Brief. Bioinform. (2020) [doi:10.1093/bib/bbz158](http://dx.doi.org/10.1093/bib/bbz158)
+Geistlinger _et al._ Toward a gold standard for benchmarking gene set enrichment analysis. Brief. Bioinform. (2020) [doi:10.1093/bib/bbz158](http://dx.doi.org/10.1093/bib/bbz158)
     
 
 ## Chi-squared test
@@ -214,7 +216,10 @@ Genome-wide association studies for common diseases and complex traits. *Nature 
 ## K-fold cross-validation: setting
 
 * Setting: prediction (as opposed to inference)
-* Purpose: to avoid reporting inflated prediction accuracy due to over-fitting
+* Potential uses: 
+    1. to tune a model to the data
+    2. to avoid reporting inflated prediction accuracy due to over-fitting
+    3. to compare the accuracy of competing algorithms in one dataset
 
 <center>
 <img src="three-fold.png" alt="three-fold.png" style="width: 600px;"/>
@@ -222,6 +227,35 @@ Genome-wide association studies for common diseases and complex traits. *Nature 
 Three-fold cross-validation
 
 </center>
+
+## Definitions: Training, Validation, Test
+
+* The model is initially fit on a **training dataset**
+* Successively, the fitted model is used to predict the responses for the observations in a second dataset called the **validation dataset**. The validation dataset might be used repeatedly for selecting from different models.
+* Finally, the **test dataset** is a dataset used to provide an unbiased evaluation of a *final model* fit on the training dataset.
+
+<font size="2">
+https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets
+</font>
+
+## Tuning: training set and validation set error
+
+<center>
+<img src="ISLR_Fig29.png" alt="ISLR Fig 2.9 U curve" style="width: 600px;"/>
+
+ISLR Figure 2.9: Training set vs. Validation set error: the U
+
+</center>
+
+* Training set error always decreased with more flexible models
+* Validation set error tends to be U-shaped: model "tuning" searches for this low point
+* Cross-validation for tuning does not equal cross-validation for estimating independent accuracy
+
+<font size="2">
+James, Witten, Hastie, Tibshirani.  An Introduction to Statistical Learning with Applications in R. Springer, 2014. https://www.statlearning.com/
+
+FIGURE 2.9. Left: Data simulated from f, shown in black. Three estimates of f are shown: the linear regression line (orange curve), and two smoothing spline fits (blue and green curves). Right: Training MSE (grey curve), test MSE (red curve), and minimum possible test MSE over all methods (dashed line). Squares represent the training and test MSEs for the three fits shown in the left-hand panel.
+</font>
 
 ## K-fold cross-validation: algorithm
 
@@ -240,11 +274,14 @@ Three-fold cross-validation
 ISLR Figure 5.2: Variability in 2-fold cross-validation
 </center>
 
+* Repeating cross-validation many times then averaging the results is called _smoothing_.
+* Simply choosing a different random training and validation set each time is called _Monte Carlo Cross-validation (MCCV)_
 
 <font size="2">
-James, Witten, Hastie, Tibshirani.  An Introduction to Statistical Learning with Applications in R. Springer, 2014. 
+James, Witten, Hastie, Tibshirani.  An Introduction to Statistical Learning with Applications in R. Springer, 2014. https://www.statlearning.com/
 
-https://www.statlearning.com/
+FIGURE 5.2. The validation set approach was used on the Auto data set in order to estimate the test error that results from predicting mpg using polynomial functions of horsepower. Left: Validation error estimates for a single split into training and validation data sets. Right: The validation method was repeated ten times, each time using a different random split of the observations into a training set and a validation set. This illustrates the variability in the estimated test MSE that results from this approach.
+
 </font>
 
 ## Cross-validation summary
@@ -526,5 +563,5 @@ RColorBrewer::display.brewer.all(n = 7)
 - A built [html][] version of this lecture is available.
 - The [source][] R Markdown is also available from Github.
 
-[html]: https://rpubs.com/lwaldron/AppStatBio2019_day2
+[html]: https://rpubs.com/lwaldron/AppStatBio2021_day2
 [source]: https://github.com/waldronlab/AppStatBio
