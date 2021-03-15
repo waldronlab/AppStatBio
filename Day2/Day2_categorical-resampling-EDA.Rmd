@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 
 ## Hypothesis testing for categorical variables
 
-- Hypothesis testing and confidence intervals for one or two continuous variables: 
+- Recall hypothesis testing and confidence intervals for one or two continuous variables: 
     - *Z-test, t-test, correlation*
 
 - Two binary variables:
