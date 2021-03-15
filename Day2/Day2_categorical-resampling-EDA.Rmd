@@ -33,7 +33,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ## Lady Tasting Tea
 
 - The Lady in question claimed to be able to tell whether the tea or the milk was added first to a cup
-- Fisher proposed to give her eight cups, four of each variety, in random order
+- Fisher proposed to give her **eight** cups, **four** of each variety, in random order
     - the Lady is **fully informed** of the experimental method
     - $H_0$: the Lady has no ability to tell which was added first
 
@@ -85,13 +85,18 @@ p-value is the probability of the observed number of successes, or more, under $
 </tr>
 </table>
 
+* x = correct, o = incorrect
+
 What do you notice about all these combinations?
+
+* Each only involves four guesses
+* Without knowing how many cups had milk added first, there would be many more possible guesses
 
 ## Notes on Fisher's Exact Test
 
-- Can also be applied to $r x c$ tables
+- Can also be applied to $r \times c$ tables
 - Remember that the margins of the table are *fixed by design*
-- Also referred to as the Hypergeometric Test
+- One-tailed version (used in Gene Set Enrichment Analysis) is referred to as the Hypergeometric Test
 - Exact p-values are difficult (and unnecessary) for large samples
     - `fisher.test(x, y = NULL, etc, simulate.p.value = FALSE)`
 
@@ -104,13 +109,17 @@ What do you notice about all these combinations?
 - Problems with this analysis:
     - Main problem: top-n genes tend to be correlated, so their selections are not independent trials
     - Secondary: does not match design for $H_0$
-- Alternative: permutation test repeating all steps
+
+- There are many alternative approaches in Gene Set Analysis, but this approach isn't as bad as statisticians thought. See:
+
+Geistlinger, L. _et al._ Toward a gold standard for benchmarking gene set enrichment analysis. Brief. Bioinform. (2020) [doi:10.1093/bib/bbz158](http://dx.doi.org/10.1093/bib/bbz158)
+    
 
 ## Chi-squared test
 
-- Test of independence for rxc table (two categorical variables)
+- Test of independence for $r \times c$ table (two categorical variables)
 - Does not assume the margins are fixed by design
-    - i.e., the number of cups of tea with milk poured first can be random, and the Lady doesn't know how many
+    - i.e., whether each cup of tea has milk poured first is determined by coin flip, and the Lady doesn't know how many
     - more common in practice
     - classic genomics example is GWAS
 - $H_0$: the two variables are independent
@@ -128,6 +137,7 @@ disease = factor(c(rep(0, 180), rep(1, 20), rep(0, 40), rep(1, 10)),
 genotype = factor(c(rep("AA/Aa", 204), rep("aa", 46)),
                   levels = c("AA/Aa", "aa"))
 dat <- data.frame(disease, genotype)
+set.seed(1)
 dat <- dat[sample(nrow(dat)), ] #shuffle them up
 summary(dat)
 ```
@@ -140,9 +150,14 @@ chisq.test(disease, genotype)
 chisq.test(disease, genotype, simulate.p.value = TRUE)
 ```
 
+* Chisquare-test p-values are approximate, and inaccuracy increases with small cells in $r \times c$ tables (say, less than 5)
+* $simulate.p.value$ is a more valid way to address small counts than using Fisher's Exact Test, if $H_0$ corresponds to a chi-square test
+* Fisher's Exact Test provides an exact p-value for a different hypothesis
+
 ## Calculate odds ratio
 
-Note that the result says nothing about *how* the departure from independence occurs
+* Note that the result says nothing about *how* the departure from independence occurs
+* Odds ratios do
 
 ```{r}
 library(epitools)
@@ -151,7 +166,8 @@ epitools::oddsratio(genotype, disease, method = "wald")$measure
 
 ## Note on factor reference levels
 
-Use the `relevel()` function if you want to change the reference level of a factor:
+Use the `relevel()` function if you want to change the reference level of a factor, or `dplyr::recode_factor()`:
+
 ```{r}
 epitools::oddsratio(relevel(genotype, "aa"), disease)$measure
 ```
