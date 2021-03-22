@@ -2,9 +2,7 @@
 ---
 title: 'Applied Statistics for High-throughput Biology: Session 2'
 author: "Levi Waldron"
-output:
-  slidy_presentation: default
-  ioslides_presentation: default
+output: slidy_presentation
 ---
 
 ```{r setup, include=FALSE}
