@@ -2,19 +2,17 @@
 ---
 title: 'Applied Statistics for High-throughput Biology Day 3'
 author: "Levi Waldron"
-date: "Nov 11, 2019"
 output: 
-  html_document: 
-    keep_md: yes
-    number_sections: yes
-    toc: yes
+  slidy_presentation: 
+    fig_caption: yes
+    smart: no
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval = FALSE)
+knitr::opts_chunk$set(eval = TRUE)
 ```
 
-# Day 2 outline
+## Outline
 
 * Multiple linear regression
     + Continuous and categorical predictors
@@ -30,11 +28,7 @@ Textbook sources:
 * Chapter 5: Linear models
 * Chapter 6: Inference for high-dimensional data
 
-# Introduction to Linear Models
-
 ## Example: friction of spider legs
-
-* Wolff & Gorb, [Radial arrangement of Janus-like setae permits friction control in spiders](http://www.nature.com/articles/srep01101), *Sci. Rep.* 2013.
 
 <div class="columns-2">
 <center> <img src="srep01101-f4.jpg" height=600> </center>
@@ -43,6 +37,10 @@ Textbook sources:
 - **(B)** Boxplot presenting friction coefficient data illustrating median, interquartile range and extreme values.
 </div>
 
+* Wolff & Gorb, [Radial arrangement of Janus-like setae permits friction control in spiders](http://www.nature.com/articles/srep01101), *Sci. Rep.* 2013.
+
+## Questions
+
 <div class="columns-2">
 <center> <img src="srep01101-f4.jpg" height=600> </center>
 
@@ -50,6 +48,8 @@ Textbook sources:
 - Are the friction coefficients different for the different leg pairs?
 - Does the difference between pulling and pushing friction coefficients vary by leg pair?
 </div>
+
+## Qualitative answers
 
 ```{r, echo=FALSE}
 url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/spider_wolff_gorb_2013.csv"
@@ -145,15 +145,15 @@ Assumptions of linear models: $\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsi
 - R re-codes factors to dummy variables automatically. 
 - Dummy coding depends on whether factor is ordered or not.
 
-## Mini-exercise
+## `spider` mini-exercises
 
 Using the `spider` object:
 
-1. Create a new variable `leg2` where `L1` / `L2` are merged, and `L3` / `L4` are merged
-2. Create a new variable `leg3` that is an "ordered" factor (see `?factor`)
-3. Make "push" the reference level for `spider$type` (see `?relevel`)
+1. Create a new variable `leg2` where `L1` / `L2` are merged, and `L3` / `L4` are merged (hint: see `?dplyr::recode_factor`)
+2. Create a new variable `leg3` that is an "ordered" factor (hint: you can use `recode_factor` again, or `?factor`)
+3. Make "push" the reference level for `spider$type` (hint: see `?relevel`)
 
-# Model formulae in R
+## Model formulae in R
 
 [Model formulae tutorial](http://ww2.coastal.edu/kingw/statistics/R-tutorials/formulae.html)
 
@@ -297,7 +297,7 @@ one factor, one numeric: **ANCOVA**
 Perform regression on the spider dataset to model friction as a function of type, leg, *and* the interaction of type and leg. Interpret the output of this regression.
 
 
-# Generalized Linear Models
+## Generalized Linear Models
 
 * Linear regression is a special case of a broad family of models called "Generalized Linear Models" (GLM)
 * This unifying approach allows to fit a large set of models using maximum likelihood estimation methods (MLE) (Nelder & Wedderburn, 1972)
@@ -424,7 +424,7 @@ legend("topright", lwd=c(2,2,2,1), lty=c(1:3,1), pch=c(1:3,-1), col=c(rep("black
     + If $x_1=1$ and $x_2=1$, this adds 3.0 to $log(\frac{P}{1-P})$
     + Odds-ratio $\frac{P}{1-P}$ increases 20-fold: $exp(1.5+1.5)$ or $exp(1.5) * exp(1.5)$
 
-# Inference in high dimensions (many variables)
+## Inference in high dimensions (many variables)
 
 * Conceptually similar to what we have already done
     * $Y_i$ expression of a gene, etc
@@ -448,7 +448,8 @@ legend("topright", lwd=c(2,2,2,1), lty=c(1:3,1), pch=c(1:3,-1), col=c(rep("black
     * correction for the smallest p-value is the same as the Bonferroni correction
     * correction for larger p-values becomes less stringent
 
-## Mini-exercise
+
+## Multiple testing mini-exercises
 
 Simulate the following vectors of p-values:
 ```{r}
@@ -457,10 +458,10 @@ p1 <- runif(1000)
 p2 <- c(runif(900), runif(100, min=0, max=0.05))
 ```
 
-1. Make histograms of these p-values. Does it look like there are more small p-values than expected if all null hypotheses are true?
+1. Make histograms of the p-values stored in `p1` and `p2`. Does it look like there are more small p-values than expected if all null hypotheses are true?
 2. Use the `p.adjust` function to calculate Bonferroni-corrected ("bonferroni") p-values and Benjamini Hochberg False Discovery Rate ("BH"). For each of these simulations, how many p-values are < 0.05 for the raw, Bonferroni-adjusted, and BH-adjusted values?
 
-# Summary
+## Summary
 
 - Linear models are the basis for identifying differential expression / differential abundance
     - anything with at least one continuous $X$ or $Y$
@@ -486,5 +487,5 @@ p2 <- c(runif(900), runif(100, min=0, max=0.05))
 - A built [html][] version of this lecture is available.
 - The [source][] R Markdown is also available from Github.
 
-[html]: http://rpubs.com/lwaldron/AppStatBio2019_day3
+[html]: http://rpubs.com/lwaldron/AppStatBio2021_day3
 [source]: https://github.com/waldronlab/AppStatBio
