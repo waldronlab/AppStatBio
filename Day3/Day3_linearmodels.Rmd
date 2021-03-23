@@ -178,7 +178,8 @@ Model formula for simple linear regression:
 Friction coefficient for leg type of first leg pair:
 
 ```{r, results='show'}
-spider.sub <- spider[spider$leg=="L1", ]
+suppressPackageStartupMessages(library(tidyverse))
+spider.sub <- filter(spider, leg=="L1")
 fit <- lm(friction ~ type, data=spider.sub)
 summary(fit)
 ```
@@ -187,9 +188,9 @@ summary(fit)
 
 Regression coefficients for `friction ~ type` for first set of spider legs:
 
-```{r, results="asis", echo=TRUE}
-fit.table <- xtable::xtable(fit, label=NULL)
-print(fit.table, type="html")
+```{r, echo=TRUE}
+library(broom)
+broom::tidy(fit)
 ```
 
 <p></p>
