@@ -1,340 +1,25 @@
 
 ---
-title: 'UNIVR Applied Statistics for High-throughput Biology 2019: Day 3'
+title: 'Applied Statistics for High-throughput Biology Day 4'
 author: "Levi Waldron"
-date: "Jan 17, 2019"
 output: 
-  html_document: 
-    keep_md: yes
-    number_sections: yes
-    toc: yes
+  slidy_presentation: 
+    fig_caption: yes
+    smart: no
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval = TRUE, cache=TRUE)
 ```
 
-# Day 3 outline
+# Day 4 outline
 
-**Book Chapter 2:**
-
-* Basic data analysis
-
-**Book chapter 7:**
+[Book](https://genomicsclass.github.io/book/) chapter 8:
 
 - Distances in high dimensions
-- Principal Components Analysis
+- Principal Components Analysis and Singular Value Decomposition
 - Multidimensional Scaling
-- Batch Effects
-
-# Exploratory data analysis
-
-## Introduction
-
-> “The greatest value of a picture is when it forces us to notice what we never expected to see.” - John W. Tukey
-
-- Discover biases, systematic errors and unexpected variability in data
-- Graphical approach to detecting these issues
-- Represents a first step in data analysis and guides hypothesis testing
-- Opportunities for discovery in the outliers
-
-## Quantile Quantile Plots
-
-- Quantiles divide a distribution into equally sized bins
-- Division into 100 bins gives percentiles
-- Quantiles of a theoretical distribution are plotted against an experimental distribution
-    - alternatively, quantiles of two experimental distributions
-- Given a perfect fit, $x=y$
-- Useful in determining data distribution (normal, t, etc.)
-
-## Quantile Quantile Plots
-
-```{r echo=TRUE, fig.width=8}
-suppressPackageStartupMessages(library(UsingR))
-suppressPackageStartupMessages(library(rafalib))
-# height qq plot
-x <- father.son$fheight
-ps <- (seq(0, 99) + 0.5) / 100
-qs <- quantile(x, ps)
-normalqs <- qnorm(ps, mean(x), popsd(x))
-par(mfrow = c(1, 3))
-plot(normalqs,
-     qs,
-     xlab = "Normal Percentiles",
-     ylab = "Height Percentiles",
-     main = "Height Q-Q Plot")
-abline(0, 1)
-# t-distributed for 12 df
-x <- rt(1000, 12)
-qqnorm(x,
-       xlab = "t quantiles",
-       main = "T Quantiles (df=12) Q-Q Plot",
-       ylim = c(-6, 6))
-qqline(x)
-# t-distributed for 3 df
-x <- rt(1000, 3)
-qqnorm(x,
-       xlab = "t quantiles",
-       main = "T Quantiles (df=3) Q-Q Plot",
-       ylim = c(-6, 6))
-qqline(x)
-```
-
-## Boxplots
-
-- Provide a graph that is easy to interpret where data may not be normally distributed
-- Qualitative + quantitative
-- Particularly informative in relation to outliers and range
-- Possible to compare multiple distributions side by side
-
-## Boxplots
-
-```{r echo=TRUE, fig.width=8, fig.height=4}
-par(mfrow = c(1, 3))
-hist(exec.pay, main = "CEO Compensation")
-qqnorm(exec.pay, main = "CEO Compensation")
-boxplot(exec.pay,
-        ylab = "10,000s of dollars",
-        ylim = c(0, 400),
-        main = "CEO Compensation")
-```
-<center>
-Three different views of a continuous variable
-</center>
-
-## Scatterplots And Correlation
-
-- For two continuous variables, scatter plot and calculation of correlation is useful
-- Provides a graphical and numeric estimation of relationships
-- Quick and easy with `plot()` and `cor()`
-
-## Scatterplots And Correlation
-
-```{r echo=TRUE, fig.width=8, fig.height=4}
-par(mfrow = c(1, 3))
-plot(
-    father.son$fheight,
-    father.son$sheight,
-    xlab = "Father's height in inches",
-    ylab = "Son's height in inches",
-    main = paste("correlation =", signif(
-        cor(father.son$fheight, father.son$sheight), 2
-    ))
-)
-plot(
-    cars$speed,
-    cars$dist,
-    xlab = "Speed",
-    ylab = "Stopping Distance",
-    main = paste("correlation =", signif(cor(
-        cars$speed, cars$dist
-    ), 2))
-)
-plot(
-    faithful$eruptions,
-    faithful$waiting,
-    xlab = "Eruption Duration",
-    ylab = "Waiting Time",
-    main = paste("correlation =", signif(
-        cor(faithful$eruptions, faithful$waiting), 2
-    ))
-)
-```
-
-## Exploratory data analysis in high dimensions
-
-<font size="2">
-```{r, eval=FALSE}
-#install from Github
-BiocManager::install("genomicsclass/GSE5859Subset")  
-BiocManager::install("genomicsclass/tissuesGeneExpression")
-```
-
-```{r}
-library(GSE5859Subset)
-data(GSE5859Subset) ##this loads three tables
-c(class(geneExpression), class(sampleInfo))
-rbind(dim(geneExpression), dim(sampleInfo))
-head(sampleInfo)
-```
-</font>
-
-## Volcano plots
-
-T-test for every row (gene) of gene expression matrix:
-```{r, message=FALSE}
-library(genefilter)
-g <- factor(sampleInfo$group)
-system.time(results <- rowttests(geneExpression,g))
-pvals <- results$p.value
-```
-
-Note that these 8,793 tests are done in about 0.01s
-
-## Volcano plots
-
-```{r, fig.height=3, fig.width=6}
-par(mar = c(4, 4, 0, 0))
-plot(results$dm,
-     -log10(results$p.value),
-     xlab = "Effect size (difference in group means)",
-     ylab = "- log (base 10) p-values")
-abline(h = -log10(0.05 / nrow(geneExpression)), col = "red")
-legend("bottomright",
-       lty = 1,
-       col = "red",
-       legend = "Bonferroni = 0.05")
-```
-
-## Volcano plots (summary)
-
-- Many small p-values with small effect size indicate low within-group variability
-- Inspect for asymmetry
-- Can color points by significance threshold
-
-## P-value histograms
-
-- If all null hypotheses are true, expect a flat histogram of p-values:
-
-```{r}
-m <- nrow(geneExpression)
-n <- ncol(geneExpression)
-set.seed(1)
-randomData <- matrix(rnorm(n * m), m, n)
-nullpvals <- rowttests(randomData, g)$p.value
-```
-
-```{r, echo=TRUE, fig.height=3}
-par(mfrow = c(1, 2))
-hist(pvals, ylim = c(0, 1400))
-hist(nullpvals, ylim = c(0, 1400))
-```
-
-## P-value histograms
-
-Note that permuting these data doesn't produce an ideal null p-value histogram due to batch effects:
-
-```{r, fig.height=3}
-permg <- sample(g)
-permresults <- rowttests(geneExpression, permg)
-hist(permresults$p.value)
-```
-
-## P-value histograms (summary)
-
-- Give a quick look at how many significant p-values there may be
-- When using permuted labels, can expose non-independence among the samples
-    + can be due to batch effects or family structure
-- Most common approaches for correcting batch effects are:
-    + including batch in your model formula
-    + `ComBat`: corrects for known batch effects by linear model), and 
-    + `sva`: creates surrogate variables for unknown batch effects, corrects the structure of permutation p-values
-    + correction using control (housekeeping) genes
-
-All are available from the [sva](https://www.bioconductor.org/packages/sva) Bioconductor package
-
-## MA plot
-
-- just a scatterplot rotated 45$^o$
-
-```{r, fig.height=3}
-rafalib::mypar(1, 2)
-pseudo <- apply(geneExpression, 1, median)
-plot(geneExpression[, 1], pseudo)
-plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
-```
-
-## MA plot (summary)
-
-- useful for quality control of high-dimensional data
-- plot all data values for a sample against another sample or a median "pseudosample"
-- `affyPLM::MAplots` better MA plots
-    - adds a smoothing line to highlight departures from horizontal line
-    - plots a "cloud" rather than many data points
-
-## Heatmaps
-
-Detailed representation of high-dimensional dataset
-
-```{r, fig.height=4}
-ge = geneExpression[sample(1:nrow(geneExpression), 200),]
-pheatmap::pheatmap(
-    ge,
-    scale = "row",
-    show_colnames = FALSE,
-    show_rownames = FALSE
-)
-```
-
-## Heatmaps
-
-- Clustering becomes slow and memory-intensivefor thousands of rows
-    - probably too detailed for thousands of rows
-- can show co-expressed genes, groups of samples
-
-## Colors
-
-- Types of color pallettes: 
-    - **sequential**: shows a gradient
-    - **diverging**: goes in two directions from a center
-    - **qualitative**: for categorical variables
-- Keep color blindness in mind (10% of all men)
-
-Combination of `RColorBrewer` package and `colorRampPalette()` can create anything you want
-
-```{r, fig.height=5, echo=TRUE}
-rafalib::mypar(1, 1)
-RColorBrewer::display.brewer.all(n = 7)
-```
-
-## Plots To Avoid
-
-> "Pie charts are a very bad way of displaying information." - R Help
-
-- Always avoid pie charts
-- Avoid doughnut charts too
-- Avoid pseudo 3D and most Excel defaults
-- Effective graphs use color judiciously
-
-# Distances in high-dimensional data analysis
-
-## The importance of distance
-
-- High-dimensional data are complex and impossible to visualize in raw form
-- Thousands of dimensions, we can only visualize 2-3
-- Distances can simplify thousands of dimensions
-
-<center>
-<img src="animals.png" alt="animals" align="middle" style="height: 350px;">
-</center>
-
-
-- Distances can help organize samples and genomic features
-
-```{r, echo=TRUE}
-library(GSE5859Subset)
-data(GSE5859Subset) ##this loads three tables
-set.seed(1)
-ge = geneExpression[sample(1:nrow(geneExpression), 200),]
-pheatmap::pheatmap(
-    ge,
-    scale = "row",
-    show_colnames = FALSE,
-    show_rownames = FALSE
-)
-```
-
-
-- Any clustering or classification of samples and/or genes involves
-combining or identifying objects that are close or similar.
-- Distances or similarities are mathematical representations of what
-we mean by close or similar.
-- The choice of distance is important and requires thought. 
-    - choice is subject-matter specific
-
-<font size="2">
-Source: http://master.bioconductor.org/help/course-materials/2002/Summer02Course/Distance/distance.pdf
-</font>
+- Batch Effects (Chapter 10)
 
 ## Metrics and distances
 
@@ -383,8 +68,17 @@ Euclidean d = $\sqrt{ (A_x-B_x)^2 + (A_y-B_y)^2}$.
 
 ## Euclidian distance in high dimensions
 
+```{r, echo = FALSE}
+if(!require(tissuesGeneExpression)){
+  BiocManager::install("genomicsclass/tissuesGeneExpression")
+}
+if(!require(GSE5859)){
+  BiocManager::install("genomicsclass/GSE5859")
+}
+```
+
 ```{r}
-##BiocManager::install("genomicsclass/tissuesGeneExpression")
+## BiocManager::install("genomicsclass/tissuesGeneExpression") #if needed
 library(tissuesGeneExpression)
 data(tissuesGeneExpression)
 dim(e) ##gene expression data
@@ -806,53 +500,11 @@ table(hcclass, year)
 - batches can be corrected for if randomized in study design
     - if confounded with treatment or outcome of interest, nothing can help you
 
-# Lab
 
-Exploratory Data Analysis: http://genomicsclass.github.io/book/pages/exploratory_data_analysis_exercises.html
+## Links
 
-<center>
-<img src="exploratory_data_analysis_exercises-hist_exercise-1.png" alt="hist" align="middle" style="height: 350px;">
-</center>
+- A built [html][] version of this lecture is available.
+- The [source][] R Markdown is also available from Github.
 
-1. Given the above histogram, how many people are between the ages of 35 and 45?
-
-2. The `InsectSprays` data set is included in R. The dataset reports the counts of insects in agricultural experimental units treated with different insecticides. Make a boxplot and determine which insecticide appears to be most effective.
-
-3. Download and load [this dataset](http://courses.edx.org/c4x/HarvardX/PH525.1x/asset/skew.RData) into R. Use exploratory data analysis tools to determine which two columns are different from the rest. Which is the column that is positively skewed?
-
-4. Which is the column that is negatively skewed?
-
-5. Let’s consider a random sample of finishers from the New York City Marathon in 2002. This dataset can be found in the UsingR package. Load the library and then load the `nym.2002` dataset.
-```{r}
-suppressPackageStartupMessages(library(dplyr))
-data(nym.2002, package="UsingR")
-```
-Use boxplots and histograms to compare the finishing times of males and females. Which of the following best describes the difference?
-
-    A) Males and females have the same distribution.
-    B) Most males are faster than most women.
-    C) Male and females have similar right skewed distributions with the former, 20 minutes shifted to the left.
-    D) Both distribution are normally distributed with a difference in mean of about 30 minutes.
-
-6. Use `dplyr` to create two new data frames: males and females, with the data for each gender. For males, what is the Pearson correlation between age and time to finish?
-
-7. For females, what is the Pearson correlation between age and time to finish?
-
-8. If we interpret these correlations without visualizing the data, we would conclude that the older we get, the slower we run marathons, regardless of gender. Look at scatterplots and boxplots of times stratified by age groups (20-25, 25-30, etc..). After examining the data, what is a more reasonable conclusion?
-
-    A) Finish times are constant up until about our 40s, then we get slower.
-    B) On average, finish times go up by about 7 minutes every five years.
-    C) The optimal age to run a marathon is 20-25.
-    D) Coding errors never happen: a five year old boy completed the 2012 NY city marathon.
-
-9. When is it appropriate to use pie charts or donut charts?
-    A) When you are hungry.
-    B) To compare percentages.
-    C) To compare values that add up to 100%.
-    D) Never.
-
-10. The use of pseudo-3D plots in the literature mostly adds:
-    A) Pizzazz.
-    B) The ability to see three dimensional data.
-    C) Ability to discover.
-    D) Confusion.
+[html]: http://rpubs.com/lwaldron/AppStatBio2021_day4
+[source]: https://github.com/waldronlab/AppStatBio
