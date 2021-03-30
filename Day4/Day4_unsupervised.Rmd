@@ -2,17 +2,14 @@
 ---
 title: 'Applied Statistics for High-throughput Biology Day 4'
 author: "Levi Waldron"
-output: 
-  slidy_presentation: 
-    fig_caption: yes
-    smart: no
+output: slidy_presentation
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval = TRUE, cache=TRUE)
 ```
 
-# Day 4 outline
+## Day 4 outline
 
 [Book](https://genomicsclass.github.io/book/) chapter 8:
 
@@ -39,7 +36,7 @@ A **metric** satisfies the following five properties:
 ## Euclidian distance (metric)
 
 - Remember grade school:
-```{r, echo=TRUE, fig.height=3.5}
+```{r, echo=FALSE, fig.height=3.5}
 rafalib::mypar()
 plot(
     c(0, 1, 1),
@@ -68,7 +65,7 @@ Euclidean d = $\sqrt{ (A_x-B_x)^2 + (A_y-B_y)^2}$.
 
 ## Euclidian distance in high dimensions
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message=FALSE}
 if(!require(tissuesGeneExpression)){
   BiocManager::install("genomicsclass/tissuesGeneExpression")
 }
@@ -79,6 +76,8 @@ if(!require(GSE5859)){
 
 ```{r}
 ## BiocManager::install("genomicsclass/tissuesGeneExpression") #if needed
+## BiocManager::install("genomicsclass/GSE5859") #if needed
+library(GSE5859)
 library(tissuesGeneExpression)
 data(tissuesGeneExpression)
 dim(e) ##gene expression data
@@ -87,9 +86,9 @@ table(tissue) ##tissue[i] corresponds to e[,i]
 
 Interested in identifying similar *samples* and similar *genes*
 
-### Notes:
+## Notes about Euclidian distance in high dimensions
 
-- Points are no longer on the Cartesian plane,
+- Points are no longer on the Cartesian plane
 - instead they are in higher dimensions. For example:
     - sample $i$ is defined by a point in 22,215 dimensional space: $(Y_{1,i},\dots,Y_{22215,i})^\top$. 
     - feature $g$ is defined by a point in 189 dimensions $(Y_{g,189},\dots,Y_{g,189})^\top$
@@ -102,9 +101,9 @@ and the distance between two features $h$ and $g$ is:
 
 $$ \mbox{dist}(h,g) = \sqrt{ \sum_{i=1}^{189} (Y_{h,i}-Y_{g,i})^2 } $$
 
-## Matrix algebra notation
+## Euclidian distance in matrix algebra notation
 
-The distance between samples $i$ and $j$ can be written as:
+The Euclidian distance between samples $i$ and $j$ can be written as:
 
 $$ \mbox{dist}(i,j) = \sqrt{ (\mathbf{Y}_i - \mathbf{Y}_j)^\top(\mathbf{Y}_i - \mathbf{Y}_j) }$$
 
@@ -116,8 +115,12 @@ matrix(1:3, ncol = 1)
 t(matrix(1:3, ncol = 1)) %*% matrix(1:3, ncol = 1)
 ```
 
-Note: R is very efficient at matrix algebra
+## Note about matrix algebra in R is very efficient at matrix algebra
 
+* is very efficient at matrix algebra
+* for very large matricies, see the:
+    + [Matrix](https://CRAN.R-project.org/package=Matrix) CRAN package (sparse matrices)
+    + [rhdf5](https://bioconductor.org/packages/rhdf5/) and [DelayedArray](https://bioconductor.org/packages/DelayedArray/) Bioconductor package (on-disk arrays)
 ## 3 sample example
 
 ```{r}
@@ -167,9 +170,9 @@ $$x_{gi} \leftarrow \frac{(x_{gi} - \bar{x}_g)}{s_g}$$
 - Euclidian distance and $1-r$ (Pearson cor) are related:
     - $\frac{d_E(x, y)^2}{2m} = 1 - r_{xy}$
 
-# Dimension reduction and PCA
+## Dimension reduction and PCA
 
-## Motivation for dimension reduction
+### Motivation for dimension reduction
 
 Simulate the heights of twin pairs:
 ```{r}
@@ -180,9 +183,9 @@ dim(y)
 cor(t(y))
 ```
 
-### Visualizing twin pairs data
+## Visualizing twin pairs data
 
-```{r, echo=TRUE}
+```{r, echo=FALSE}
 z1 = (y[1,] + y[2,]) / 2 #the sum
 z2 = (y[1,] - y[2,])   #the difference
 
@@ -214,10 +217,9 @@ plot(
 points(z[1, 1:2] , z[2, 1:2], col = 2, pch = 16)
 ```
 
-### Not much distance is lost in the second dimension
+## Not much distance is lost in the second dimension
 
-<center>
-```{r, echo=TRUE, fig.height=3.5, fig.width=3.5}
+```{r, echo=FALSE}
 rafalib::mypar()
 d = dist(t(y))
 d3 = dist(z[1, ]) * sqrt(2) ##distance computed using just first dimension mypar(1,1)
@@ -227,7 +229,6 @@ plot(as.numeric(d),
      ylab = "Pairwise distances in 1 dimension")
 abline(0, 1, col = "red")
 ```
-</center>
 
 - Not much loss of height differences when just using average heights of twin pairs.
     - because twin heights are highly correlated
@@ -242,12 +243,12 @@ $$\mathbf{Y} = \mathbf{UDV}^\top$$
 <img src="SVD1.png" alt="SVD" align="middle" style="height: 350px;">
 </center>
 
-- **note**: the above formulation is for $m > n$
+- **note**: the above formulation is for $m$ rows $> n$ columns
 
-- $\mathbf{Y}$: the m rows x n cols matrix of measurements
-- $\mathbf{U}$: m x n matrix relating original scores to PCA scores (**loadings**)
-- $\mathbf{D}$: n x n diagonal matrix (**eigenvalues**)
-- $\mathbf{V}$: n × n *orthogonal* matrix (**eigenvectors or PCA scores**)
+- $\mathbf{Y}$: the $m$ rows x $n$ cols matrix of measurements
+- $\mathbf{U}$: $m \times n$ matrix relating original scores to PCA scores (**loadings**)
+- $\mathbf{D}$: $n \times n$ diagonal matrix (**eigenvalues**)
+- $\mathbf{V}$: $n \times n$ *orthogonal* matrix (**eigenvectors or PCA scores**)
     - orthogonal = unit length and "perpendicular" in 3-D
 
 ## SVD of gene expression dataset
@@ -278,7 +279,9 @@ dim(s$v)     # d %*% vT = scores
 <img src="SVD1.png" alt="SVD" align="middle" style="height: 200px;">
 </center>
 
-## PCA of gene expression dataset
+## PCA is a SVD
+
+* gene expression dataset
 
 ```{r, cache=TRUE}
 rafalib::mypar()
@@ -303,11 +306,11 @@ plot(s$u[, 1] ~ p$rotation[, 1])
 plot(p$rotation[, 1],
      xlab = "Index of genes",
      ylab = "Loadings of PC1",
-     main = "Scores of PC1") #or, predict(p)
-abline(h = c(-0.03, 0.04), col = "red")
+     main = "PC1 loadings of each gene") #or, predict(p)
+abline(h = c(-0.03, 0.03), col = "red")
 ```
 
-Genes with high PC1 loadings:
+## Genes with high PC1 loadings
 
 ```{r, fig.height=3.5}
 e.pc1genes <-
@@ -336,7 +339,10 @@ plot(
 )
 ```
 
-Alternatively as cumulative % variance explained (using `cumsum()` function):
+## PCA interpretation: eigenvalues
+
+Alternatively as cumulative % variance explained (using `cumsum()` function)
+
 ```{r, fig.height=4, echo=TRUE, fig.align='center'}
 rafalib::mypar()
 plot(
@@ -355,11 +361,11 @@ plot(
 </center>
 
 - $\mathbf{V}$ (**scores**): The "datapoints" in the reduced prinipal component space
-- In some implementations (like `prcomp()`), scores $\mathbf{D V^T}$
+- In some implementations (like `prcomp()`), scores are already scaled by eigenvalues: $\mathbf{D V^T}$
 
 ## PCA interpretation: scores
 
-```{r, fig.height=5, echo=TRUE}
+```{r, fig.height=5, echo=FALSE}
 rafalib::mypar()
 plot(
     p$x[, 1:2],
@@ -389,7 +395,7 @@ d <- as.dist(1 - cor(e.standardize.fast))
 mds <- cmdscale(d)
 ```
 
-```{r, echo=TRUE, fig.height=5}
+```{r, echo=FALSE}
 rafalib::mypar()
 plot(mds, col = factor(tissue), pch = as.integer(factor(tissue)))
 legend(
@@ -410,11 +416,9 @@ legend(
 - PCA projection can be applied to new datasets if you know the matrix calculations
 - PCA is subject to over-fitting, screeplot can be tested by cross-validation
 
-# Batch Effects
-
 ## Batch Effects
 
-- pervasive in genomics (e.g. [Leek *et al.*](https://www.ncbi.nlm.nih.gov/pubmed/?term=20838408) )
+- pervasive in genomics (e.g. [Leek *et al.* Nat Rev Genet. 2010 Oct;11(10):733-9.](https://www.ncbi.nlm.nih.gov/pubmed/?term=20838408))
 - affect DNA and RNA sequencing, proteomics, imaging, microarray...
 - have caused high-profile problems and retractions
     - you can't get rid of them
@@ -481,7 +485,7 @@ MYcols <- colorRampPalette(col3, space = "Lab")(length(unique(month)))
 d <- as.dist(1 - cor(geneExpression))
 mds <- cmdscale(d)
 plot(mds, col = MYcols[as.integer(factor(month))],
-     main = "MDS shaded by batch")
+     main = "MDS shaded by month")
 ```
 
 ## The batch effects impact clustering
