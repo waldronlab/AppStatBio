@@ -121,6 +121,7 @@ t(matrix(1:3, ncol = 1)) %*% matrix(1:3, ncol = 1)
 * for very large matricies, see the:
     + [Matrix](https://CRAN.R-project.org/package=Matrix) CRAN package (sparse matrices)
     + [rhdf5](https://bioconductor.org/packages/rhdf5/) and [DelayedArray](https://bioconductor.org/packages/DelayedArray/) Bioconductor package (on-disk arrays)
+
 ## 3 sample example
 
 ```{r}
@@ -172,7 +173,7 @@ $$x_{gi} \leftarrow \frac{(x_{gi} - \bar{x}_g)}{s_g}$$
 
 ## Dimension reduction and PCA
 
-### Motivation for dimension reduction
+* Motivation for dimension reduction
 
 Simulate the heights of twin pairs:
 ```{r}
@@ -416,6 +417,11 @@ legend(
 - PCA projection can be applied to new datasets if you know the matrix calculations
 - PCA is subject to over-fitting, screeplot can be tested by cross-validation
 
+## PCA and MDS Exercises
+
+1. Repeat the PCA after removing half of the features with lowest variance. Does it look any different?
+2. Repeat the MDS, using Spearman correlation instead of Pearson correlation. Does it look any different?
+
 ## Batch Effects
 
 - pervasive in genomics (e.g. [Leek *et al.* Nat Rev Genet. 2010 Oct;11(10):733-9.](https://www.ncbi.nlm.nih.gov/pubmed/?term=20838408))
@@ -438,6 +444,8 @@ data(GSE5859)
 geneExpression = exprs(e)
 sampleInfo = pData(e)
 ```
+
+* Note: the `ExpressionSet` object is obsolete, we use `SummarizedExperiment` now
 
 ## Date of processing as a proxy for batch
 
@@ -503,7 +511,9 @@ table(hcclass, year)
     - include control samples in each batch
 - batches can be corrected for if randomized in study design
     - if confounded with treatment or outcome of interest, nothing can help you
-
+- see Bioconductor [sva](https://bioconductor.org/packages/sva/) package (Surrogate Variable Analysis)
+- I don't recommend batch effect correction in the context of machine learning / prediction modeling
+    - but only believe independent datasets for estimating accuracy
 
 ## Links
 
