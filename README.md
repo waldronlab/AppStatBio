@@ -8,8 +8,7 @@ City University of New York School Graduate of Public Health and Health Policy
 New York, NY, U.S.A.  
 
 Email: lwaldron.research@gmail.com  
-Hangouts: lwaldron.research  
-Skype: levi.waldron  
+Other contact information: https://waldronlab.io
 
 ## Summary
 

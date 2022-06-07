@@ -29,21 +29,19 @@ My research interests:
 
 ## Day 1 outline
 
-* Some essential R classes and related Bioconductor classes
 * Random variables and distributions
 * Hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
 * Confidence intervals
-* Introduction to `dplyr`
+* Essential data classes in R/Bioconductor
 * [Book][book] chapters 0 and 1
 
 ## Learning objectives
 
-* Perform basic data manipulation/exploration in R and dplyr
-* Identify key R and Bioconductor data classes
 * Define random variables and distinguish them from non-random ones
 * Distinguish population from sampling distributions
 * Identify scenarios for use of z-test and t-tests
 * Interpret confidence intervals and Standard Error
+* Identify and interrogate key R/Bioconductor data classes
 
 # Random Variables and Distributions
 
@@ -394,7 +392,7 @@ BiocManager::valid()  #check validity of installed packages
 
 * Works for CRAN, GitHub, and Bioconductor packages!
 
-# Introduction to the R language
+# Introduction to the R/Bioconductor data classes
 
 ## Base R Data Types: atomic vectors
 
@@ -463,18 +461,58 @@ my.df <- data.frame(x, y, z, a, stringsAsFactors = FALSE)
 ## Bioconductor S4 vectors: DataFrame
 
 * Bioconductor (www.bioconductor.org) defines its own set of vectors using the S4 formal class system
-`DataFrame`: like a `data.frame` but more flexible. columns can be any atomic vector type:
+`DqtqFrame`: like a `data.frame` but more flexible. columns can be any atomic vector type:
     - `GenomicRanges` objects
     - `Rle` (run-length encoding)
 ```{r}
 suppressPackageStartupMessages(library(S4Vectors))
 df <- DataFrame(var1 = Rle(c("a", "a", "b")),
                 var2 = 1:3)
-metadata(df) <- list(father = "Levi is my father")
+metadata(df) <- list(parent = "DataFrame is my virtual parent")
 df
 ```
 
-## Bioconductor S4 vectors: List and derived classes
+## DataFrame is actually a virtual classes
+
+```{r, echo = FALSE, message = FALSE}
+suppressPackageStartupMessages(library(DiagrammeR))
+grViz("                           # All instructions are within a large character string
+digraph surveillance_diagram {    # 'digraph' means 'directional graph', then the graph name 
+  
+  # graph statement
+  #################
+  graph [layout = dot,
+         rankdir = TB,
+         overlap = true]
+  
+  # nodes
+  #######
+  node [shape = none,           # shape = circle
+       fixedsize = false,
+       fontsize = 10]               # width of circles
+  
+  DataFrame                         # names of nodes
+  DFrame
+  SQLDataFrame
+  ParquetDataFrame
+  '...'
+
+  # edges
+  #######
+  DFrame -> DataFrame 
+  DFrame -> SQLDataFrame
+  DFrame -> ParquetDataFrame
+  DFrame -> '...'
+
+}
+")
+```
+
+* Rationale: Methods defined on `DFrame` are shared by all classes inheriting it
+* See: https://bioconductor.org/help/course-materials/2019/BiocDevelForum/02-DataFrame.pdf
+* See also: https://github.com/Bioconductor/S4Vectors/issues/90#issue-1026425148
+
+## List and derived classes
 
 ```{r}
 List(my.list)
@@ -488,7 +526,7 @@ CharacterList(var1 = letters[1:100], var2 = LETTERS[1:26])
 LogicalList(var1 = 1:100 %in% 5, var2 = 1:100 %% 2)
 ```
 
-## Bioconductor S4 vectors: Biostrings
+## Biostrings
 
 ```{r}
 suppressPackageStartupMessages(library(Biostrings))
@@ -506,58 +544,29 @@ str(dnastring)
 alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 ```
 
-# dplyr
+## (Ranged)SummarizedExperiment
 
-## Data Manipulation using `dplyr`
+![Summarized Experiment](https://github.com/Bioconductor/SummarizedExperiment/raw/master/vignettes/SE.svg)
+* Source: https://bioconductor.org/packages/SummarizedExperiment/
 
-* `dplyr` convention aims to ease cognitive burden
-* Function names are easy to remember:
-1. select (Y)
-2. mutate/transmute (add Ys / new Y)
-3. filter (get Xs based on condition)
-4. slice (get Xs specified)
-5. summarise (reduce to single observation) 
-6. arrange (re-order observations)
+## (Ranged)SummarizedExperiment
 
-## `dplyr` example
+* `RangedSummarizedExperiment` is the _de facto_ standard for "rectangular" data with metadata
+* Extended by `SingleCellExperiment`, `DESeqDataSet`
+* Emulated by `MultiAssayExperiment`
 
-```{r, message=FALSE}
-library(nycflights13)
-library(dplyr)
-delays <- flights %>%
-    filter(!is.na(dep_delay)) %>%
-    group_by(year, month, day, hour) %>%
-    summarise(delay = mean(dep_delay), n = n()) %>%
-    filter(n > 10)
-## dplyr cheatsheet
-## ggplot2 cheatsheet
-```
+## Lab Exercises and Links
 
-## `dplyr` example (cont'd)
+* Lab Exercises
+** [random variables exercises](http://genomicsclass.github.io/book/pages/random_variables_exercises.html)
 
-```{r}
-library(ggplot2)
-ggplot(delays, aes(x=delay)) + 
-  xlab("Delay (minutes)") +
-  labs(title = "Mean hourly flight delay") +
-  geom_histogram()
-```
+* Links
+** A built [html][] version of this lecture is available.
+** The [source][] R Markdown is also available from Github.
 
-# Lab Exercises and Links
-
-## Lab Exercises
-
-1. [dplyr exercises](http://genomicsclass.github.io/book/pages/dplyr_intro_exercises.html)
-2. [random variables exercises](http://genomicsclass.github.io/book/pages/random_variables_exercises.html)
+[html]: https://rpubs.com/lwaldron/AppStatBio2022_day1
+[source]: https://github.com/waldronlab/AppStatBio
 
 [book]: https://genomicsclass.github.io/book/
 [ePub version]: https://leanpub.com/dataanalysisforthelifesciences/
 [Source repository]: https://github.com/genomicsclass/labs
-
-## Links
-
-* A built [html][] version of this lecture is available.
-* The [source][] R Markdown is also available from Github.
-
-[html]: https://rpubs.com/lwaldron/AppStatBio2021_day1
-[source]: https://github.com/waldronlab/AppStatBio
