@@ -180,9 +180,10 @@ lines(xdens, length(x) * dbinom(xdens, size = 20, prob = 0.25), lw = 2)
 ## Note about the Central Limit Theorem
 
 When sample size is large, the average $\bar{Y}$ of a random sample:
- 1. Follows a normal distribution
- 2. The normal distribution has mean entered at the population average $\mu_Y$ 
- 3. with standard deviation equal to the population standard deviation $\sigma_Y$, divided by the square root of the sample size $N$. We refer to the standard deviation of the distribution of a random variable as the random variable's _standard error_.
+
+1. Follows a normal distribution
+2. The normal distribution has mean entered at the population average $\mu_Y$ 
+3. with standard deviation equal to the population standard deviation $\sigma_Y$, divided by the square root of the sample size $N$. We refer to the standard deviation of the distribution of a random variable as the random variable's _standard error_.
 
 Thanks to CLT, linear modeling, t-tests, ANOVA are all guaranteed to work reasonably well for large samples (more than ~30 observations).
 
@@ -558,11 +559,11 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 ## Lab Exercises and Links
 
 * Lab Exercises
-** [random variables exercises](http://genomicsclass.github.io/book/pages/random_variables_exercises.html)
+    - [random variables exercises](http://genomicsclass.github.io/book/pages/random_variables_exercises.html)
 
 * Links
-** A built [html][] version of this lecture is available.
-** The [source][] R Markdown is also available from Github.
+    - A built [html][] version of this lecture is available.
+    - The [source][] R Markdown is also available from Github.
 
 [html]: https://rpubs.com/lwaldron/AppStatBio2022_day1
 [source]: https://github.com/waldronlab/AppStatBio

@@ -506,16 +506,25 @@ plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
 
 ## Heatmaps
 
-Detailed representation of high-dimensional dataset
+* Detailed representation of high-dimensional dataset.
+    - `ComplexHeatmap` package is the best as of 2022: large datasets, interactive heatmaps, simple defaults but many customizations possible
 
-```{r, fig.height=4}
-ge = geneExpression[sample(1:nrow(geneExpression), 200),]
-pheatmap::pheatmap(
-  ge,
-  scale = "row",
-  show_colnames = FALSE,
-  show_rownames = FALSE
-)
+```{r, fig.width=12}
+suppressPackageStartupMessages(library(ComplexHeatmap))
+keep <- rank(apply(geneExpression, 1, var)) <= 100  # 500 most variable genes
+ge <- geneExpression[keep, ]
+ge <- t(scale(t(ge))) #scale
+rownames(ge) <- NULL; colnames(ge) <- NULL
+chr <- sub("chr", "", geneAnnotation$CHR)
+chr[is.na(chr)] <- "Un"
+chr <- factor(chr, levels = c(1:22, "Un", "X", "Y"))
+chrcols <- list(chromosome = c(colorRampPalette(c("lightgrey", "black"))(22), "white", "pink", "blue"))
+names(chrcols[["chromosome"]]) <- c(1:22, "Un", "X", "Y")
+row_ha <- rowAnnotation(chromosome = chr[keep], col = chrcols, na_col = "white")
+column_ha <- HeatmapAnnotation(ethnicity = sampleInfo$ethnicity, group = factor(sampleInfo$group),
+                               col = list(ethnicity = c("ASN"="lightgrey", "CEU"="darkgrey"),
+                                          group = c("0" = "brown", "1" = "blue")))
+Heatmap(ge, use_raster = TRUE, top_annotation = column_ha, right_annotation = row_ha)
 ```
 
 ## Heatmaps: Summary
@@ -561,5 +570,5 @@ RColorBrewer::display.brewer.all(n = 7)
 - A built [html][] version of this lecture is available.
 - The [source][] R Markdown is also available from Github.
 
-[html]: https://rpubs.com/lwaldron/AppStatBio2021_day2
+[html]: https://rpubs.com/lwaldron/AppStatBio2022_day2
 [source]: https://github.com/waldronlab/AppStatBio

@@ -31,12 +31,11 @@ Each day will include a hands-on lab session, that students should attempt in fu
 
 All course materials will be available from https://github.com/waldronlab/AppStatBio/.
 
-1. introduction
+1. introduction ([link](https://rpubs.com/lwaldron/AppStatBio2022_day1))
     + random variables
     + distributions
     + hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
-    + data manipulation using dplyr
-2. non-parametric approaches
+2. non-parametric approaches ([link](https://rpubs.com/lwaldron/AppStatBio2022_day2))
     + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
     + Monte Carlo simulation
     + permutation tests
