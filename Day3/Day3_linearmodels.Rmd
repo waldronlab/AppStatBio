@@ -307,7 +307,7 @@ Image credit: <http://personal.stevens.edu/~ysakamot/>
 ## Model formulae (cont'd)
 
 | symbol | example        | meaning                                                      |
-|-------------------|-------------------|-----------------------------------|
+|-------------------|-------------------|----------------------------------|
 | \+     | \+ x           | include this variable                                        |
 | \-     | \- x           | delete this variable                                         |
 | :      | x : z          | include the interaction                                      |
@@ -568,7 +568,7 @@ p2 <- c(runif(900), runif(100, min=0, max=0.05))
     exercises](http://genomicsclass.github.io/book/pages/expressing_design_formula_exercises.html)
 -   [Interactions and
     contrasts](http://genomicsclass.github.io/book/pages/interactions_and_contrasts_exercises.html)
-    All **except 3**
+    All **except 1 and 3**
 
 ## Links
 
