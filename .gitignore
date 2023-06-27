@@ -22,3 +22,5 @@ README.html
 *.md
 *_files/*
 
+inst/doc
+docs

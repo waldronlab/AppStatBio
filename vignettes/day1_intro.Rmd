@@ -1,0 +1,582 @@
+---
+title: "Applied Statistics for High-throughput Biology: Session 1"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Applied Statistics for High-throughput Biology: Session 1}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+suppressPackageStartupMessages(library(AppStatBio))
+```
+
+# Front matter
+
+## Welcome
+
+My research interests:
+
+* High-dimensional statistics (more variables than observations)
+* Predictive modeling and methodology for validation
+* Metagenomic profiling of the human microbiome
+* Multi-omic data analysis for cancer
+* https://www.waldronlab.io
+
+## The textbook
+
+* [Biomedical Data Science][book] by Irizarry and Love ([ePub version] on Leanpub)
+* [Source repository](https://github.com/genomicsclass/labs)
+
+![Biomedical Data Science book cover](https://d2sofvawe08yqg.cloudfront.net/dataanalysisforthelifesciences/hero2x?1549465432)
+
+## Day 1 outline
+
+* Random variables and distributions
+* Hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
+* Confidence intervals
+* Essential data classes in R/Bioconductor
+* [Book][book] chapters 0 and 1
+
+## Learning objectives
+
+* Define random variables and distinguish them from non-random ones
+* Distinguish population from sampling distributions
+* Identify scenarios for use of z-test and t-tests
+* Interpret confidence intervals and Standard Error
+* Identify and interrogate key R/Bioconductor data classes
+
+# Random Variables and Distributions
+
+## Random Variables
+
+* **A random variable**: any characteristic that can be measured or categorized, and where any particular outcome is determined at least partially by chance.
+
+* Examples:
+    - number of new diabetes cases in population in a given year
+    - The weight of a randomly selected individual in a population
+
+* Types:
+    - Categorical random variable (e.g. disease / healthy)
+    - Discrete random variable (e.g. sequence read counts)
+    - Continuous random variable (e.g. normalized qPCR intensity)
+
+## Random Variables - examples
+
+Normally distributed random variable with mean $\mu = 0$ / standard deviation $\sigma = 1$, and a sample of $n=100$
+
+```{r, echo=FALSE}
+x = rnorm(100)
+res = hist(x, main = "Standard Normal Distribution\n mean 0, std. dev. 1", prob =
+               TRUE)
+xdens = seq(min(res$breaks), max(res$breaks), by = 0.01)
+lines(xdens, dnorm(xdens))
+```
+
+## Random Variables - examples
+
+Poisson distributed random variable ($\lambda = 2$), and a sample of $n=100$.
+
+```{r, echo=FALSE}
+x = rpois(100, lambda = 2)
+res = hist(
+    x,
+    main = "Poisson Distribution",
+    prob = FALSE,
+    col = "lightgrey",
+    breaks = seq(-0.5, round(max(x)) + 0.5, by = 0.5)
+)
+xdens = seq(min(x), max(x), by = 1)
+lines(xdens, length(x) * dpois(xdens, lambda = 2), lw = 2)
+```
+
+## Random Variables - examples
+
+Negative Binomially distributed random variable ($size=30, \mu=2$), and a sample of $n=100$.
+
+```{r, echo=FALSE}
+x = rnbinom(100, size = 30, mu = 2)
+res = hist(
+    x,
+    main = "Negative Binomial Distribution",
+    prob = FALSE,
+    col = "lightgrey",
+    breaks = seq(-0.5, round(max(x)) + 0.5, by = 0.5)
+)
+xdens = seq(min(x), max(x), by = 1)
+lines(xdens, length(x) * dnbinom(xdens, size = 30, mu = 2), lw = 2)
+```
+
+## Random Variables - examples
+
+* Binomial Distribution random variable ($size=20, prob=0.25$), and a sample of $n=100$.
+    - use for binary outcomes
+    
+```{r, echo=FALSE}
+x = rbinom(100, size = 20, prob = 0.25)
+res = hist(
+    x,
+    main = "Binomial Distribution",
+    prob = FALSE,
+    col = "lightgrey",
+    breaks = seq(-0.5, round(max(x)) + 0.5, by = 0.5)
+)
+xdens = seq(min(x), max(x), by = 1)
+lines(xdens, length(x) * dbinom(xdens, size = 20, prob = 0.25), lw = 2)
+```
+
+# Hypothesis Testing
+
+## Why hypothesis testing?
+
+* Allows yes/no statements, e.g. whether:
+    - a population mean has a hypothesized value, or
+    - an intervention causes a measurable effect relative to a control group
+
+* Example questions with yes/no answers:
+    - Is a gene differentially expressed between two populations?
+    - Do hypertensive, smoking men have the same mean cholesterol level as the general population?
+
+* Hypothesis testing is not the only framework for inferential statistics, e.g.:
+    - confidence intervals
+    - posterior probabilities (Bayesian statistics)
+    - read [p-values are just the tip of the iceberg](http://www.nature.com/news/statistics-p-values-are-just-the-tip-of-the-iceberg-1.17412)
+
+## Logic of hypothesis testing
+
+* Hypotheses are made about *populations* based on inference from *samples*
+* We make inference from *samples* because we usually cannot observe the entire population
+
+<center>
+![Sample vs Population](images/population-vs-sample2.jpg)
+</center>
+
+Source: https://keydifferences.com/wp-content/uploads/2016/06/population-vs-sample2.jpg
+
+## One and two-sample hypothesis tests of mean
+
+**One-sample hypothesis test of mean** - sample comes from one of two population distributions:
+
+1. usual distribution that has been true in the past
+    - $H_0: \mu = \mu_0$ (null hypothesis)
+2. a potentially new distribution induced by an intervention or changing condition
+    - $H_A: \mu \neq \mu_0$ (alternative hypothesis)
+
+**Two-sample hypothesis test of means** - two samples are drawn, either:
+
+1. from a single population
+    - $H_0: \mu_1 = \mu_2$ (null hypothesis)
+2. from two different populations
+    - $H_A: \mu_1 \neq \mu_2$ (alternative hypothesis)
+
+## Population vs sampling distributions
+
+* Population distributions
+    + Each realization / point is an individual
+    
+* Sampling distributions
+    + Each realization / point is a sample
+    + distribution depends on sample size
+    + large sample distributions are given by the Central Limit Theorem
+
+* **Hypothesis testing is about sampling distributions**
+    + Did my sample likely come from that distribution?
+
+## Note about the Central Limit Theorem
+
+When sample size is large, the average $\bar{Y}$ of a random sample:
+
+1. Follows a normal distribution
+2. The normal distribution has mean entered at the population average $\mu_Y$ 
+3. with standard deviation equal to the population standard deviation $\sigma_Y$, divided by the square root of the sample size $N$. We refer to the standard deviation of the distribution of a random variable as the random variable's _standard error_.
+
+Thanks to CLT, linear modeling, t-tests, ANOVA are all guaranteed to work reasonably well for large samples (more than ~30 observations).
+
+Go to online demo: http://onlinestatbook.com/stat_sim/sampling_dist/
+
+## Example applications of hypothesis tests for continuous variables
+
+1. Do study participants on a diet lose weight compared to a control group?
+2. Does a gene knockout result in less viable cell colonies, as measured by the number of living cells in replicate experiments?
+3. Is *Prevotella copri* more abundant in the guts of vegans than of meat-eaters?
+4. Do infants born in this region have a higher birthweight than the national average?
+
+These are research hypotheses. What are the corresponding *null hypotheses*?
+
+## The z-tests
+
+* "$z$" refers to the **Standard Normal Distribution**: $N(\mu=0, \sigma=1)$
+* In a one-sample test, only a single sample is drawn:
+    - $H_0: \mu = \mu_0$
+* In a two-sample test, two samples are drawn *independently*:
+    - $H_0: \mu_1 = \mu_2$
+* A paired test is one sample of paired measurements, e.g.:
+    - pain level in individuals before and after treatment
+       + $H_0: \mu_{before} = \mu_{after}$
+    - microbial abundance in upper and lower intestines in same individuals
+       + $H_0: \mu_{upper} = \mu_{lower}$
+
+## When to use z-tests
+
+* $\frac{{}\bar{x} - \mu}{\sigma}$ and $\frac{\bar{x_1} - \bar{x_2}}{\sigma}$
+are z-distributed *if*:
+    - **the standard deviation $\sigma$ for the population is known in advance**
+    - the population values are normally distributed
+    - the population values are slightly skewed but n > 15
+    - the population values are quite skewed but n > 30
+
+## Example of one-sample z-test
+
+```{r}
+library(TeachingDemos)
+set.seed(1)
+(weights = rnorm(10, mean = 75, sd = 10))
+TeachingDemos::z.test(
+    x = weights,
+    mu = 70,  #specified for population under H0 because this is a one-sample test
+    stdev = 10, #specified for population because this is a z-test
+    alternative = "two.sided"
+)
+```
+
+## The t-tests
+
+* The t-tests are for small samples and do _not_ rely on the Central Limit Theorem
+* In a one-sample test, only a single sample is drawn:
+    - $H_0: \mu = \mu_0$
+* In a two-sample test, two samples are drawn *independently*:
+    - $H_0: \mu_1 = \mu_2$
+* A paired test is one sample of paired measurements, e.g.:
+    - individuals before and after treatment
+
+## When to use t-tests
+
+* $\frac{{}\bar{x} - \mu}{s}$ and $\frac{\bar{x_1} - \bar{x_2}}{s}$
+are t-distributed *if*:
+    - **the standard deviation $s$ is estimated from the sample**
+    - the population values are normally distributed
+    - the population values are slightly skewed but n > 15
+    - the population values are quite skewed but n > 30
+
+* Wilcoxon tests are an alternative for non-normal populations
+    - e.g. rank data
+    - data where ranks are more informative than means
+    - *not* when many ranks are arbitrary
+
+## Example of one-sample t-test
+
+Note that here we do not specify the standard deviation, because it is estimated from the sample.
+```{r}
+stats::t.test(
+    x = weights,
+    mu = 70,  #specified for population under H0 because this is a one-sample test
+    alternative = "two.sided"
+)
+```
+
+In this particular example the p-value is smaller than from the *z-test*, but in general it would be **less powerful** than a *z-test* if its assumptions are met.
+
+# Confidence intervals
+
+## Why confidence intervals?
+
+* The above procedures produced both p-values and confidence intervals
+* p-values are useful only for deciding whether to reject $H_0$
+* p-values do not report effect size (observed difference).
+* p-values only indicate statistical significance which does not guarantee scientific/clinical significance.
+
+Confidence intervals provide a **probable range for the true population mean**.
+
+```{r, echo=FALSE}
+set.seed(1)
+reps <- 100
+N <- 30
+alpha <- 0.05
+my.conf.ints <- replicate(reps, t.test(rnorm(N), conf.level = 1-alpha)$conf.int)
+plot(x = rep(range(my.conf.ints), reps / 2),
+     y = 1:reps,
+     main = paste(reps, "samples of size N=", N),
+     type = "n")
+abline(v = 0, lw = 2, lty = 3)
+for (i in seq(1, reps)) {
+    acceptH0 <- my.conf.ints[1, i] < 0 & my.conf.ints[2, i] > 0
+    segments(
+        x0 = my.conf.ints[1, i],
+        y0 = i,
+        x1 = my.conf.ints[2, i],
+        y1 = i,
+        lw = ifelse(acceptH0, 1, 2),
+        col = ifelse(acceptH0, "black", "red")
+    )
+}
+```
+
+## Intervals for any confidence level
+
+* If the sampling distribution is normal with standard error $SE$, then a confidence interval for the population mean is:
+    - $\bar{X} \pm 1.96 \times SE$ (95% CI, normal sampling distribution)
+    - $\bar{X} \pm z_{\alpha / 2}^{crit} \times SE$ (normal sampling distribution)
+    - $\bar{X} \pm t_{\alpha / 2, df}^{crit} \times SE$ (t sampling distribution)
+* The part after the $\pm$ is called the _margin of error_
+
+## Confidence intervals vs. hypothesis testing
+
+* Confidence intervals can be used for hypothesis testing
+    - reject $H_0$ if the "null value" is not contained in the CI
+* Do **not** use overlap between two CIs for hypothesis test
+    - for a two sample hypothesis test $H_0: \mu_1 = \mu_2$, must construct a single confidence interval for $\mu_1 - \mu_2$
+
+## Q & A: confidence intervals
+
+Which of the following are true?
+
+* The 95% CI contains 95% of the values in the population
+* The 95% CI will contain the population mean, 19 times out of 20
+* The 95% CI is 95% probable to contain the population mean
+* The 99% CI will be wider than the 95% CI
+
+# Summary - hypothesis testing
+
+## Power and type I and II error
+
+| True state of nature | Result of test             |                                                 |
+|----------------------|----------------------------|-------------------------------------------------|
+|                      | **Reject $H_0$**                                      | **Fail to reject $H_0$**                                 |
+| $H_0$ TRUE           | Type I error, probability = $\alpha$ | No error, probability = $1-\alpha$                     |
+| $H_0$ FALSE          | No error, probability is called power = $1-\beta$    | Type II error, probability = $\beta$ (false negative) |
+
+## Use and mis-use of the p-value
+
+* The p-value is the probability of observing a sample statistic _as or more extreme_ as you did, _assuming that $H_0$ is true_
+* The p-value is a **random variable**:
+    - **don't** treat it as precise.
+    - **don't** do silly things like try to interpret differences or ratios between p-values
+    - **don't** lose track of test assumptions such as independence of observations
+    - **do** use a moderate p-value cutoff, then use some effect size measure for ranking
+* Small p-values are particularly:
+    - variable under repeated sampling, and
+    - sensitive to test assumptions
+
+## Use and mis-use of the p-value (cont'd)
+
+* If we fail to reject $H_0$, is the probability that $H_0$ is true equal to ($1-\alpha$)?  (Hint: NO NO NO!)
+    - Failing to reject $H_0$ does not mean $H_0$ is true
+    - "No evidence of difference $\neq$ evidence of no difference"
+* Statistical significance vs. practical significance
+    - As sample size increases, point estimates such as the mean are more precise
+    - With large sample size, small differences in means may be statistically significant but not practically significant
+* Although $\alpha = 0.05$ is a common cut-off for the p-value, there is no set border between "significant" and "insignificant," only increasingly strong evidence against $H_0$ (in favor of $H_A$) as the p-value gets smaller.
+
+# R - basic usage
+
+## Tips for learning R
+
+Pseudo code                                   |   Example code
+--------------------------------------------  |   -------------------
+library(packagename)                          | library(dplyr)
+?functionname                                 | ?select
+?package::functionname                        | ?dplyr::select
+? 'Reserved keyword or symbol' \color{blue}{(or backticks)} | ? '%>%'
+??searchforpossiblyexistingfunctionandortopic | ??simulate
+help(package = "loadedpackage")               | help("dplyr")
+browseVignettes("packagename")                | browseVignettes("dplyr")
+
+\tiny Slide credit: Marcel Ramos
+
+## Installing Packages the Bioconductor Way
+
+* See the [Bioconductor](http://www.bioconductor.org/install) site for more info
+
+Pseudo code: 
+
+```{r, eval = FALSE}
+install.packages("BiocManager") #from CRAN
+packages <- c("packagename", "githubuser/repository", "biopackage")
+BiocManager::install(packages)
+BiocManager::valid()  #check validity of installed packages
+```
+
+* Works for CRAN, GitHub, and Bioconductor packages!
+
+# Introduction to the R/Bioconductor data classes
+
+## Base R Data Types: atomic vectors
+
+`numeric` (set seed to sync random number generator):
+```{r}
+set.seed(1)
+rnorm(5)
+```
+
+`integer`:
+```{r}
+sample(1L:5L)
+```
+
+`logical`:
+```{r}
+1:3 %in% 3
+```
+
+`character`:
+```{r}
+c("yes", "no")
+```
+
+`factor`:
+```{r}
+factor(c("yes", "no"))
+```
+
+For real-life recoding of factors, try `dplyr::recode`, `dplyr::recode_factor`
+
+## Base R Data Types: missingness
+
+* Missing Values and others - **IMPORTANT**
+```{r}
+c(NA, NaN, -Inf, Inf)
+```
+
+`class()` to find the class of a variable.
+
+## Base R Data Types: matrix, list, data.frame
+
+`matrix`:
+```{r}
+matrix(1:9, nrow = 3)
+```
+
+The `list` is a non-atomic vector:
+```{r}
+measurements <- c(1.3, 1.6, 3.2, 9.8, 10.2)
+parents <- c("Parent1.name", "Parent2.name")
+my.list <- list(measurements, parents)
+my.list
+```
+
+
+The `data.frame` has list-like and matrix-like properties:
+```{r}
+x <- 11:16
+y <- seq(0, 1, .2)
+z <- c("one", "two", "three", "four", "five", "six")
+a <- factor(z)
+my.df <- data.frame(x, y, z, a, stringsAsFactors = FALSE)
+```
+
+## Bioconductor S4 vectors: DataFrame
+
+* Bioconductor (www.bioconductor.org) defines its own set of vectors using the S4 formal class system
+`DqtqFrame`: like a `data.frame` but more flexible. columns can be any atomic vector type:
+    - `GenomicRanges` objects
+    - `Rle` (run-length encoding)
+```{r}
+suppressPackageStartupMessages(library(S4Vectors))
+df <- DataFrame(var1 = Rle(c("a", "a", "b")),
+                var2 = 1:3)
+metadata(df) <- list(parent = "DataFrame is my virtual parent")
+df
+```
+
+## DataFrame is actually a virtual classes
+
+```{r, echo = FALSE, message = FALSE}
+suppressPackageStartupMessages(library(DiagrammeR))
+grViz("                           # All instructions are within a large character string
+digraph surveillance_diagram {    # 'digraph' means 'directional graph', then the graph name 
+  
+  # graph statement
+  #################
+  graph [layout = dot,
+         rankdir = TB,
+         overlap = true]
+  
+  # nodes
+  #######
+  node [shape = none,           # shape = circle
+       fixedsize = false,
+       fontsize = 10]               # width of circles
+  
+  DataFrame                         # names of nodes
+  DFrame
+  SQLDataFrame
+  ParquetDataFrame
+  '...'
+
+  # edges
+  #######
+  DFrame -> DataFrame 
+  DFrame -> SQLDataFrame
+  DFrame -> ParquetDataFrame
+  DFrame -> '...'
+
+}
+")
+```
+
+* Rationale: Methods defined on `DFrame` are shared by all classes inheriting it
+* See: https://bioconductor.org/help/course-materials/2019/BiocDevelForum/02-DataFrame.pdf
+* See also: https://github.com/Bioconductor/S4Vectors/issues/90#issue-1026425148
+
+## List and derived classes
+
+```{r}
+List(my.list)
+str(List(my.list))
+```
+
+```{r}
+suppressPackageStartupMessages(library(IRanges))
+IntegerList(var1 = 1:26, var2 = 1:100)
+CharacterList(var1 = letters[1:100], var2 = LETTERS[1:26])
+LogicalList(var1 = 1:100 %in% 5, var2 = 1:100 %% 2)
+```
+
+## Biostrings
+
+```{r}
+suppressPackageStartupMessages(library(Biostrings))
+bstring <- BString("I am a BString object")
+bstring
+```
+
+```{r}
+dnastring <- DNAString("TTGAAA-CTC-N")
+dnastring
+str(dnastring)
+```
+
+```{r}
+alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
+```
+
+## (Ranged)SummarizedExperiment
+
+![Summarized Experiment](images/SE.svg)
+* Source: https://bioconductor.org/packages/SummarizedExperiment/
+
+## (Ranged)SummarizedExperiment
+
+* `RangedSummarizedExperiment` is the _de facto_ standard for "rectangular" data with metadata
+* Extended by `SingleCellExperiment`, `DESeqDataSet`
+* Emulated by `MultiAssayExperiment`
+
+## Lab Exercises and Links
+
+* Lab Exercises
+    - [random variables exercises](http://genomicsclass.github.io/book/pages/random_variables_exercises.html)
+
+* Links
+    - A built [html][] version of this lecture is available.
+    - The [source][] R Markdown is also available from Github.
+
+[html]: https://rpubs.com/lwaldron/AppStatBio2023_day1
+[source]: https://github.com/waldronlab/AppStatBio
+
+[book]: https://genomicsclass.github.io/book/
+[ePub version]: https://leanpub.com/dataanalysisforthelifesciences/
+[Source repository]: https://github.com/genomicsclass/labs
