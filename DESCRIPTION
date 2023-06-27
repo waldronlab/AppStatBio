@@ -12,6 +12,8 @@ RoxygenNote: 7.2.3
 Imports:
     TeachingDemos,
     DiagrammeR,
+    IRanges,
+    Biostrings,
     S4Vectors
 Suggests: 
     knitr,
