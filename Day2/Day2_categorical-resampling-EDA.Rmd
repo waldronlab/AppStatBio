@@ -38,7 +38,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
     - $H_0$: the Lady has no ability to tell which was added first
 
 <center>
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Nice_Cup_of_Tea.jpg/330px-Nice_Cup_of_Tea.jpg" alt="Lady tasting tea" align="middle" style="height: 200px;">
+<img src="images/NiceCupofTea.jpg" alt="Lady tasting tea" align="middle" style="height: 200px;">
 </center>
 
 Source: https://en.wikipedia.org/wiki/Lady_tasting_tea
@@ -195,7 +195,7 @@ epitools::oddsratio(relevel(genotype, "aa"), disease)$measure
 Response (y) variable is permuted to guarantee true $H_0$:
 
 <center>
-<img src="nrg1521-i1.gif" alt="nrg1521-i1.gif" style="height: 400px;"/>
+<img src="images/nrg1521-i1.gif" alt="nrg1521-i1.gif" style="height: 400px;"/>
 </center>
 
 <font size="2">
@@ -220,7 +220,7 @@ Genome-wide association studies for common diseases and complex traits. *Nature 
     3. to compare the accuracy of competing algorithms in one dataset
 
 <center>
-<img src="three-fold.png" alt="three-fold.png" style="width: 600px;"/>
+<img src="images/three-fold.png" alt="three-fold.png" style="width: 600px;"/>
 
 Three-fold cross-validation
 
@@ -239,7 +239,7 @@ https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets
 ## Tuning: training set and validation set error
 
 <center>
-<img src="ISLR_Fig29.png" alt="ISLR Fig 2.9 U curve" style="width: 600px;"/>
+<img src="images/ISLR_Fig29.png" alt="ISLR Fig 2.9 U curve" style="width: 600px;"/>
 
 ISLR Figure 2.9: Training set vs. Validation set error: the U
 
@@ -267,7 +267,7 @@ FIGURE 2.9. Left: Data simulated from f, shown in black. Three estimates of f ar
 ## Variability in cross-validation
 
 <center>
-<img src="ISLR_Fig52.png" alt="ISLR_Fig52.png" style="width: 600px;"/>
+<img src="images/ISLR_Fig52.png" alt="ISLR_Fig52.png" style="width: 600px;"/>
 
 ISLR Figure 5.2: Variability in 2-fold cross-validation
 </center>
@@ -304,7 +304,7 @@ FIGURE 5.2. The validation set approach was used on the Auto data set in order t
 ## The Bootstrap (schematic)
 
 <center>
-<img src="ISLR_Fig511.png" alt="ISLR_Fig511.png" style="width: 600px;"/>
+<img src="images/ISLR_Fig511.png" alt="ISLR_Fig511.png" style="width: 600px;"/>
 </center>
 
 # Exploratory data analysis
@@ -396,7 +396,7 @@ plot(faithful$eruptions, faithful$waiting,xlab="Eruption Duration",ylab="Waiting
 
 ## Exploratory data analysis in high dimensions
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 if(!require(GSE5859Subset)){
   BiocManager::install("genomicsclass/GSE5859Subset")
 }
@@ -507,7 +507,7 @@ plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
 ## Heatmaps
 
 * Detailed representation of high-dimensional dataset.
-    - `ComplexHeatmap` package is the best as of 2022: large datasets, interactive heatmaps, simple defaults but many customizations possible
+    - `ComplexHeatmap` package is the best as of 2023: large datasets, interactive heatmaps, simple defaults but many customizations possible
 
 ```{r, fig.width=12}
 suppressPackageStartupMessages(library(ComplexHeatmap))
@@ -524,7 +524,7 @@ row_ha <- rowAnnotation(chromosome = chr[keep], col = chrcols, na_col = "white")
 column_ha <- HeatmapAnnotation(ethnicity = sampleInfo$ethnicity, group = factor(sampleInfo$group),
                                col = list(ethnicity = c("ASN"="lightgrey", "CEU"="darkgrey"),
                                           group = c("0" = "brown", "1" = "blue")))
-Heatmap(ge, use_raster = TRUE, top_annotation = column_ha, right_annotation = row_ha)
+Heatmap(ge, use_raster = FALSE, top_annotation = column_ha, right_annotation = row_ha)
 ```
 
 ## Heatmaps: Summary
@@ -570,5 +570,5 @@ RColorBrewer::display.brewer.all(n = 7)
 - A built [html][] version of this lecture is available.
 - The [source][] R Markdown is also available from Github.
 
-[html]: https://rpubs.com/lwaldron/AppStatBio2022_day2
+[html]: https://rpubs.com/lwaldron/AppStatBio2023_day2
 [source]: https://github.com/waldronlab/AppStatBio

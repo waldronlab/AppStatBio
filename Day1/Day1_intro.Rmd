@@ -145,8 +145,10 @@ lines(xdens, length(x) * dbinom(xdens, size = 20, prob = 0.25), lw = 2)
 * We make inference from *samples* because we usually cannot observe the entire population
 
 <center>
-![Sample vs Population](https://keydifferences.com/wp-content/uploads/2016/06/population-vs-sample2.jpg)
+![Sample vs Population](images/population-vs-sample2.jpg)
 </center>
+
+Source: https://keydifferences.com/wp-content/uploads/2016/06/population-vs-sample2.jpg
 
 ## One and two-sample hypothesis tests of mean
 
@@ -547,7 +549,7 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 
 ## (Ranged)SummarizedExperiment
 
-![Summarized Experiment](https://github.com/Bioconductor/SummarizedExperiment/raw/master/vignettes/SE.svg)
+![Summarized Experiment](images/SE.svg)
 * Source: https://bioconductor.org/packages/SummarizedExperiment/
 
 ## (Ranged)SummarizedExperiment
@@ -565,7 +567,7 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
     - A built [html][] version of this lecture is available.
     - The [source][] R Markdown is also available from Github.
 
-[html]: https://rpubs.com/lwaldron/AppStatBio2022_day1
+[html]: https://rpubs.com/lwaldron/AppStatBio2023_day1
 [source]: https://github.com/waldronlab/AppStatBio
 
 [book]: https://genomicsclass.github.io/book/
