@@ -570,7 +570,9 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 ## Lab Exercises and Links
 
 * Lab Exercises
-    - Orchestrating Single-cell Analysis (OSCA) Chapter 3: [Feature Selection](http://bioconductor.org/books/3.17/OSCA.basic/feature-selection.html)
+    - [OSCA Introduction Chapter 3: Getting scRNA-seq datasets
+](http://bioconductor.org/books/3.17/OSCA.intro/getting-scrna-seq-datasets.html)
+    - [OSCA Introduction Chapter 4: The SingleCellExperiment class](http://bioconductor.org/books/3.17/OSCA.intro/the-singlecellexperiment-class.html) (as time allows)
 
 * Links
     - A built [html][] version of this lecture is available.
