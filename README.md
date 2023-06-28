@@ -16,8 +16,10 @@ This course will provide biologists and bioinformaticians with practical statist
 
 ## Textbook
 
-* [Biomedical Data Science](http://genomicsclass.github.io/book/) by Irizarry and Love ([ePub version](https://leanpub.com/dataanalysisforthelifesciences/))
+* [Biomedical Data Science](https://genomicsclass.github.io/book/) by Irizarry and Love ([ePub version](https://leanpub.com/dataanalysisforthelifesciences/) on Leanpub)
 * [Source repository](https://github.com/genomicsclass/labs)
+* [Modern Statistics for Modern Biology](https://www.huber.embl.de/msmb/) by Holmes and Huber (secondary)
+* [Orchestrating Single-Cell Analysis with Bioconductor](https://bioconductor.org/books/release/OSCA/) (OSCA) by Amezquita, Lun, Hicks, Gottardo, O’Callaghan
 
 ## Related Resources
 
@@ -31,11 +33,11 @@ Each day will include a hands-on lab session, that students should attempt in fu
 
 All course materials will be available from https://github.com/waldronlab/AppStatBio/.
 
-1. introduction ([link](https://rpubs.com/lwaldron/AppStatBio2022_day1))
+1. introduction
     + random variables
     + distributions
     + hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
-2. non-parametric approaches ([link](https://rpubs.com/lwaldron/AppStatBio2022_day2))
+2. non-parametric approaches
     + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
     + Monte Carlo simulation
     + permutation tests
