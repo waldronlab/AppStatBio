@@ -1,6 +1,6 @@
 ---
 title: "Applied Statistics for High-throughput Biology: Session 1"
-output: rmarkdown::html_vignette
+output: slidy_presentation
 vignette: >
   %\VignetteIndexEntry{Applied Statistics for High-throughput Biology: Session 1}
   %\VignetteEngine{knitr::rmarkdown}
@@ -27,10 +27,12 @@ My research interests:
 * Multi-omic data analysis for cancer
 * https://www.waldronlab.io
 
-## The textbook
+## The textbooks
 
 * [Biomedical Data Science][book] by Irizarry and Love ([ePub version] on Leanpub)
 * [Source repository](https://github.com/genomicsclass/labs)
+* [Modern Statistics for Modern Biology](https://www.huber.embl.de/msmb/) by Holmes and Huber (secondary)
+* [Orchestrating Single-Cell Analysis with Bioconductor](https://bioconductor.org/books/release/OSCA/) (OSCA) by Amezquita, Lun, Hicks, Gottardo, O’Callaghan
 
 ![Biomedical Data Science book cover](https://d2sofvawe08yqg.cloudfront.net/dataanalysisforthelifesciences/hero2x?1549465432)
 
@@ -568,13 +570,13 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 ## Lab Exercises and Links
 
 * Lab Exercises
-    - [random variables exercises](http://genomicsclass.github.io/book/pages/random_variables_exercises.html)
+    - Orchestrating Single-cell Analysis (OSCA) Chapter 3: [Feature Selection](http://bioconductor.org/books/3.17/OSCA.basic/feature-selection.html)
 
 * Links
     - A built [html][] version of this lecture is available.
     - The [source][] R Markdown is also available from Github.
 
-[html]: https://rpubs.com/lwaldron/AppStatBio2023_day1
+[html]: http://waldronlab.io/AppStatBio/
 [source]: https://github.com/waldronlab/AppStatBio
 
 [book]: https://genomicsclass.github.io/book/
