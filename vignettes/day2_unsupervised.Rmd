@@ -485,6 +485,28 @@ sce.zeisel <- runUMAP(sce.zeisel, dimred="PCA")
 plotReducedDim(sce.zeisel, dimred="UMAP", colour_by="level1class")
 ```
 
+## tSNE of tissue microarray data
+
+Using default parameters and no log transformation
+
+```{r}
+sct <- SingleCellExperiment(e)
+sct$tissue <- tissue
+# fake the log normalization because it is undesirable for microarray data
+names(assays(sct)) <- "logcounts" 
+sct <- fixedPCA(sct, subset.row=NULL)
+sct <- runTSNE(sct, dimred="PCA")
+plotReducedDim(sct, dimred="TSNE", colour_by="tissue")
+```
+
+## UMAP of tissue microarray data
+
+Also using default parameters and no log transformation
+
+```{r}
+sct <- runUMAP(sct, dimred="PCA")
+plotReducedDim(sct, dimred="UMAP", colour_by="tissue")
+```
 
 ## Summary: distances and dimension reduction
 
