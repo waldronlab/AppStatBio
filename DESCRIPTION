@@ -14,7 +14,20 @@ Imports:
     DiagrammeR,
     IRanges,
     Biostrings,
+    org.Mm.eg.db,
+    scRNAseq,
+    scater,
+    BiocSingular,
+    scran,
+    GSE5859,
+    tissuesGeneExpression,
+    genefilter,
+    survival,
+    rafalib,
     S4Vectors
+Remotes:
+    genomicsclass/GSE5859,
+    genomicsclass/tissuesGeneExpression
 Suggests: 
     knitr,
     rmarkdown
