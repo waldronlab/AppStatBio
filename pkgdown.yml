@@ -3,7 +3,8 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   day1_intro: day1_intro.html
-last_built: 2023-06-28T14:51Z
+  day2_unsupervised: day2_unsupervised.html
+last_built: 2023-06-30T07:15Z
 urls:
   reference: http://waldronlab.io/AppStatBio/reference
   article: http://waldronlab.io/AppStatBio/articles
