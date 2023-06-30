@@ -74,10 +74,10 @@ Waldron</h4>
     
     
 <div class="section level2">
-<h2 id="schematic-of-a-typical-scrna-seq-analysis-workflow-">Schematic of a typical scRNA-seq analysis workflow.<a class="anchor" aria-label="anchor" href="#schematic-of-a-typical-scrna-seq-analysis-workflow-"></a>
+<h2 id="schematic-of-a-typical-scrna-seq-analysis-workflow">Schematic of a typical scRNA-seq analysis workflow<a class="anchor" aria-label="anchor" href="#schematic-of-a-typical-scrna-seq-analysis-workflow"></a>
 </h2>
 <div class="figure">
-<img src="http://bioconductor.org/books/3.17/OSCA.intro/images/workflow.png" alt=""><p class="caption">workflow</p>
+<img src="http://bioconductor.org/books/3.17/OSCA.intro/images/workflow.png" alt=""><p class="caption">Single-cell workflow</p>
 </div>
 <p>Each stage (separated by dashed lines) consists of a number of
 specific steps, many of which operate on and modify a
@@ -368,19 +368,10 @@ scores to PCA scores (<strong>loadings</strong>)</p></li>
 </h2>
 <p>Scaling:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">e.standardize.slow</span> <span class="op">&lt;-</span></span>
-<span>                <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">e</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span>                    <span class="va">x</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.808   0.028   0.836</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">e.standardize.fast</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>, scale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.097   0.020   0.118</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">e.standardize.slow</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">e.standardize.fast</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">e.standardize</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>, scale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>SVD:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd</a></span><span class="op">(</span><span class="va">e.standardize.fast</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd</a></span><span class="op">(</span><span class="va">e.standardize</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "d" "u" "v"</span></span></code></pre></div>
 </div>
@@ -406,7 +397,7 @@ scores to PCA scores (<strong>loadings</strong>)</p></li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">rafalib</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rafalib/man/mypar.html" class="external-link">mypar</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">e.standardize.fast</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">e.standardize</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">u</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">~</span> <span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="day2_unsupervised_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p><strong>Lesson:</strong> u and v can each be multiplied by -1
@@ -446,7 +437,7 @@ original axes</li>
 </h2>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">e.pc1genes</span> <span class="op">&lt;-</span></span>
-<span>    <span class="va">e.standardize.fast</span><span class="op">[</span><span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.03</span> <span class="op">|</span></span>
+<span>    <span class="va">e.standardize</span><span class="op">[</span><span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.03</span> <span class="op">|</span></span>
 <span>                           <span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0.03</span>,<span class="op">]</span></span>
 <span><span class="fu">pheatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html" class="external-link">pheatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">e.pc1genes</span>,</span>
@@ -524,7 +515,7 @@ V^T}\)</span>
 distances</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">e.standardize.fast</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">e.standardize</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cmdscale.html" class="external-link">cmdscale</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
 <p><img src="day2_unsupervised_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 </div>
@@ -545,11 +536,19 @@ single-cell data
 <li>“perplexity” parameter defines (loosely) how to balance attention
 between local and global aspects of data</li>
 <li>optimal choice of perplexity changes for different numbers of cells
-from the <strong>same</strong> sample. Here is a <a href="https://towardsdatascience.com/how-to-tune-hyperparameters-of-tsne-7c0596a18868" class="external-link">good
+from the <strong>same</strong> sample.</li>
+<li>perplexity = <span class="math inline">\(\sqrt{N}\)</span> is one
+rule of thumb. <span class="math inline">\(max(N/5, 50)\)</span> is
+another (default of <a href="https://cran.r-project.org/package=Rtsne" class="external-link">Rtsne</a>)</li>
+<li>Here is a <a href="https://towardsdatascience.com/how-to-tune-hyperparameters-of-tsne-7c0596a18868" class="external-link">good
 post by Nikolay Oskolkov</a> on this topic.</li>
 </ul>
 </li>
-<li>Caveats
+</ul>
+</div>
+<div class="section level2">
+<h2 id="t-sne-caveats">t-SNE caveats<a class="anchor" aria-label="anchor" href="#t-sne-caveats"></a>
+</h2>
 <ul>
 <li>uses a random number generator</li>
 <li>apparent spread of clusters is completely meaningless</li>
@@ -557,8 +556,6 @@ post by Nikolay Oskolkov</a> on this topic.</li>
 <li>parameters can be tuned to make data appear how you want</li>
 <li>can show apparent clusters in random noise. Should <em>not</em> be
 used for statistical inference</li>
-</ul>
-</li>
 <li>Try it to gain some intuition: <a href="https://distill.pub/2016/misread-tsne/" class="external-link uri">https://distill.pub/2016/misread-tsne/</a>)</li>
 </ul>
 <div class="figure">
@@ -590,6 +587,31 @@ t-SNE clustering of Zeisel dataset
 </div>
 </div>
 <div class="section level2">
+<h2 id="umap-vs-t-sne">UMAP vs t-SNE<a class="anchor" aria-label="anchor" href="#umap-vs-t-sne"></a>
+</h2>
+<ul>
+<li>UMAP may better preserve local and global distances</li>
+<li>tends to have more compact visual clusters with more empty space
+between them</li>
+<li>more computationally efficient</li>
+<li>also involves random number generation</li>
+<li>Note: I prefer <em>not</em> setting the random number seed during
+exploratory analysis in order to see the random variability</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="umap-of-the-same-dataset">UMAP of the same dataset<a class="anchor" aria-label="anchor" href="#umap-of-the-same-dataset"></a>
+</h2>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sce.zeisel</span> <span class="op">&lt;-</span> <span class="fu">runUMAP</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred<span class="op">=</span><span class="st">"PCA"</span><span class="op">)</span></span>
+<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred<span class="op">=</span><span class="st">"UMAP"</span>, colour_by<span class="op">=</span><span class="st">"level1class"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="day2_unsupervised_files/figure-html/unnamed-chunk-26-1.png" alt="UMAP representation of the Zeisel dataset" width="700"><p class="caption">
+UMAP representation of the Zeisel dataset
+</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="summary-distances-and-dimension-reduction">Summary: distances and dimension reduction<a class="anchor" aria-label="anchor" href="#summary-distances-and-dimension-reduction"></a>
 </h2>
 <ul>
@@ -607,6 +629,8 @@ in the population</li>
 calculations</li>
 <li>PCA is subject to over-fitting, screeplot can be tested by
 cross-validation</li>
+<li>PCA is often used prior to t-SNE and UMAP for de-noising and
+computational tractability</li>
 </ul>
 </div>
 <div class="section level2">
