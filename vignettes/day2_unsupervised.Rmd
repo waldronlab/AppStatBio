@@ -16,9 +16,9 @@ knitr::opts_chunk$set(
 library(AppStatBio)
 ```
 
-## Schematic of a typical scRNA-seq analysis workflow. 
+## Schematic of a typical scRNA-seq analysis workflow
 
-![workflow](http://bioconductor.org/books/3.17/OSCA.intro/images/workflow.png)
+![Single-cell workflow](http://bioconductor.org/books/3.17/OSCA.intro/images/workflow.png)
 
 Each stage (separated by dashed lines) consists of a number of specific steps, many of which operate on and modify a SingleCellExperiment instance.
 
@@ -270,16 +270,12 @@ $$\mathbf{Y} = \mathbf{UDV}^\top$$
 
 Scaling:
 ```{r, cache=TRUE}
-system.time(e.standardize.slow <-
-                t(apply(e, 1, function(x)
-                    x - mean(x))))
-system.time(e.standardize.fast <- t(scale(t(e), scale = FALSE)))
-all.equal(e.standardize.slow[, 1], e.standardize.fast[, 1])
+e.standardize <- t(scale(t(e), scale = FALSE))
 ```
 
 SVD:
 ```{r}
-s <- svd(e.standardize.fast)
+s <- svd(e.standardize)
 names(s)
 ```
 
@@ -300,7 +296,7 @@ dim(s$v)     # d %*% vT = scores
 
 ```{r, cache=TRUE}
 rafalib::mypar()
-p <- prcomp(t(e.standardize.fast))
+p <- prcomp(t(e.standardize))
 plot(s$u[, 1] ~ p$rotation[, 1])
 ```
 
@@ -329,7 +325,7 @@ abline(h = c(-0.03, 0.03), col = "red")
 
 ```{r, fig.height=3.5}
 e.pc1genes <-
-    e.standardize.fast[p$rotation[, 1] < -0.03 |
+    e.standardize[p$rotation[, 1] < -0.03 |
                            p$rotation[, 1] > 0.03,]
 pheatmap::pheatmap(
     e.pc1genes,
@@ -406,7 +402,7 @@ legend(
 - identify two (or more) eigenvalues/vectors that preserve distances
 
 ```{r}
-d <- as.dist(1 - cor(e.standardize.fast))
+d <- as.dist(1 - cor(e.standardize))
 mds <- cmdscale(d)
 ```
 
@@ -430,13 +426,17 @@ legend(
 * computationally intensive so usually done only on top ~30 PCs
 * t-SNE is sensitive to choices of tuning parameters
     - "perplexity" parameter defines (loosely) how to balance attention between local and global aspects of data
-    - optimal choice of perplexity changes for different numbers of cells from the **same** sample. Here is a [good post by Nikolay Oskolkov](https://towardsdatascience.com/how-to-tune-hyperparameters-of-tsne-7c0596a18868) on this topic.
-* Caveats
-    - uses a random number generator
-    - apparent spread of clusters is completely meaningless
-    - distance between clusters might also not mean anything
-    - parameters can be tuned to make data appear how you want
-    - can show apparent clusters in random noise. Should _not_ be used for statistical inference
+    - optimal choice of perplexity changes for different numbers of cells from the **same** sample. 
+    - perplexity = $\sqrt{N}$ is one rule of thumb. $max(N/5, 50)$ is another (default of [Rtsne](https://cran.r-project.org/package=Rtsne))
+    - Here is a [good post by Nikolay Oskolkov](https://towardsdatascience.com/how-to-tune-hyperparameters-of-tsne-7c0596a18868) on this topic.
+
+## t-SNE caveats
+
+* uses a random number generator
+* apparent spread of clusters is completely meaningless
+* distance between clusters might also not mean anything
+* parameters can be tuned to make data appear how you want
+* can show apparent clusters in random noise. Should _not_ be used for statistical inference
 * Try it to gain some intuition: https://distill.pub/2016/misread-tsne/)
 
 ![tSNE](images/tSNE-eg.png)
@@ -469,6 +469,21 @@ sce.zeisel <- runTSNE(sce.zeisel, dimred="PCA")
 plotReducedDim(sce.zeisel, dimred="TSNE", colour_by="level1class")
 ```
 
+## UMAP vs t-SNE
+
+* UMAP may better preserve local and global distances
+* tends to have more compact visual clusters with more empty space between them
+* more computationally efficient
+* also involves random number generation
+* Note: I prefer _not_ setting the random number seed during exploratory analysis in order to see the random variability
+
+## UMAP of the same dataset
+
+```{r, fig.cap = "UMAP representation of the Zeisel dataset"}
+sce.zeisel <- runUMAP(sce.zeisel, dimred="PCA")
+plotReducedDim(sce.zeisel, dimred="UMAP", colour_by="level1class")
+```
+
 
 ## Summary: distances and dimension reduction
 
@@ -478,6 +493,7 @@ plotReducedDim(sce.zeisel, dimred="TSNE", colour_by="level1class")
 - Variables are also scaled unless you know they have the same scale in the population
 - PCA projection can be applied to new datasets if you know the matrix calculations
 - PCA is subject to over-fitting, screeplot can be tested by cross-validation
+- PCA is often used prior to t-SNE and UMAP for de-noising and computational tractability
 
 ## Lab exercise
 
