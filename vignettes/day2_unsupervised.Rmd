@@ -10,6 +10,7 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  cache = TRUE,
   collapse = TRUE,
   comment = "#>"
 )
@@ -255,7 +256,7 @@ SVD generalizes the example rotation we looked at:
 $$\mathbf{Y} = \mathbf{UDV}^\top$$
 
 <center>
-<img src="SVD1.png" alt="SVD" align="middle" style="height: 350px;">
+<img src="images/SVD1.png" alt="SVD" align="middle" style="height: 350px;">
 </center>
 
 - **note**: the above formulation is for $m$ rows $> n$ columns
@@ -287,7 +288,7 @@ length(s$d)  # eigenvalues
 dim(s$v)     # d %*% vT = scores
 ```
 <center>
-<img src="SVD1.png" alt="SVD" align="middle" style="height: 200px;">
+<img src="images/SVD1.png" alt="SVD" align="middle" style="height: 200px;">
 </center>
 
 ## PCA is a SVD
@@ -305,7 +306,7 @@ plot(s$u[, 1] ~ p$rotation[, 1])
 ## PCA interpretation: loadings
 
 <center>
-<img src="SVD1.png" alt="SVD" align="middle" style="height: 225px;">
+<img src="images/SVD1.png" alt="SVD" align="middle" style="height: 225px;">
 </center>
 
 - $\mathbf{U}$ (**loadings**): relate the *principal component* axes to the original variables
@@ -368,7 +369,7 @@ plot(
 ## PCA interpretation: scores
 
 <center>
-<img src="SVD1.png" alt="SVD" align="middle" style="height: 225px;">
+<img src="images/SVD1.png" alt="SVD" align="middle" style="height: 225px;">
 </center>
 
 - $\mathbf{V}$ (**scores**): The "datapoints" in the reduced prinipal component space
