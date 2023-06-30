@@ -1,9 +1,9 @@
 ---
-title: "Applied Statistics for High-throughput Biology Day 2"
+title: "Applied Statistics for High-throughput Biology Session 2"
 output: slidy_presentation
 author: "Levi Waldron"
 vignette: >
-  %\VignetteIndexEntry{Applied Statistics for High-throughput Biology Day}
+  %\VignetteIndexEntry{Applied Statistics for High-throughput Biology: Session 2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
