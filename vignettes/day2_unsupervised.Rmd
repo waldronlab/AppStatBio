@@ -1,5 +1,5 @@
 ---
-title: "Applied Statistics for High-throughput Biology Session 2"
+title: "Applied Statistics for High-throughput Biology: Session 2"
 output: slidy_presentation
 author: "Levi Waldron"
 vignette: >
@@ -498,7 +498,8 @@ plotReducedDim(sce.zeisel, dimred="UMAP", colour_by="level1class")
 
 ## Lab exercise
 
-OSCA Basics: [Chapter 4 Dimensionality Reduction](http://bioconductor.org/books/3.17/OSCA.basic/dimensionality-reduction.html)
+* OSCA Basics: [Chapter 4 Dimensionality Reduction](http://bioconductor.org/books/3.17/OSCA.basic/dimensionality-reduction.html)
+* Optional if you are interested, OSCA Advanced: [Chapter 4 Dimensionality reduction, redux](http://bioconductor.org/books/3.17/OSCA.advanced/dimensionality-reduction-redux.html)
 
 ## Links
 
