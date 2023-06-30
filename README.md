@@ -33,23 +33,12 @@ Each day will include a hands-on lab session, that students should attempt in fu
 
 All course materials will be available from https://github.com/waldronlab/AppStatBio/.
 
-1. introduction
+1. Introduction
     + random variables
     + distributions
     + hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
-2. non-parametric approaches
-    + hypothesis tests for categorical variables (chi-square, Fisher's Exact)
-    + Monte Carlo simulation
-    + permutation tests
-    + bootstrap simulation
-    + exploratory data analysis
-3. linear modeling
-    + linear and generalized linear modeling
-    + model matrix and model formulae
-    + multiple testing
-4. unsupervised analysis
-    + graphics for exploratory data analysis
-    + distance in high dimensions
-    + principal components analysis and multidimensional scaling
-    + unsupervised clustering
-    + batch effects
+2. Dimensionality reduction
+    + Distances in high dimensions
+    + Principal Components Analysis and Singular Value Decomposition
+    + Multidimensional Scaling
+    + t-SNE and UMAP

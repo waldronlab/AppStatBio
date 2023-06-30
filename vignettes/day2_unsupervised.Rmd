@@ -30,7 +30,7 @@ Each stage (separated by dashed lines) consists of a number of specific steps, m
 - Distances in high dimensions
 - Principal Components Analysis and Singular Value Decomposition
 - Multidimensional Scaling
-- Batch Effects (Chapter 10)
+- t-SNE and UMAP
 
 ## Metrics and distances
 
