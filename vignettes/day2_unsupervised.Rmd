@@ -452,8 +452,6 @@ suppressPackageStartupMessages({
   library(scater)
 })
 sce.zeisel <- ZeiselBrainData()
-sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
-    id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 sce.zeisel <- logNormCounts(sce.zeisel)
 ```
 
