@@ -1,0 +1,407 @@
+---
+title: "Applied Statistics for High-throughput Biology: Session 4"
+output: slidy_presentation
+author: "Levi Waldron"
+vignette: >
+  %\VignetteIndexEntry{Applied Statistics for High-throughput Biology: Session 4}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+  collapse = TRUE,
+  comment = "#>"
+)
+library(AppStatBio)
+```
+
+## Outline
+
+- [Exploratory data analysis](https://genomicsclass.github.io/book/pages/exploratory_data_analysis.html) (Chapter 2)
+    - Quantile Quantile (QQ)-plots
+    - Boxplots
+    - Scatterplots
+    - Volcano plots
+    - p-value histograms
+    - MA plots
+    - heatmaps
+- [Batch effects](http://genomicsclass.github.io/book/pages/intro_to_batch_effects.html) (Chapter 10)
+
+# Exploratory data analysis
+
+## Introduction
+
+> “The greatest value of a picture is when it forces us to notice what we never expected to see.” - John W. Tukey
+
+- Discover biases, systematic errors and unexpected variability in data
+- Graphical approach to detecting these issues
+- Represents a first step in data analysis and guides hypothesis testing
+- Opportunities for discovery in the outliers
+
+## Quantile Quantile Plots
+
+- Quantiles divide a distribution into equally sized bins
+- Division into 100 bins gives percentiles
+- Quantiles of a theoretical distribution are plotted against an experimental distribution
+    - alternatively, quantiles of two experimental distributions
+- Given a perfect fit, $x=y$
+- Useful in determining data distribution (normal, t, etc.)
+
+## Example: Quantile Quantile Plots
+
+```{r echo=FALSE, fig.width=8}
+suppressPackageStartupMessages(library(UsingR))
+suppressPackageStartupMessages(library(rafalib))
+# height qq plot
+x <- father.son$fheight
+ps <- (seq(0, 99) + 0.5) / 100
+qs <- quantile(x, ps)
+normalqs <- qnorm(ps, mean(x), popsd(x))
+par(mfrow = c(1, 3))
+plot(normalqs,
+     qs,
+     xlab = "Normal Percentiles",
+     ylab = "Height Percentiles",
+     main = "Height Q-Q Plot")
+abline(0, 1)
+# t-distributed for 12 df
+x <- rt(1000, 12)
+qqnorm(x,
+       xlab = "t quantiles",
+       main = "T Quantiles (df=12) Q-Q Plot",
+       ylim = c(-6, 6))
+qqline(x)
+# t-distributed for 3 df
+x <- rt(1000, 3)
+qqnorm(x,
+       xlab = "t quantiles",
+       main = "T Quantiles (df=3) Q-Q Plot",
+       ylim = c(-6, 6))
+qqline(x)
+```
+
+## Boxplots: About
+
+- Provide a graph that is easy to interpret where data is not normally distributed
+- Would be an appropriate choice to explore income data, as distribution is highly skewed
+- Particularly informative in relation to outliers and range
+- Possible to compare multiple distributions side by side
+
+## Boxplots: Example
+
+```{r echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow=c(1, 3))
+hist(exec.pay, main = "CEO Compensation")
+qqnorm(exec.pay, main = "CEO Compensation")
+boxplot(exec.pay, ylab="10,000s of dollars", ylim=c(0,400), main = "CEO Compensation")
+```
+<center>
+Three different views of a continuous variable
+</center>
+
+## Scatterplots And Correlation: About
+
+- For two continuous variables, scatter plot and calculation of correlation is useful
+- Provides a graphical and numeric estimation of relationships
+- Quick and easy with `plot()` and `cor()`
+
+## Scatterplots And Correlation: Example
+
+```{r echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow=c(1,3))
+plot(father.son$fheight, father.son$sheight,xlab="Father's height in inches",ylab="Son's height in inches",main=paste("correlation =",signif(cor(father.son$fheight, father.son$sheight),2)))
+plot(cars$speed, cars$dist,xlab="Speed",ylab="Stopping Distance",main=paste("correlation =",signif(cor(cars$speed, cars$dist),2)))
+plot(faithful$eruptions, faithful$waiting,xlab="Eruption Duration",ylab="Waiting Time",main=paste("correlation =",signif(cor(faithful$eruptions, faithful$waiting),2)))
+```
+
+## Exploratory data analysis in high dimensions
+
+```{r, echo=FALSE, message=FALSE}
+if(!require(GSE5859Subset)){
+  BiocManager::install("genomicsclass/GSE5859Subset")
+}
+```
+
+```{r}
+library(GSE5859Subset)
+data(GSE5859Subset) ##this loads three tables
+c(class(geneExpression), class(sampleInfo))
+rbind(dim(geneExpression), dim(sampleInfo))
+head(sampleInfo)
+```
+
+## Volcano plots: Setup
+
+T-test for every row (gene) of gene expression matrix:
+```{r, message=FALSE}
+library(genefilter)
+g <- factor(sampleInfo$group)
+system.time(results <- rowttests(geneExpression, g))
+pvals <- results$p.value
+```
+
+Note that these 8,793 tests are done in about 0.01s
+
+## Volcano plots: Example
+
+```{r, fig.height=3, fig.width=6}
+par(mar = c(4, 4, 0, 0))
+plot(results$dm,
+     -log10(results$p.value),
+     xlab = "Effect size (difference in group means)",
+     ylab = "- log (base 10) p-values")
+abline(h = -log10(0.05 / nrow(geneExpression)), col = "red")
+legend("bottomright",
+       lty = 1,
+       col = "red",
+       legend = "Bonferroni = 0.05")
+```
+
+## Volcano plots: Summary
+
+- Many small p-values with small effect size indicate low within-group variability
+- Inspect for asymmetry
+- Can color points by significance threshold
+
+## P-value histograms: Setup
+
+- If all null hypotheses are true, expect a flat histogram of p-values:
+
+```{r}
+m <- nrow(geneExpression)
+n <- ncol(geneExpression)
+set.seed(1)
+randomData <- matrix(rnorm(n * m), m, n)
+nullpvals <- rowttests(randomData, g)$p.value
+```
+
+## P-value histograms: Example
+
+```{r, echo=FALSE, fig.height=3}
+par(mfrow = c(1, 2))
+hist(pvals, ylim = c(0, 1400))
+hist(nullpvals, ylim = c(0, 1400))
+```
+
+## P-value histograms: Example 2 (permutation)
+
+Note that permuting these data doesn't produce an ideal null p-value histogram due to batch effects:
+
+```{r, fig.height=3}
+permg <- sample(g)
+permresults <- rowttests(geneExpression, permg)
+hist(permresults$p.value)
+```
+
+## P-value histograms: Summary
+
+- Give a quick look at how many significant p-values there may be
+- When using permuted labels, can exposes non-independence among the samples
+    + can be due to batch effects or family structure
+- Most common approaches for correcting batch effects are:
+    + `ComBat`: corrects for known batch effects by linear model), and 
+    + `sva`: creates surrogate variables for unknown batch effects, corrects the structure of permutation p-values
+    + correction using control (housekeeping) genes
+
+All are available from the [sva](https://www.bioconductor.org/packages/sva) Bioconductor package
+
+## MA plot
+
+- just a scatterplot rotated 45$^o$
+
+```{r, fig.height=3}
+rafalib::mypar(1, 2)
+pseudo <- apply(geneExpression, 1, median)
+plot(geneExpression[, 1], pseudo)
+plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
+```
+
+## MA plot: Summary
+
+- useful for quality control of high-dimensional data
+- plot all data values for a sample against another sample or a median "pseudosample"
+- `affyPLM::MAplots` better MA plots
+    - adds a smoothing line to highlight departures from horizontal line
+    - plots a "cloud" rather than many data points
+
+## Heatmaps
+
+* Detailed representation of high-dimensional dataset.
+    - `ComplexHeatmap` package is the best as of 2023: large datasets, interactive heatmaps, simple defaults but many customizations possible
+
+```{r, fig.width=12}
+suppressPackageStartupMessages(library(ComplexHeatmap))
+keep <- rank(apply(geneExpression, 1, var)) <= 100  # 500 most variable genes
+ge <- geneExpression[keep, ]
+ge <- t(scale(t(ge))) #scale
+rownames(ge) <- NULL; colnames(ge) <- NULL
+chr <- sub("chr", "", geneAnnotation$CHR)
+chr[is.na(chr)] <- "Un"
+chr <- factor(chr, levels = c(1:22, "Un", "X", "Y"))
+chrcols <- list(chromosome = c(colorRampPalette(c("lightgrey", "black"))(22), "white", "pink", "blue"))
+names(chrcols[["chromosome"]]) <- c(1:22, "Un", "X", "Y")
+row_ha <- rowAnnotation(chromosome = chr[keep], col = chrcols, na_col = "white")
+column_ha <- HeatmapAnnotation(ethnicity = sampleInfo$ethnicity, group = factor(sampleInfo$group),
+                               col = list(ethnicity = c("ASN"="lightgrey", "CEU"="darkgrey"),
+                                          group = c("0" = "brown", "1" = "blue")))
+Heatmap(ge, use_raster = FALSE, top_annotation = column_ha, right_annotation = row_ha)
+```
+
+## Heatmaps: Summary
+
+- Clustering becomes slow and memory-intensivefor thousands of rows
+    - probably too detailed for thousands of rows
+- can show co-expressed genes, groups of samples
+
+## Colors
+
+- Types of color pallettes: 
+    - **sequential**: shows a gradient
+    - **diverging**: goes in two directions from a center
+    - **qualitative**: for categorical variables
+- Keep color blindness in mind (10% of all men)
+
+## Colors (cont'd)
+
+Combination of `RColorBrewer` package and `colorRampPalette()` can create anything you want
+
+```{r, fig.height=5, echo=FALSE}
+rafalib::mypar(1, 1)
+RColorBrewer::display.brewer.all(n = 7)
+```
+
+## Plots To Avoid
+
+> "Pie charts are a very bad way of displaying information." - R Help
+
+- Avoid pie charts
+- Avoid doughnut charts too
+- Avoid pseudo 3D
+- Use color judiciously
+
+# Batch effects
+
+## Pervasiveness of batch Effects
+
+- pervasive in genomics (e.g. [Leek *et al.* Nat Rev Genet. 2010 Oct;11(10):733-9.](https://www.ncbi.nlm.nih.gov/pubmed/?term=20838408))
+- affect DNA and RNA sequencing, proteomics, imaging, microarray...
+- have caused high-profile problems and retractions
+    - you can't get rid of them
+    - but you can make sure they are not confounded with your experiment
+    
+## Batch Effects - an example
+
+- Nat Genet. 2007 Feb;39(2):226-31. Epub 2007 Jan 7.
+- Title: *Common genetic variants account for differences in gene expression among ethnic groups.*
+    - "The results show that specific genetic variation among populations contributes appreciably to differences in gene expression phenotypes."
+
+```{r, message=FALSE}
+library(Biobase)
+library(genefilter)
+library(GSE5859) ## BiocInstaller::biocLite("genomicsclass/GSE5859")
+data(GSE5859)
+geneExpression = exprs(e)
+sampleInfo = pData(e)
+```
+
+* Note: the `ExpressionSet` object is obsolete, we use `SummarizedExperiment` now
+
+## Date of processing as a proxy for batch
+
+- Sample metadata included *date of processing*:
+
+```{r}
+head(table(sampleInfo$date))
+```
+
+```{r}
+year <-  as.integer(format(sampleInfo$date, "%y"))
+year <- year - min(year)
+month = as.integer(format(sampleInfo$date, "%m")) + 12 * year
+table(year, sampleInfo$ethnicity)
+```
+
+## Visualizing batch effects by PCA
+
+```{r, cache=TRUE, warning=FALSE}
+pc <- prcomp(t(geneExpression), scale. = TRUE)
+boxplot(
+    pc$x[, 1] ~ month,
+    varwidth = TRUE,
+    notch = TRUE,
+    main = "PC1 scores vs. month",
+    xlab = "Month",
+    ylab = "PC1"
+)
+```
+
+## Visualizing batch effects by MDS
+
+A starting point for a color palette:
+```{r, eval=FALSE}
+RColorBrewer::display.brewer.all(n = 3, colorblindFriendly = TRUE)
+```
+
+Interpolate one color per month on a quantitative palette:
+```{r}
+col3 <- c(RColorBrewer::brewer.pal(n = 3, "Greys")[2:3], "black")
+MYcols <- colorRampPalette(col3, space = "Lab")(length(unique(month)))
+```
+
+```{r, fig.height=3.5, fig.align='center'}
+d <- as.dist(1 - cor(geneExpression))
+mds <- cmdscale(d)
+plot(mds, col = MYcols[as.integer(factor(month))],
+     main = "MDS shaded by month")
+```
+
+## The batch effects impact clustering
+
+```{r}
+hcclass <- cutree(hclust(d), k = 5)
+table(hcclass, year)
+```
+
+## Approaches to correcting for batch effects
+
+* _No correction_
+    - in my experience, the best choice for machine learning applications
+* [Simple rescaling](http://bioconductor.org/books/3.17/OSCA.multisample/integrating-datasets.html#by-rescaling-the-counts)
+    - Rescale observations (cells) to the same mean, variance in each batch
+    - maintains sparsity (ie zeros remain zeros)
+    - `batchelor::rescaleBatches()`
+* _Linear modeling to regress out batch effects_
+    - use when batches are known. Fits a linear model and use residuals
+    - assumes the same composition of cells across batches
+    - `limma::removeBatchEffect()`, `sva::comBat()`, `batchelor::regressBatches()`
+* _Linear modeling to achieve a flat p-value histogram when permuting labels_
+    - can be used when batches are unknown
+    - "Surrogate Variables Analysis" implemented by the [sva](https://bioconductor.org/packages/sva/) package
+* _Mutual Nearest Neighbors_
+    - developed specifically for single-cell RNA-seq
+    - no assumption of the same composition of cells across batches, but still 
+        assumes no meaningful biological differences exist between batches
+    - `batchelor::fastMNN()`
+
+## Batch Effects - summary
+
+- batches can be corrected for **only** if not overlapping with conditions of interest
+    - if confounded with treatment or outcome of interest, nothing can help you
+    - randomization of samples to batches in study design protects against this
+- during experimental design:
+    - keep track of anything that might cause a batch effect for post-hoc analysis
+    - include control samples in each batch
+- tend to affect many or all measurements by a little bit
+
+## Exercises
+
+* OSCA Multi-sample [Chapter 1: Correcting batch effects](http://bioconductor.org/books/3.17/OSCA.multisample/integrating-datasets.html)
+
+## Links
+
+-   A built [html](https://rpubs.com/lwaldron/AppStatBio2023_day4)
+    version of this lecture is available.
+-   The [source](https://github.com/waldronlab/AppStatBio) R Markdown is
+     available from Github.
