@@ -444,11 +444,16 @@ legend(
 
 ## PCA of Zeisel single-cell RNA-seq dataset
 
-```{r setupzeisel, include=FALSE, message=FALSE}
-library(scRNAseq)
-library(BiocSingular)
-library(scran)
-library(scater)
+```{r loadlibraries, include=FALSE}
+suppressPackageStartupMessages({
+  library(scRNAseq)
+  library(BiocSingular)
+  library(scran)
+  library(scater)
+})
+```
+
+```{r setupzeisel, echo=FALSE}
 sce.zeisel <- ZeiselBrainData()
 sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
     id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
