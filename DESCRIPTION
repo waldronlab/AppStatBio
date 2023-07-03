@@ -24,6 +24,9 @@ Imports:
     genefilter,
     survival,
     rafalib,
+    tidyverse,
+    broom,
+    RColorBrewer,
     S4Vectors
 Remotes:
     genomicsclass/GSE5859,
