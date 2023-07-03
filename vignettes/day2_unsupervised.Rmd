@@ -457,7 +457,7 @@ suppressPackageStartupMessages({
 sce.zeisel <- ZeiselBrainData()
 ```
 
-```{r setupzeisel2, echo=FALSE}
+```{r setupzeisel2, eval=FALSE}
 sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
     id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 ```
