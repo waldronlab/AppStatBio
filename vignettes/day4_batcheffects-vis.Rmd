@@ -51,7 +51,7 @@ library(AppStatBio)
 
 ## Example: Quantile Quantile Plots
 
-```{r echo=FALSE, fig.width=8}
+```{r qq1, echo=FALSE, fig.width=8}
 suppressPackageStartupMessages(library(UsingR))
 suppressPackageStartupMessages(library(rafalib))
 # height qq plot
@@ -91,7 +91,7 @@ qqline(x)
 
 ## Boxplots: Example
 
-```{r echo=FALSE, fig.width=8, fig.height=4}
+```{r bp1, echo=FALSE, fig.width=8, fig.height=4}
 par(mfrow=c(1, 3))
 hist(exec.pay, main = "CEO Compensation")
 qqnorm(exec.pay, main = "CEO Compensation")
@@ -109,22 +109,41 @@ Three different views of a continuous variable
 
 ## Scatterplots And Correlation: Example
 
-```{r echo=FALSE, fig.width=8, fig.height=4}
-par(mfrow=c(1,3))
-plot(father.son$fheight, father.son$sheight,xlab="Father's height in inches",ylab="Son's height in inches",main=paste("correlation =",signif(cor(father.son$fheight, father.son$sheight),2)))
-plot(cars$speed, cars$dist,xlab="Speed",ylab="Stopping Distance",main=paste("correlation =",signif(cor(cars$speed, cars$dist),2)))
-plot(faithful$eruptions, faithful$waiting,xlab="Eruption Duration",ylab="Waiting Time",main=paste("correlation =",signif(cor(faithful$eruptions, faithful$waiting),2)))
+```{r cor1, echo=FALSE, fig.width=8, fig.height=4}
+par(mfrow = c(1, 3))
+plot(
+  father.son$fheight,
+  father.son$sheight,
+  xlab = "Father's height in inches",
+  ylab = "Son's height in inches",
+  main = paste("correlation =", signif(
+    cor(father.son$fheight, father.son$sheight), 2
+  ))
+)
+plot(
+  cars$speed,
+  cars$dist,
+  xlab = "Speed",
+  ylab = "Stopping Distance",
+  main = paste("correlation =", signif(cor(
+    cars$speed, cars$dist
+  ), 2))
+)
+plot(
+  faithful$eruptions,
+  faithful$waiting,
+  xlab = "Eruption Duration",
+  ylab = "Waiting Time",
+  main = paste("correlation =", signif(
+    cor(faithful$eruptions, faithful$waiting), 2
+  ))
+)
 ```
 
 ## Exploratory data analysis in high dimensions
 
-```{r, echo=FALSE, message=FALSE}
-if(!require(GSE5859Subset)){
-  BiocManager::install("genomicsclass/GSE5859Subset")
-}
-```
 
-```{r}
+```{r eda1}
 library(GSE5859Subset)
 data(GSE5859Subset) ##this loads three tables
 c(class(geneExpression), class(sampleInfo))
@@ -135,7 +154,7 @@ head(sampleInfo)
 ## Volcano plots: Setup
 
 T-test for every row (gene) of gene expression matrix:
-```{r, message=FALSE}
+```{r vp1, message=FALSE}
 library(genefilter)
 g <- factor(sampleInfo$group)
 system.time(results <- rowttests(geneExpression, g))
@@ -146,7 +165,7 @@ Note that these 8,793 tests are done in about 0.01s
 
 ## Volcano plots: Example
 
-```{r, fig.height=3, fig.width=6}
+```{r vp2, fig.height=3, fig.width=6}
 par(mar = c(4, 4, 0, 0))
 plot(results$dm,
      -log10(results$p.value),
@@ -169,7 +188,7 @@ legend("bottomright",
 
 - If all null hypotheses are true, expect a flat histogram of p-values:
 
-```{r}
+```{r pvalhist1}
 m <- nrow(geneExpression)
 n <- ncol(geneExpression)
 set.seed(1)
@@ -179,7 +198,7 @@ nullpvals <- rowttests(randomData, g)$p.value
 
 ## P-value histograms: Example
 
-```{r, echo=FALSE, fig.height=3}
+```{r pvalhist2, echo=FALSE, fig.height=3}
 par(mfrow = c(1, 2))
 hist(pvals, ylim = c(0, 1400))
 hist(nullpvals, ylim = c(0, 1400))
@@ -189,7 +208,7 @@ hist(nullpvals, ylim = c(0, 1400))
 
 Note that permuting these data doesn't produce an ideal null p-value histogram due to batch effects:
 
-```{r, fig.height=3}
+```{r pvalhist3, fig.height=3}
 permg <- sample(g)
 permresults <- rowttests(geneExpression, permg)
 hist(permresults$p.value)
@@ -211,7 +230,7 @@ All are available from the [sva](https://www.bioconductor.org/packages/sva) Bioc
 
 - just a scatterplot rotated 45$^o$
 
-```{r, fig.height=3}
+```{r pvalhist4, fig.height=3}
 rafalib::mypar(1, 2)
 pseudo <- apply(geneExpression, 1, median)
 plot(geneExpression[, 1], pseudo)
@@ -231,7 +250,7 @@ plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
 * Detailed representation of high-dimensional dataset.
     - `ComplexHeatmap` package is the best as of 2023: large datasets, interactive heatmaps, simple defaults but many customizations possible
 
-```{r, fig.width=12}
+```{r ma1, fig.width=12, echo=FALSE}
 suppressPackageStartupMessages(library(ComplexHeatmap))
 keep <- rank(apply(geneExpression, 1, var)) <= 100  # 500 most variable genes
 ge <- geneExpression[keep, ]
@@ -267,7 +286,7 @@ Heatmap(ge, use_raster = FALSE, top_annotation = column_ha, right_annotation = r
 
 Combination of `RColorBrewer` package and `colorRampPalette()` can create anything you want
 
-```{r, fig.height=5, echo=FALSE}
+```{r brewer, fig.height=5, echo=FALSE}
 rafalib::mypar(1, 1)
 RColorBrewer::display.brewer.all(n = 7)
 ```
@@ -297,7 +316,7 @@ RColorBrewer::display.brewer.all(n = 7)
 - Title: *Common genetic variants account for differences in gene expression among ethnic groups.*
     - "The results show that specific genetic variation among populations contributes appreciably to differences in gene expression phenotypes."
 
-```{r, message=FALSE}
+```{r ge, message=FALSE}
 library(Biobase)
 library(genefilter)
 library(GSE5859) ## BiocInstaller::biocLite("genomicsclass/GSE5859")
@@ -312,11 +331,11 @@ sampleInfo = pData(e)
 
 - Sample metadata included *date of processing*:
 
-```{r}
+```{r ge2}
 head(table(sampleInfo$date))
 ```
 
-```{r}
+```{r ge3}
 year <-  as.integer(format(sampleInfo$date, "%y"))
 year <- year - min(year)
 month = as.integer(format(sampleInfo$date, "%m")) + 12 * year
@@ -325,7 +344,7 @@ table(year, sampleInfo$ethnicity)
 
 ## Visualizing batch effects by PCA
 
-```{r, cache=TRUE, warning=FALSE}
+```{r ge4, cache=TRUE, warning=FALSE}
 pc <- prcomp(t(geneExpression), scale. = TRUE)
 boxplot(
     pc$x[, 1] ~ month,
@@ -340,17 +359,17 @@ boxplot(
 ## Visualizing batch effects by MDS
 
 A starting point for a color palette:
-```{r, eval=FALSE}
+```{r ge5, eval=FALSE}
 RColorBrewer::display.brewer.all(n = 3, colorblindFriendly = TRUE)
 ```
 
 Interpolate one color per month on a quantitative palette:
-```{r}
+```{r rcb2}
 col3 <- c(RColorBrewer::brewer.pal(n = 3, "Greys")[2:3], "black")
 MYcols <- colorRampPalette(col3, space = "Lab")(length(unique(month)))
 ```
 
-```{r, fig.height=3.5, fig.align='center'}
+```{r mds1, fig.height=3.5, fig.align='center'}
 d <- as.dist(1 - cor(geneExpression))
 mds <- cmdscale(d)
 plot(mds, col = MYcols[as.integer(factor(month))],
@@ -359,7 +378,7 @@ plot(mds, col = MYcols[as.integer(factor(month))],
 
 ## The batch effects impact clustering
 
-```{r}
+```{r clust1}
 hcclass <- cutree(hclust(d), k = 5)
 table(hcclass, year)
 ```
