@@ -505,9 +505,11 @@ Source: [MSMB Chapter 6](https://www.huber.embl.de/msmb/06-chap.html#the-benjami
 2. for some choice of $\phi$ (our target FDR), find the largest value of that $k$ that satisfies: $p_k \leq \phi k/m$
 3. reject the hypotheses $1, \ldots, k$
 
-```{r, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Benjamini-Hochberg FDR, visually",fig.show='hold',fig.align='center'}
+```{r, eval=FALSE, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Benjamini-Hochberg FDR, visually",fig.show='hold',fig.align='center'}
 knitr::include_graphics(c("images/fig-testing-awpvvisfdr-1.png","images/fig-testing-BH-1.png"))
 ``` 
+
+![](images/fig-testing-awpvvisfdr-1.png) ![](images/fig-testing-BH-1.png)
 
 Important notes for intuition: 
 
@@ -525,6 +527,28 @@ Important notes for intuition:
     - can improve power by modeling the relationship between a covariate property (such as mean expression) and probability of rejecting $H_0$
     - works best with lots of tests (ie, thousands)
     - implemented in the [IHW](https://bioconductor.org/packages/IHW/) Bioconductor package and in [DESeq2](https://bioconductor.org/packages/DESeq2/)
+
+## Beware of "double-dipping" in statistical inference
+
+1. define a separation between observations
+2. test for a difference across the separation
+
+![Example from: García-Mantrana _et al._, Gut Microbes 2020](images/doubledipping.jpg)
+
+* For a full treatment see https://arxiv.org/abs/2012.02936 and https://pubmed.ncbi.nlm.nih.gov/31521605 
+* Or a nice lecture: Daniela Whitten “Double-dipping” in statistics: https://youtu.be/tiv--XjPl9M 
+
+## Simple example of double-dipping
+
+*Step 1*: define an age classifier
+
+- Elderly >70 yrs
+- Youth <18 years
+- Otherwise unclassified
+
+*Step 2*: test for a difference in ages between elderly and youth
+
+**IMPORTANT**: Even applying a fully-specified classifier to a validation dataset does not protect against inflated p-values from "double-dipping"
 
 ## Summary
 
@@ -560,9 +584,8 @@ Important notes for intuition:
 Please discuss the following questions:
 
 1. What is a major problem with the hypothesis testing in [4.6 Testing for between-label differences](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html#testing-for-between-label-differences)?
-    - Hint, see [Double dipping: problems and solutions, with application to single-cell RNA-sequencing data](https://stat.uw.edu/seminars/double-dipping-problems-and-solutions-application-single-cell-rna-sequencing-data)
 2. What is a related problem with the hypothesis testing in [4.4 Performing the DE analysis](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html#performing-the-de-analysis)?
-3. Could some kind of multi'omic technology allow you to do these per cell type analysis without the same problems?
+3. How might you avoid these same problems, with the same data or a multi'omic technology?
 
 ## Links
 
