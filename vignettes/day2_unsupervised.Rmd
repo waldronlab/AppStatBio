@@ -444,7 +444,7 @@ legend(
 
 ## PCA of Zeisel single-cell RNA-seq dataset
 
-```{r pcazeisel, include=FALSE, message=FALSE}
+```{r setupzeisel, include=FALSE, message=FALSE}
 library(scRNAseq)
 library(BiocSingular)
 library(scran)
@@ -452,13 +452,10 @@ library(scater)
 sce.zeisel <- ZeiselBrainData()
 sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
     id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
-library(org.Mm.eg.db)
-rowData(sce.zeisel)$Ensembl <- mapIds(org.Mm.eg.db, 
-    keys=rownames(sce.zeisel), keytype="SYMBOL", column="ENSEMBL")
 sce.zeisel <- logNormCounts(sce.zeisel)
 ```
 
-```{r, fig.cap="Principal Components Analysis of Zeisel dataset"}
+```{r plotpcazeisel, fig.cap="Principal Components Analysis of Zeisel dataset"}
 sce.zeisel <- fixedPCA(sce.zeisel, subset.row=NULL)
 plotReducedDim(sce.zeisel, dimred="PCA", colour_by="level1class")
 ```
