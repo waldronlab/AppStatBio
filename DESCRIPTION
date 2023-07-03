@@ -26,6 +26,7 @@ Imports:
     rafalib,
     tidyverse,
     broom,
+    MASS,
     RColorBrewer,
     S4Vectors
 Remotes:

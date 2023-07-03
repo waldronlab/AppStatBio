@@ -19,9 +19,9 @@ library(AppStatBio)
 
 ## Schematic of a typical scRNA-seq analysis workflow
 
-![Single-cell workflow](http://bioconductor.org/books/3.17/OSCA.intro/images/workflow.png)
+![Single-cell workflow](images/workflow.png)
 
-Each stage (separated by dashed lines) consists of a number of specific steps, many of which operate on and modify a SingleCellExperiment instance.
+Each stage (separated by dashed lines) consists of a number of specific steps, many of which operate on and modify a SingleCellExperiment instance. ([original image](http://bioconductor.org/books/3.17/OSCA.intro/))
 
 ## Day 4 outline
 
@@ -88,7 +88,7 @@ if(!require(GSE5859)){
 }
 ```
 
-```{r}
+```{r getdata}
 ## BiocManager::install("genomicsclass/tissuesGeneExpression") #if needed
 ## BiocManager::install("genomicsclass/GSE5859") #if needed
 library(GSE5859)
@@ -123,7 +123,7 @@ $$ \mbox{dist}(i,j) = \sqrt{ (\mathbf{Y}_i - \mathbf{Y}_j)^\top(\mathbf{Y}_i - \
 
 with $\mathbf{Y}_i$ and $\mathbf{Y}_j$ columns $i$ and $j$. 
 
-```{r}
+```{r tdata}
 t(matrix(1:3, ncol = 1))
 matrix(1:3, ncol = 1)
 t(matrix(1:3, ncol = 1)) %*% matrix(1:3, ncol = 1)
@@ -138,7 +138,7 @@ t(matrix(1:3, ncol = 1)) %*% matrix(1:3, ncol = 1)
 
 ## 3 sample example
 
-```{r}
+```{r 3samp}
 kidney1 <- e[, 1]
 kidney2 <- e[, 2]
 colon1 <- e[, 87]
@@ -148,7 +148,7 @@ sqrt(sum((kidney1 - colon1) ^ 2))
 
 ## 3 sample example using dist()
 
-```{r}
+```{r dist}
 dim(e)
 (d <- dist(t(e[, c(1, 2, 87)])))
 class(d)
@@ -158,7 +158,7 @@ class(d)
 
 Excerpt from ?dist:
 
-```{r, eval=FALSE}
+```{r distfun, eval=FALSE}
 dist(
     x,
     method = "euclidean",
@@ -191,7 +191,7 @@ $$x_{gi} \leftarrow \frac{(x_{gi} - \bar{x}_g)}{s_g}$$
 * Motivation for dimension reduction
 
 Simulate the heights of twin pairs:
-```{r}
+```{r simtwins}
 set.seed(1)
 n <- 100
 y <- t(MASS::mvrnorm(n, c(0, 0), matrix(c(1, 0.95, 0.95, 1), 2, 2)))
@@ -201,7 +201,7 @@ cor(t(y))
 
 ## Visualizing twin pairs data
 
-```{r, echo=FALSE}
+```{r vistwins, echo=FALSE}
 z1 = (y[1,] + y[2,]) / 2 #the sum
 z2 = (y[1,] - y[2,])   #the difference
 
@@ -235,7 +235,7 @@ points(z[1, 1:2] , z[2, 1:2], col = 2, pch = 16)
 
 ## Not much distance is lost in the second dimension
 
-```{r, echo=FALSE}
+```{r twindists, echo=FALSE}
 rafalib::mypar()
 d = dist(t(y))
 d3 = dist(z[1, ]) * sqrt(2) ##distance computed using just first dimension mypar(1,1)
@@ -270,19 +270,19 @@ $$\mathbf{Y} = \mathbf{UDV}^\top$$
 ## SVD of gene expression dataset
 
 Scaling:
-```{r, cache=TRUE}
+```{r scaling, cache=TRUE}
 e.standardize <- t(scale(t(e), scale = FALSE))
 ```
 
 SVD:
-```{r}
+```{r svd}
 s <- svd(e.standardize)
 names(s)
 ```
 
 ## Components of SVD results
 
-```{r}
+```{r dimsvd}
 dim(s$u)     # loadings
 length(s$d)  # eigenvalues
 dim(s$v)     # d %*% vT = scores
@@ -295,7 +295,7 @@ dim(s$v)     # d %*% vT = scores
 
 * gene expression dataset
 
-```{r, cache=TRUE}
+```{r pcavssvd, cache=TRUE}
 rafalib::mypar()
 p <- prcomp(t(e.standardize))
 plot(s$u[, 1] ~ p$rotation[, 1])
@@ -314,7 +314,7 @@ plot(s$u[, 1] ~ p$rotation[, 1])
 
 ## Visualizing PCA loadings
 
-```{r}
+```{r visloadings}
 plot(p$rotation[, 1],
      xlab = "Index of genes",
      ylab = "Loadings of PC1",
@@ -324,7 +324,7 @@ abline(h = c(-0.03, 0.03), col = "red")
 
 ## Genes with high PC1 loadings
 
-```{r, fig.height=3.5}
+```{r pheatmaploadings, fig.height=3.5}
 e.pc1genes <-
     e.standardize[p$rotation[, 1] < -0.03 |
                            p$rotation[, 1] > 0.03,]
@@ -340,7 +340,7 @@ pheatmap::pheatmap(
 
 - $\mathbf{D}$ (**eigenvalues**): standard deviation scaling factor that each decomposed variable is multiplied by.
 
-```{r, fig.height=3, fig.width=5, echo=TRUE, fig.align='center'}
+```{r screeplot, fig.height=3, fig.width=5, echo=TRUE, fig.align='center'}
 rafalib::mypar()
 plot(
     p$sdev ^ 2 / sum(p$sdev ^ 2) * 100,
@@ -355,7 +355,7 @@ plot(
 
 Alternatively as cumulative % variance explained (using `cumsum()` function)
 
-```{r, fig.height=4, echo=TRUE, fig.align='center'}
+```{r cumscreeplot, fig.height=4, echo=TRUE, fig.align='center'}
 rafalib::mypar()
 plot(
     cumsum(p$sdev ^ 2) / sum(p$sdev ^ 2) * 100,
@@ -377,7 +377,7 @@ plot(
 
 ## PCA interpretation: scores
 
-```{r, fig.height=5, echo=FALSE}
+```{r scores, fig.height=5, echo=FALSE}
 rafalib::mypar()
 plot(
     p$x[, 1:2],
@@ -402,12 +402,12 @@ legend(
 - a reduced SVD, performed on a distance matrix
 - identify two (or more) eigenvalues/vectors that preserve distances
 
-```{r}
+```{r mds}
 d <- as.dist(1 - cor(e.standardize))
 mds <- cmdscale(d)
 ```
 
-```{r, echo=FALSE}
+```{r plotmds, echo=FALSE}
 rafalib::mypar()
 plot(mds, col = factor(tissue), pch = as.integer(factor(tissue)))
 legend(
@@ -444,7 +444,7 @@ legend(
 
 ## PCA of Zeisel single-cell RNA-seq dataset
 
-```{r, include=FALSE, message=FALSE}
+```{r pcazeisel, include=FALSE, message=FALSE}
 library(scRNAseq)
 library(BiocSingular)
 library(scran)
@@ -465,7 +465,7 @@ plotReducedDim(sce.zeisel, dimred="PCA", colour_by="level1class")
 
 ## t-SNE of the same dataset
 
-```{r, fig.cap="t-SNE clustering of Zeisel dataset"}
+```{r tsenzeisel, fig.cap="t-SNE clustering of Zeisel dataset"}
 sce.zeisel <- runTSNE(sce.zeisel, dimred="PCA")
 plotReducedDim(sce.zeisel, dimred="TSNE", colour_by="level1class")
 ```
@@ -480,7 +480,7 @@ plotReducedDim(sce.zeisel, dimred="TSNE", colour_by="level1class")
 
 ## UMAP of the same dataset
 
-```{r, fig.cap = "UMAP representation of the Zeisel dataset"}
+```{r umapzeisel, fig.cap = "UMAP representation of the Zeisel dataset"}
 sce.zeisel <- runUMAP(sce.zeisel, dimred="PCA")
 plotReducedDim(sce.zeisel, dimred="UMAP", colour_by="level1class")
 ```
@@ -489,7 +489,7 @@ plotReducedDim(sce.zeisel, dimred="UMAP", colour_by="level1class")
 
 Using default parameters and no log transformation
 
-```{r}
+```{r umaptsnezeisel}
 sct <- SingleCellExperiment(e)
 sct$tissue <- tissue
 # fake the log normalization because it is undesirable for microarray data
@@ -503,7 +503,7 @@ plotReducedDim(sct, dimred="TSNE", colour_by="tissue")
 
 Also using default parameters and no log transformation
 
-```{r}
+```{r nologumap}
 sct <- runUMAP(sct, dimred="PCA")
 plotReducedDim(sct, dimred="UMAP", colour_by="tissue")
 ```

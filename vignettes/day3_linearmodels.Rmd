@@ -505,11 +505,9 @@ Source: [MSMB Chapter 6](https://www.huber.embl.de/msmb/06-chap.html#the-benjami
 2. for some choice of $\phi$ (our target FDR), find the largest value of that $k$ that satisfies: $p_k \leq \phi k/m$
 3. reject the hypotheses $1, \ldots, k$
 
-```{r, eval=FALSE, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Benjamini-Hochberg FDR, visually",fig.show='hold',fig.align='center'}
+```{r, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Benjamini-Hochberg FDR, visually",fig.show='hold',fig.align='center'}
 knitr::include_graphics(c("images/fig-testing-awpvvisfdr-1.png","images/fig-testing-BH-1.png"))
 ``` 
-
-![](images/fig-testing-awpvvisfdr-1.png) ![](images/fig-testing-BH-1.png)
 
 Important notes for intuition: 
 
@@ -584,6 +582,7 @@ Important notes for intuition:
 Please discuss the following questions:
 
 1. What is a major problem with the hypothesis testing in [4.6 Testing for between-label differences](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html#testing-for-between-label-differences)?
+    - (note, the inference problem is acknowledged in this section)
 2. What is a related problem with the hypothesis testing in [4.4 Performing the DE analysis](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html#performing-the-de-analysis)?
 3. How might you avoid these same problems, with the same data or a multi'omic technology?
 
