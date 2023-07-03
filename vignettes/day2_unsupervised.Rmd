@@ -453,10 +453,16 @@ suppressPackageStartupMessages({
 })
 ```
 
-```{r setupzeisel, echo=FALSE}
+```{r setupzeisel1, echo=FALSE}
 sce.zeisel <- ZeiselBrainData()
+```
+
+```{r setupzeisel2, echo=FALSE}
 sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
     id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
+```
+
+```{r setupzeisel3, echo=FALSE}
 sce.zeisel <- logNormCounts(sce.zeisel)
 ```
 
