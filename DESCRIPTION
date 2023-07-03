@@ -10,26 +10,29 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
-    TeachingDemos,
-    DiagrammeR,
-    IRanges,
+    BiocSingular,
     Biostrings,
+    broom,
+    DiagrammeR,
+    genefilter,
+    GSE5859,
+    GSE5859Subset,
+    IRanges,
+    MASS,
+    rafalib,
+    RColorBrewer,
+    S4Vectors,
     scRNAseq,
     scater,
-    BiocSingular,
     scran,
-    GSE5859,
-    tissuesGeneExpression,
-    genefilter,
     survival,
-    rafalib,
+    TeachingDemos,
     tidyverse,
-    broom,
-    MASS,
-    RColorBrewer,
-    S4Vectors
+    tissuesGeneExpression,
+    UsingR
 Remotes:
     genomicsclass/GSE5859,
+    genomicsclass/GSE5859Subset,
     genomicsclass/tissuesGeneExpression
 Suggests: 
     knitr,
