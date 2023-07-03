@@ -13,6 +13,7 @@ Imports:
     BiocSingular,
     Biostrings,
     broom,
+    ComplexHeatmap,
     DiagrammeR,
     genefilter,
     GSE5859,
