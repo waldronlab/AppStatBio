@@ -86,20 +86,12 @@ boxplot(spider$friction ~ spider$type * spider$leg,
         main="Friction coefficients of different leg pairs")
 ```
 
-::: columns-2
-```{r, fig.align='center', echo=FALSE}
-boxplot(spider$friction ~ spider$type * spider$leg,
-        col=c("grey90","grey40"), las=2,
-        main="Friction coefficients of \n different leg pairs")
-```
-
 Notes:
 
 -   Pulling friction is higher
 -   Pulling (but not pushing) friction increases for further back legs
     (L1 -\> 4)
 -   Variance isn't constant
-:::
 
 ## What are linear models?
 
@@ -110,7 +102,7 @@ The following are examples of linear models:
 2.  $Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i$
     (quadratic regression)
 3.  $Y_i = \beta_0 + \beta_1 x_i + \beta_2 \times 2^{x_i} + \varepsilon_i$
-    (2\^{x_i} is a new transformed variable)
+    ($2^{x_i}$ is a new transformed variable)
 
 ## Multiple linear regression model
 
@@ -164,7 +156,7 @@ $\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)$
     -   `L3`={1 if $3^{nd}$ leg pair, 0 otherwise},
     -   `L4`={1 if $4^{th}$ leg pair, 0 otherwise}.
 -   R re-codes factors to dummy variables automatically.
--   Dummy coding depends on whether factor is ordered or not.
+-   Dummy coding depends on the reference level
 
 ## Model formulae in R
 
@@ -205,7 +197,6 @@ Regression coefficients for `friction ~ type` for first set of spider
 legs:
 
 ```{r, echo=TRUE}
-library(broom)
 broom::tidy(fit)
 ```
 
@@ -216,7 +207,7 @@ broom::tidy(fit)
 -   How to interpret this table?
     -   Coefficients for **(Intercept)** and **typepush**
     -   Coefficients are t-distributed when assumptions are correct
-    -   Variance in the estimates of each coefficient can be calculated
+    -   Standard deviation in the estimates of each coefficient can be calculated (standard errors)
 
 ## Interpretation of spider leg type coefficients
 
@@ -321,8 +312,7 @@ one factor, one numeric: **ANCOVA**
 -   Linear regression is a special case of a broad family of models
     called "Generalized Linear Models" (GLM)
 -   This unifying approach allows to fit a large set of models using
-    maximum likelihood estimation methods (MLE) (Nelder & Wedderburn,
-    1972) 
+    maximum likelihood estimation methods (MLE) (Nelder & Wedderburn, 1972) 
 -   Can model many types of data directly using appropriate
     distributions, e.g. Poisson distribution for count data
 -   Transformations of $y$ not needed
@@ -340,7 +330,7 @@ $$
         distributions
 -   **Systematic component** specifies linear function of predictors
     (linear predictor)
--   **Link** [denoted by g(.)] specifies the relationship between the
+-   **Link** [denoted by $g(.)$] specifies the relationship between the
     expected value of the random component and the systematic component
     -   can be linear or nonlinear
 
@@ -400,7 +390,7 @@ $$
     -   can account for differences in sequencing depth by an *offset*
         $log(t_i)$
     -   guarantees non-negative expected number of counts
-    -   often used in conjunction with Poisson or Negative Binomial
+    -   often used in conjunction with **Poisson** or **Negative Binomial**
         error models
 
 ## Poisson error model
@@ -517,7 +507,7 @@ Important notes for intuition:
 
 ## FDR alternatives to Benjamini-Hochberg
 
-* ["Local" False Discovery Rate](https://www.huber.embl.de/msmb/06-chap.html#sec-testing-localfdr)
+* ["Local" False Discovery Rate](https://www.huber.embl.de/msmb/06-chap.html#sec-testing-localfdr) or _q-value_
     - The _q-value_ of a test estimates the proportion of false positives incurred when _that particular test and all smaller p-values_ are called significant (packages: [qvalue](https://bioconductor.org/packages/qvalue/) or [fdrtool](https://cran.r-project.org/web/packages/fdrtool/))
     - q-value increases monotonically with p-value (unlike Benjamini-Hochbert FDR)
 
