@@ -422,7 +422,7 @@ samples, jittered horizontally to avoid overplotting.
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
 <!-- html table generated in R 4.3.1 by xtable 1.8-4 package -->
-<!-- Tue Jul  4 07:51:56 2023 -->
+<!-- Tue Jul  4 10:12:04 2023 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -533,7 +533,7 @@ achieved by:</p>
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
 <!-- html table generated in R 4.3.1 by xtable 1.8-4 package -->
-<!-- Tue Jul  4 07:51:56 2023 -->
+<!-- Tue Jul  4 10:12:04 2023 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -1021,7 +1021,7 @@ False Discovery Rate</a> or <em>q-value</em>
 positives incurred when <em>that particular test and all smaller
 p-values</em> are called significant (packages: <a href="https://bioconductor.org/packages/qvalue/" class="external-link">qvalue</a> or <a href="https://cran.r-project.org/web/packages/fdrtool/" class="external-link">fdrtool</a>)</li>
 <li>q-value increases monotonically with p-value (unlike
-Benjamini-Hochbert FDR)</li>
+Benjamini-Hochberg FDR)</li>
 </ul>
 </li>
 <li>
@@ -1079,23 +1079,6 @@ p-values from “double-dipping”</p>
 <ul>
 <li><p>Linear models are the basis for identifying differential
 expression / differential abundance</p></li>
-<li><p>The basis for identifying differential expression / differential
-abundance</p></li>
-<li>
-<p><strong>Assumptions</strong>:</p>
-<ol style="list-style-type: decimal">
-<li>normal, homoscadistic errors (for small n, can make p-values
-conservative and standard errors misleading),</li>
-<li>a linear relationship between predictor some expected value
-(potentially with a non-linear link function for GLMs), and</li>
-<li>independent observations (until you learn hierarchical models /
-mixed models).</li>
-</ol>
-</li>
-<li><p>Extends to binary <span class="math inline">\(Y\)</span>
-(logistic regression), count <span class="math inline">\(Y\)</span>
-(log-linear regression with e.g. Poisson or Negative Binomial link
-functions) through <strong>Generalized Linear Models</strong></p></li>
 <li>
 <p><strong>Generalized Linear Models</strong> extend linear
 regression to:</p>
@@ -1106,6 +1089,9 @@ regression)</li>
 with e.g. Poisson or Negative Binomial link functions)</li>
 </ul>
 </li>
+<li><p>FWER, FDR, local FDR (q-value), Independent Hypothesis
+Testing</p></li>
+<li><p>Be aware of “double-dipping” in statistical inference</p></li>
 </ul>
 </div>
 <div class="section level2">
