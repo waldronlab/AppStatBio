@@ -514,7 +514,7 @@ Important notes for intuition:
 
 * ["Local" False Discovery Rate](https://www.huber.embl.de/msmb/06-chap.html#sec-testing-localfdr) or _q-value_
     - The _q-value_ of a test estimates the proportion of false positives incurred when _that particular test and all smaller p-values_ are called significant (packages: [qvalue](https://bioconductor.org/packages/qvalue/) or [fdrtool](https://cran.r-project.org/web/packages/fdrtool/))
-    - q-value increases monotonically with p-value (unlike Benjamini-Hochbert FDR)
+    - q-value increases monotonically with p-value (unlike Benjamini-Hochberg FDR)
 
 * [Independent Hypothesis Weighting](https://www.huber.embl.de/msmb/06-chap.html#independent-hypothesis-weighting)
     - can improve power by modeling the relationship between a covariate property (such as mean expression) and probability of rejecting $H_0$
@@ -548,27 +548,15 @@ Important notes for intuition:
 -   Linear models are the basis for identifying differential expression
     / differential abundance
 
--   The basis for identifying differential expression / differential
-    abundance
-
--   **Assumptions**:
-
-    1.  normal, homoscadistic errors (for small n, can make p-values conservative and standard errors misleading),
-    2.  a linear relationship between predictor some expected value
-        (potentially with a non-linear link function for GLMs), and
-    3.  independent observations (until you learn hierarchical models /
-        mixed models).
-
--   Extends to binary $Y$ (logistic regression), count $Y$ (log-linear
-    regression with e.g. Poisson or Negative Binomial link functions)
-    through **Generalized Linear Models**
-
 -   **Generalized Linear Models** extend linear regression to:
 
     -   binary $y$ (logistic regression)
     -   count $y$ (log-linear regression with e.g. Poisson or Negative
         Binomial link functions)
 
+-   FWER, FDR, local FDR (q-value), Independent Hypothesis Testing
+
+-   Be aware of "double-dipping" in statistical inference
 
 ## Exercises
 
