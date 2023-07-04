@@ -28,10 +28,15 @@ library(AppStatBio)
     -   Poisson, Negative Binomial error distributions
 -   Multiple Hypothesis Testing
 
-Textbook sources:
+## Textbook sources
 
--   Chapter 5: Linear models
--   Chapter 6: Inference for high-dimensional data
+-   [Biomedical Data Science](http://genomicsclass.github.io/book/)
+    - Chapter 5: Linear models
+    - Chapter 6: Inference for high-dimensional data
+-   [Modern Statistics for Modern Biology](https://www.huber.embl.de/msmb/06-chap.html)
+    - Chapter 6: Testing 
+- [OSCA multi-sample](http://bioconductor.org/books/3.17/OSCA.multisample/)
+    - Chapter 4: [DE analyses between conditions](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html)
 
 ## Example: friction of spider legs
 
