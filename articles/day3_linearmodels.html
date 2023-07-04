@@ -166,8 +166,6 @@ coefficients vary by leg pair?</li>
 <span>        col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey90"</span>,<span class="st">"grey40"</span><span class="op">)</span>, las<span class="op">=</span><span class="fl">2</span>,</span>
 <span>        main<span class="op">=</span><span class="st">"Friction coefficients of different leg pairs"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-4-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="columns-2">
-<p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-5-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>Notes:</p>
 <ul>
 <li>Pulling friction is higher</li>
@@ -175,7 +173,6 @@ coefficients vary by leg pair?</li>
 (L1 -&gt; 4)</li>
 <li>Variance isn’t constant</li>
 </ul>
-</div>
 </div>
 <div class="section level2">
 <h2 id="what-are-linear-models">What are linear models?<a class="anchor" aria-label="anchor" href="#what-are-linear-models"></a>
@@ -190,7 +187,7 @@ coefficients vary by leg pair?</li>
 x_i^2 + \varepsilon_i\)</span> (quadratic regression)</li>
 <li>
 <span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i + \beta_2
-\times 2^{x_i} + \varepsilon_i\)</span> (2^{x_i} is a new transformed
+\times 2^{x_i} + \varepsilon_i\)</span> (<span class="math inline">\(2^{x_i}\)</span> is a new transformed
 variable)</li>
 </ol>
 </div>
@@ -291,7 +288,7 @@ leg pair, 0 otherwise}.</li>
 </ul>
 </li>
 <li>R re-codes factors to dummy variables automatically.</li>
-<li>Dummy coding depends on whether factor is ordered or not.</li>
+<li>Dummy coding depends on the reference level</li>
 </ul>
 </div>
 <div class="section level2">
@@ -355,8 +352,7 @@ of.”</li>
 <p>Regression coefficients for <code>friction ~ type</code> for first
 set of spider legs:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/" class="external-link">broom</a></span><span class="op">)</span></span>
-<span><span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
 <span><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -371,7 +367,8 @@ set of spider legs:</p>
 <strong>typepush</strong>
 </li>
 <li>Coefficients are t-distributed when assumptions are correct</li>
-<li>Variance in the estimates of each coefficient can be calculated</li>
+<li>Standard deviation in the estimates of each coefficient can be
+calculated (standard errors)</li>
 </ul>
 </li>
 </ul>
@@ -400,7 +397,7 @@ samples, jittered horizontally to avoid overplotting.
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
 <!-- html table generated in R 4.3.1 by xtable 1.8-4 package -->
-<!-- Mon Jul  3 15:10:56 2023 -->
+<!-- Tue Jul  4 07:36:31 2023 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -511,7 +508,7 @@ achieved by:</p>
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
 <!-- html table generated in R 4.3.1 by xtable 1.8-4 package -->
-<!-- Mon Jul  3 15:10:56 2023 -->
+<!-- Tue Jul  4 07:36:31 2023 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -707,10 +704,7 @@ one factor, one numeric: <strong>ANCOVA</strong></p>
 called “Generalized Linear Models” (GLM)</li>
 <li>This unifying approach allows to fit a large set of models using
 maximum likelihood estimation methods (MLE) (Nelder &amp; Wedderburn,
-<ol start="1972" style="list-style-type: decimal">
-<li>
-</ol>
-</li>
+1972)</li>
 <li>Can model many types of data directly using appropriate
 distributions, e.g. Poisson distribution for count data</li>
 <li>Transformations of <span class="math inline">\(y\)</span> not
@@ -738,9 +732,8 @@ distributions</li>
 <strong>Systematic component</strong> specifies linear function of
 predictors (linear predictor)</li>
 <li>
-<strong>Link</strong> [denoted by g(.)] specifies the relationship
-between the expected value of the random component and the systematic
-component
+<strong>Link</strong> [denoted by <span class="math inline">\(g(.)\)</span>] specifies the relationship between
+the expected value of the random component and the systematic component
 <ul>
 <li>can be linear or nonlinear</li>
 </ul>
@@ -806,8 +799,8 @@ log\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} +
 <em>offset</em> <span class="math inline">\(log(t_i)\)</span>
 </li>
 <li>guarantees non-negative expected number of counts</li>
-<li>often used in conjunction with Poisson or Negative Binomial error
-models</li>
+<li>often used in conjunction with <strong>Poisson</strong> or
+<strong>Negative Binomial</strong> error models</li>
 </ul>
 </li>
 </ul>
@@ -880,7 +873,7 @@ parameters:
 </ol>
 </li>
 </ul>
-<p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="additive-vs--multiplicative-models">Additive vs. multiplicative models<a class="anchor" aria-label="anchor" href="#additive-vs--multiplicative-models"></a>
@@ -997,7 +990,7 @@ smallest p-value is 0.01 or 0.001 (ie from permutation tests)</li>
 <ul>
 <li>
 <a href="https://www.huber.embl.de/msmb/06-chap.html#sec-testing-localfdr" class="external-link">“Local”
-False Discovery Rate</a>
+False Discovery Rate</a> or <em>q-value</em>
 <ul>
 <li>The <em>q-value</em> of a test estimates the proportion of false
 positives incurred when <em>that particular test and all smaller
