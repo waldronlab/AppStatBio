@@ -35,24 +35,20 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/day1_intro.html">Applied Statistics for High-throughput Biology: Session 1</a>
-    <a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology: Session 2</a>
-    <a class="dropdown-item" href="../articles/day3_linearmodels.html">Applied Statistics for High-throughput Biology: Session 3</a>
-    <a class="dropdown-item" href="../articles/day4_batcheffects-vis.html">Applied Statistics for High-throughput Biology: Session 4</a>
-  </div>
-</li>
+<h6 class="dropdown-header" data-toc-skip>Lecture notes</h6>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/waldronlab/AppStatBio/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
@@ -69,7 +65,7 @@
 Waldron</h4>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/waldronlab/AppStatBio/blob/HEAD/vignettes/day4_batcheffects-vis.Rmd" class="external-link"><code>vignettes/day4_batcheffects-vis.Rmd</code></a></small>
       <div class="d-none name"><code>day4_batcheffects-vis.Rmd</code></div>
     </div>
 
@@ -203,7 +199,7 @@ correlation is useful</li>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">sampleInfo</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/genefilter/man/rowFtests.html" class="external-link">rowttests</a></span><span class="op">(</span><span class="va">geneExpression</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.007   0.000   0.008</span></span>
+<span><span class="co">#&gt;   0.006   0.000   0.006</span></span>
 <span><span class="va">pvals</span> <span class="op">&lt;-</span> <span class="va">results</span><span class="op">$</span><span class="va">p.value</span></span></code></pre></div>
 <p>Note that these 8,793 tests are done in about 0.01s</p>
 </div>

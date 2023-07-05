@@ -35,24 +35,20 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/day1_intro.html">Applied Statistics for High-throughput Biology: Session 1</a>
-    <a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology: Session 2</a>
-    <a class="dropdown-item" href="../articles/day3_linearmodels.html">Applied Statistics for High-throughput Biology: Session 3</a>
-    <a class="dropdown-item" href="../articles/day4_batcheffects-vis.html">Applied Statistics for High-throughput Biology: Session 4</a>
-  </div>
-</li>
+<h6 class="dropdown-header" data-toc-skip>Lecture notes</h6>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/waldronlab/AppStatBio/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
@@ -69,7 +65,7 @@
 Waldron</h4>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/waldronlab/AppStatBio/blob/HEAD/vignettes/day3_linearmodels.Rmd" class="external-link"><code>vignettes/day3_linearmodels.Rmd</code></a></small>
       <div class="d-none name"><code>day3_linearmodels.Rmd</code></div>
     </div>
 
@@ -422,7 +418,7 @@ samples, jittered horizontally to avoid overplotting.
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
 <!-- html table generated in R 4.3.1 by xtable 1.8-4 package -->
-<!-- Wed Jul  5 08:03:11 2023 -->
+<!-- Wed Jul  5 09:52:32 2023 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -533,7 +529,7 @@ achieved by:</p>
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
 <!-- html table generated in R 4.3.1 by xtable 1.8-4 package -->
-<!-- Wed Jul  5 08:03:11 2023 -->
+<!-- Wed Jul  5 09:52:32 2023 -->
 <table border="1" class="table">
 <tr>
 <th>
