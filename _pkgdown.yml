@@ -6,6 +6,3 @@ navbar:
   structure:
     left:  [articles]
     right: [search, github]
-  components:
-    articles:
-     text: Lecture notes
