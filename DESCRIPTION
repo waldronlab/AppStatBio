@@ -39,4 +39,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: http://waldronlab.io/AppStatBio/
+URL: http://waldronlab.io/AppStatBio/, https://github.com/waldronlab/AppStatBio
