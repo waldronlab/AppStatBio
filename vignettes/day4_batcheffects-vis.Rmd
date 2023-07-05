@@ -223,8 +223,9 @@ hist(permresults$p.value)
     + `ComBat`: corrects for known batch effects by linear model), and 
     + `sva`: creates surrogate variables for unknown batch effects, corrects the structure of permutation p-values
     + correction using control (housekeeping) genes
+    + `batchelor` for single-cell analysis
 
-All are available from the [sva](https://www.bioconductor.org/packages/sva) Bioconductor package
+`ComBat` and `sva` are available from the [sva](https://www.bioconductor.org/packages/sva) Bioconductor package
 
 ## MA plot
 
@@ -359,7 +360,7 @@ boxplot(
 ## Visualizing batch effects by MDS
 
 A starting point for a color palette:
-```{r ge5, eval=FALSE}
+```{r ge5, eval=TRUE}
 RColorBrewer::display.brewer.all(n = 3, colorblindFriendly = TRUE)
 ```
 
@@ -368,6 +369,8 @@ Interpolate one color per month on a quantitative palette:
 col3 <- c(RColorBrewer::brewer.pal(n = 3, "Greys")[2:3], "black")
 MYcols <- colorRampPalette(col3, space = "Lab")(length(unique(month)))
 ```
+
+## Visualizing batch effects by MDS
 
 ```{r mds1, fig.height=3.5, fig.align='center'}
 d <- as.dist(1 - cor(geneExpression))
