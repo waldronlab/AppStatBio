@@ -1,4 +1,4 @@
-# Syllabus: Applied Statistics for High-Throughput Biology
+# Syllabus: Applied Statistics for High-Throughput Biology with Applications to Single-cell Sequencing
 
 ## Instructor
 
