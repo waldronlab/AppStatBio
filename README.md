@@ -29,24 +29,22 @@ Each day will include a hands-on lab session from [Orchestrating Single-Cell Ana
 Lecture materials are available in HTML format from https://waldronlab.io/AppStatBio/.
 
 1. Introduction
-    + random variables
-    + distributions
-    + hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
+- random variables
+- distributions
+- hypothesis testing for one or two samples (t-test, Wilcoxon test, etc)
 
 2. Dimensionality reduction
-    + Distances in high dimensions
-    + Principal Components Analysis and Singular Value Decomposition
-    + Multidimensional Scaling
-    + t-SNE and UMAP
+- distances in high dimensions
+- principal components analysis and singular value decomposition
+- multidimensional Scaling
+- t-SNE and UMAP
 
-3. Linear Modeling
+3. Linear modeling
+- multiple linear regression
+- model formulae
+- generalized linear models
+- multiple hypothesis testing
 
-    + Multiple linear regression
-    + Model formulae
-    + Generalized Linear Models
-    + Multiple Hypothesis Testing
-
-4. Exploratory Data Analysis and Batch Effects
-
-    + Plots for exploratory data analysis
-    + About batch effects
+4. exploratory data analysis and batch effects
+- plots for exploratory data analysis
+- about batch effects
