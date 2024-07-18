@@ -3,7 +3,7 @@
 ## Instructor
 
 Levi Waldron, PhD  
-Associate Professor of Biostatistics  
+Professor of Biostatistics  
 City University of New York School Graduate of Public Health and Health Policy  
 New York, NY, U.S.A.  
 
@@ -45,6 +45,6 @@ Lecture materials are available in HTML format from https://waldronlab.io/AppSta
 - generalized linear models
 - multiple hypothesis testing
 
-4. exploratory data analysis and batch effects
+4. Exploratory data analysis and batch effects
 - plots for exploratory data analysis
 - about batch effects
