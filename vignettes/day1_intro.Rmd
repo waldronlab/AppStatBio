@@ -72,6 +72,7 @@ My research interests:
 Normally distributed random variable with mean $\mu = 0$ / standard deviation $\sigma = 1$, and a sample of $n=100$
 
 ```{r, echo=FALSE}
+set.seed(1)
 x = rnorm(100)
 res = hist(x, main = "Standard Normal Distribution\n mean 0, std. dev. 1", prob =
                TRUE)
@@ -571,8 +572,8 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 
 * Lab Exercises
     - [OSCA Introduction Chapter 3: Getting scRNA-seq datasets
-](http://bioconductor.org/books/3.17/OSCA.intro/getting-scrna-seq-datasets.html)
-    - [OSCA Introduction Chapter 4: The SingleCellExperiment class](http://bioconductor.org/books/3.17/OSCA.intro/the-singlecellexperiment-class.html) (as time allows)
+](http://bioconductor.org/books/release/OSCA.intro/getting-scrna-seq-datasets.html). Also note the [TENxIO](https://www.bioconductor.org/packages/TENxIO/) package.
+    - [OSCA Introduction Chapter 4: The SingleCellExperiment class](http://bioconductor.org/books/release/OSCA.intro/the-singlecellexperiment-class.html) (as time allows)
 
 * Links
     - A built [html][] version of this lecture is available.
