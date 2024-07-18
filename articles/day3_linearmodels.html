@@ -5,30 +5,24 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="AppStatBio">
 <title>Applied Statistics for High-throughput Biology: Session 3 • AppStatBio</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Applied Statistics for High-throughput Biology: Session 3">
-<meta property="og:description" content="AppStatBio">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Applied Statistics for High-throughput Biology: Session 3">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">AppStatBio</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -36,30 +30,24 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/day1_intro.html">Applied Statistics for High-throughput Biology: Session 1</a>
-    <a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology: Session 2</a>
-    <a class="dropdown-item" href="../articles/day3_linearmodels.html">Applied Statistics for High-throughput Biology: Session 3</a>
-    <a class="dropdown-item" href="../articles/day4_batcheffects-vis.html">Applied Statistics for High-throughput Biology: Session 4</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/day1_intro.html">Applied Statistics for High-throughput Biology: Session 1</a></li>
+    <li><a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology: Session 2</a></li>
+    <li><a class="dropdown-item" href="../articles/day3_linearmodels.html">Applied Statistics for High-throughput Biology: Session 3</a></li>
+    <li><a class="dropdown-item" href="../articles/day4_batcheffects-vis.html">Applied Statistics for High-throughput Biology: Session 4</a></li>
+  </ul>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/waldronlab/AppStatBio/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/waldronlab/AppStatBio/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -68,12 +56,13 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Applied Statistics for High-throughput Biology: Session 3</h1>
+
+      <h1>Applied Statistics for High-throughput Biology: Session 3</h1>
                         <h4 data-toc-skip class="author">Levi
 Waldron</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/waldronlab/AppStatBio/blob/HEAD/vignettes/day3_linearmodels.Rmd" class="external-link"><code>vignettes/day3_linearmodels.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/waldronlab/AppStatBio/blob/main/vignettes/day3_linearmodels.Rmd" class="external-link"><code>vignettes/day3_linearmodels.Rmd</code></a></small>
       <div class="d-none name"><code>day3_linearmodels.Rmd</code></div>
     </div>
 
@@ -149,9 +138,8 @@ illustrating median, interquartile range and extreme values.</li>
 <li>Wolff &amp; Gorb, <a href="http://www.nature.com/articles/srep01101" class="external-link">Radial arrangement of
 Janus-like setae permits friction control in spiders</a>, <em>Sci.
 Rep.</em>
-<ol start="2013" style="list-style-type: decimal">
-<li>
-</ol>
+<ol start="2013" style="list-style-type: decimal"><li>
+</li></ol>
 </li>
 </ul>
 </div>
@@ -209,15 +197,15 @@ coefficients vary by leg pair?</li>
 <p>The following are examples of linear models:</p>
 <ol style="list-style-type: decimal">
 <li>
-<span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i +
-\varepsilon_i\)</span> (simple linear regression)</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mi>i</mi></msub><mo>+</mo><msub><mi>ε</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i</annotation></semantics></math>
+(simple linear regression)</li>
 <li>
-<span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i + \beta_2
-x_i^2 + \varepsilon_i\)</span> (quadratic regression)</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mi>i</mi></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup><mo>+</mo><msub><mi>ε</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i</annotation></semantics></math>
+(quadratic regression)</li>
 <li>
-<span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i + \beta_2
-\times 2^{x_i} + \varepsilon_i\)</span> (<span class="math inline">\(2^{x_i}\)</span> is a new transformed
-variable)</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mi>i</mi></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><mo>×</mo><msup><mn>2</mn><msub><mi>x</mi><mi>i</mi></msub></msup><mo>+</mo><msub><mi>ε</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">Y_i = \beta_0 + \beta_1 x_i + \beta_2 \times 2^{x_i} + \varepsilon_i</annotation></semantics></math>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>2</mn><msub><mi>x</mi><mi>i</mi></msub></msup><annotation encoding="application/x-tex">2^{x_i}</annotation></semantics></math>
+is a new transformed variable)</li>
 </ol>
 </div>
 <div class="section level2">
@@ -227,32 +215,34 @@ variable)</li>
 <li>Linear models can have any number of predictors</li>
 <li>Systematic part of model:</li>
 </ul>
-<p><span class="math display">\[
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">
 E[y|x] = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... + \beta_p x_p
-\]</span></p>
+</annotation></semantics></math></p>
 <ul>
 <li>
-<span class="math inline">\(E[y|x]\)</span> is the expected value of
-<span class="math inline">\(y\)</span> given <span class="math inline">\(x\)</span>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
+is the expected value of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+given
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 </li>
 <li>
-<span class="math inline">\(y\)</span> is the outcome, response, or
-dependent variable</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+is the outcome, response, or dependent variable</li>
 <li>
-<span class="math inline">\(x\)</span> is the vector of predictors /
-independent variables</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+is the vector of predictors / independent variables</li>
 <li>
-<span class="math inline">\(x_p\)</span> are the individual
-predictors or independent variables</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>p</mi></msub><annotation encoding="application/x-tex">x_p</annotation></semantics></math>
+are the individual predictors or independent variables</li>
 <li>
-<span class="math inline">\(\beta_p\)</span> are the regression
-coefficients</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mi>p</mi></msub><annotation encoding="application/x-tex">\beta_p</annotation></semantics></math>
+are the regression coefficients</li>
 </ul>
 <p>Random part of model:</p>
-<p><span class="math inline">\(y_i = E[y_i|x_i] +
-\epsilon_i\)</span></p>
-<p>Assumptions of linear models: <span class="math inline">\(\epsilon_i
-\stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)\)</span></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i = E[y_i|x_i] + \epsilon_i</annotation></semantics></math></p>
+<p>Assumptions of linear models:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mover><mo>∼</mo><mrow><mi>i</mi><mi>i</mi><mi>d</mi></mrow></mover><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)</annotation></semantics></math></p>
 <ul>
 <li>Normal distribution</li>
 <li>Mean zero at every value of predictors</li>
@@ -286,8 +276,8 @@ or decrease in average outcome levels in the group coded “1”, compared
 to the reference category (“0”)
 <ul>
 <li>
-<em>e.g.</em> <span class="math inline">\(E(y|x) = \beta_0 + \beta_1
-x\)</span>
+<em>e.g.</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mi>x</mi></mrow><annotation encoding="application/x-tex">E(y|x) = \beta_0 + \beta_1 x</annotation></semantics></math>
 </li>
 <li>where x={ 1 if push friction, 0 if pull friction }</li>
 </ul>
@@ -299,20 +289,25 @@ x\)</span>
 </h2>
 <ul>
 <li>
-<strong>Coding:</strong> <span class="math inline">\(K-1\)</span>
-dummy variables for <span class="math inline">\(K\)</span>-level
+<strong>Coding:</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">K-1</annotation></semantics></math>
+dummy variables for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>-level
 categorical variable</li>
 <li>Comparisons with respect to a reference category, <em>e.g.</em>
 <code>L1</code>:
 <ul>
 <li>
-<code>L2</code>={1 if <span class="math inline">\(2^{nd}\)</span>
+<code>L2</code>={1 if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>2</mn><mrow><mi>n</mi><mi>d</mi></mrow></msup><annotation encoding="application/x-tex">2^{nd}</annotation></semantics></math>
 leg pair, 0 otherwise},</li>
 <li>
-<code>L3</code>={1 if <span class="math inline">\(3^{nd}\)</span>
+<code>L3</code>={1 if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>3</mn><mrow><mi>n</mi><mi>d</mi></mrow></msup><annotation encoding="application/x-tex">3^{nd}</annotation></semantics></math>
 leg pair, 0 otherwise},</li>
 <li>
-<code>L4</code>={1 if <span class="math inline">\(4^{th}\)</span>
+<code>L4</code>={1 if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>4</mn><mrow><mi>t</mi><mi>h</mi></mrow></msup><annotation encoding="application/x-tex">4^{th}</annotation></semantics></math>
 leg pair, 0 otherwise}.</li>
 </ul>
 </li>
@@ -425,8 +420,8 @@ samples, jittered horizontally to avoid overplotting.
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
-<!-- html table generated in R 4.3.1 by xtable 1.8-4 package -->
-<!-- Fri Sep 22 09:06:00 2023 -->
+<!-- html table generated in R 4.4.1 by xtable 1.8-4 package -->
+<!-- Thu Jul 18 10:34:13 2024 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -536,8 +531,8 @@ achieved by:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
-<!-- html table generated in R 4.3.1 by xtable 1.8-4 package -->
-<!-- Fri Sep 22 09:06:00 2023 -->
+<!-- html table generated in R 4.4.1 by xtable 1.8-4 package -->
+<!-- Thu Jul 18 10:34:13 2024 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -650,12 +645,13 @@ pushing</li>
 <div class="section level2">
 <h2 id="interaction-effect-modification">Interaction (effect modification)<a class="anchor" aria-label="anchor" href="#interaction-effect-modification"></a>
 </h2>
-<p>Interaction is modeled as the product of two covariates: <span class="math display">\[
+<p>Interaction is modeled as the product of two covariates:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><msub><mi>β</mi><mn>12</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>*</mo><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">
 E[y|x] = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{12} x_1*x_2
-\]</span></p>
-<div class="figure">
-<img src="images/coffee_interaction.jpg" alt=""><p class="caption">Interaction between coffee and time of day on
-performance</p>
+</annotation></semantics></math></p>
+<div class="float">
+<img src="images/coffee_interaction.jpg" alt="Interaction between coffee and time of day on performance"><div class="figcaption">Interaction between coffee and time of day on
+performance</div>
 </div>
 <p>Image credit: <a href="http://personal.stevens.edu/~ysakamot/" class="external-link uri">http://personal.stevens.edu/~ysakamot/</a></p>
 </div>
@@ -736,17 +732,17 @@ maximum likelihood estimation methods (MLE) (Nelder &amp; Wedderburn,
 1972)</li>
 <li>Can model many types of data directly using appropriate
 distributions, e.g. Poisson distribution for count data</li>
-<li>Transformations of <span class="math inline">\(y\)</span> not
-needed</li>
+<li>Transformations of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+not needed</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="components-of-a-glm">Components of a GLM<a class="anchor" aria-label="anchor" href="#components-of-a-glm"></a>
 </h2>
-<p><span class="math display">\[
-g\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ...
-+ \beta_p x_{pi}
-\]</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
+g\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}
+</annotation></semantics></math></p>
 <ul>
 <li>
 <strong>Random component</strong> specifies the conditional
@@ -761,8 +757,10 @@ distributions</li>
 <strong>Systematic component</strong> specifies linear function of
 predictors (linear predictor)</li>
 <li>
-<strong>Link</strong> [denoted by <span class="math inline">\(g(.)\)</span>] specifies the relationship between
-the expected value of the random component and the systematic component
+<strong>Link</strong> [denoted by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>.</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(.)</annotation></semantics></math>]
+specifies the relationship between the expected value of the random
+component and the systematic component
 <ul>
 <li>can be linear or nonlinear</li>
 </ul>
@@ -774,15 +772,17 @@ the expected value of the random component and the systematic component
 </h2>
 <ul>
 <li><p>Useful for log-transformed microarray data</p></li>
-<li><p><strong>The model</strong>: <span class="math inline">\(y_i =
-E[y|x] + \epsilon_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... +
-\beta_p x_{pi} + \epsilon_i\)</span></p></li>
-<li><p><strong>Random component</strong> of <span class="math inline">\(y_i\)</span> is normally distributed: <span class="math inline">\(\epsilon_i \stackrel{iid}{\sim} N(0,
-\sigma_\epsilon^2)\)</span></p></li>
-<li><p><strong>Systematic component</strong> (linear predictor): <span class="math inline">\(\beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... +
-\beta_p x_{pi}\)</span></p></li>
+<li><p><strong>The model</strong>:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i = E[y|x] + \epsilon_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi} + \epsilon_i</annotation></semantics></math></p></li>
+<li><p><strong>Random component</strong> of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math>
+is normally distributed:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mover><mo>∼</mo><mrow><mi>i</mi><mi>i</mi><mi>d</mi></mrow></mover><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)</annotation></semantics></math></p></li>
+<li><p><strong>Systematic component</strong> (linear predictor):
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}</annotation></semantics></math></p></li>
 <li><p><strong>Link function</strong> here is the <em>identity
-link</em>: <span class="math inline">\(g(E(y | x)) = E(y | x)\)</span>.
+link</em>:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(E(y | x)) = E(y | x)</annotation></semantics></math>.
 We are modeling the mean directly, no transformation.</p></li>
 </ul>
 </div>
@@ -792,40 +792,41 @@ We are modeling the mean directly, no transformation.</p></li>
 <ul>
 <li><p>Useful for binary outcomes, e.g. Single Nucleotide Polymorphisms
 or somatic variants</p></li>
-<li><p><strong>The model</strong>: <span class="math display">\[
-Logit(P(x)) = log \left( \frac{P(x)}{1-P(x)} \right) = \beta_0 + \beta_1
-x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}
-\]</span></p></li>
-<li><p><strong>Random component</strong>: <span class="math inline">\(y_i\)</span> follows a Binomial distribution
-(outcome is a binary variable)</p></li>
-<li><p><strong>Systematic component</strong>: linear predictor <span class="math display">\[
+<li><p><strong>The model</strong>:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mn>1</mn><mo>−</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
+Logit(P(x)) = log \left( \frac{P(x)}{1-P(x)} \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}
+</annotation></semantics></math></p></li>
+<li><p><strong>Random component</strong>:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math>
+follows a Binomial distribution (outcome is a binary variable)</p></li>
+<li><p><strong>Systematic component</strong>: linear predictor
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
 \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}
-\]</span></p></li>
+</annotation></semantics></math></p></li>
 <li><p><strong>Link function</strong>: <em>logit</em> (log of the odds
 that the event occurs)</p></li>
 </ul>
-<p><span class="math display">\[
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mn>1</mn><mo>−</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 g(P(x)) = logit(P(x)) = log\left( \frac{P(x)}{1-P(x)} \right)
-\]</span></p>
-<p><span class="math display">\[
-P(x) = g^{-1}\left( \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... +
-\beta_p x_{pi}
-\right)
-\]</span></p>
+</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+P(x) = g^{-1}\left( \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}
+ \right)
+</annotation></semantics></math></p>
 </div>
 <div class="section level2">
 <h2 id="log-linear-glm">Log-linear GLM<a class="anchor" aria-label="anchor" href="#log-linear-glm"></a>
 </h2>
 <p>The systematic part of the GLM is:</p>
-<p><span class="math display">\[
-log\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} +
-... + \beta_p x_{pi} + log(t_i)
-\]</span></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo>+</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+log\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi} + log(t_i)
+</annotation></semantics></math></p>
 <ul>
 <li>Common for count data
 <ul>
 <li>can account for differences in sequencing depth by an
-<em>offset</em> <span class="math inline">\(log(t_i)\)</span>
+<em>offset</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">log(t_i)</annotation></semantics></math>
 </li>
 <li>guarantees non-negative expected number of counts</li>
 <li>often used in conjunction with <strong>Poisson</strong> or
@@ -837,20 +838,23 @@ log\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} +
 <div class="section level2">
 <h2 id="poisson-error-model">Poisson error model<a class="anchor" aria-label="anchor" href="#poisson-error-model"></a>
 </h2>
-<p><span class="math display">\[
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>λ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>λ</mi></mrow></msup><mfrac><msup><mi>λ</mi><mi>k</mi></msup><mrow><mi>k</mi><mi>!</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 f(k, \lambda) = e^{-\lambda} \frac{\lambda^k}{k!}
-\]</span></p>
+</annotation></semantics></math></p>
 <ul>
-<li>where <span class="math inline">\(f\)</span> is the probability of
-<span class="math inline">\(k\)</span> events (e.g. # of reads counted),
-and</li>
+<li>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is the probability of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+events (e.g. # of reads counted), and</li>
 <li>
-<span class="math inline">\(\lambda\)</span> is the mean number of
-events, so <span class="math inline">\(E[y|x]\)</span>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
+is the mean number of events, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
 </li>
 <li>
-<span class="math inline">\(\lambda\)</span> is also the variance of
-the number of events</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
+is also the variance of the number of events</li>
 </ul>
 </div>
 <div class="section level2">
@@ -860,28 +864,32 @@ the number of events</li>
 <li>
 <em>aka</em> gamma–Poisson mixture distribution</li>
 </ul>
-<p><span class="math display">\[
-f(k, \lambda, \theta) = \frac{\Gamma(\frac{1 + \theta k}{\theta})}{k! \,
-\Gamma(\frac{1}{\theta})}
-    \left(\frac{\theta m}{1+\theta m}\right)^k
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>λ</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mn>1</mn><mo>+</mo><mi>θ</mi><mi>k</mi></mrow><mi>θ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>k</mi><mi>!</mi><mspace width="0.167em"></mspace><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>θ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>θ</mi><mi>m</mi></mrow><mrow><mn>1</mn><mo>+</mo><mi>θ</mi><mi>m</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>k</mi></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>θ</mi><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>θ</mi></msup><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">for </mtext><mspace width="0.333em"></mspace></mrow><mi>k</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi></mrow><annotation encoding="application/x-tex">
+f(k, \lambda, \theta) = \frac{\Gamma(\frac{1 + \theta k}{\theta})}{k! \, \Gamma(\frac{1}{\theta})} 
+    \left(\frac{\theta m}{1+\theta m}\right)^k 
     \left(1+\theta m\right)^\theta
     \quad\text{for }k = 0, 1, 2, \dotsc
-\]</span></p>
+</annotation></semantics></math></p>
 <ul>
-<li>where <span class="math inline">\(f\)</span> is still the
-probability of <span class="math inline">\(k\)</span> events (e.g. # of
-reads counted),</li>
+<li>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+is still the probability of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+events (e.g. # of reads counted),</li>
 <li>
-<span class="math inline">\(\lambda\)</span> is still the mean
-number of events, so <span class="math inline">\(E[y|x]\)</span>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
+is still the mean number of events, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
 </li>
-<li>An additional <strong>dispersion parameter</strong> <span class="math inline">\(\theta\)</span> is estimated:
+<li>An additional <strong>dispersion parameter</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+is estimated:
 <ul>
 <li>
-<span class="math inline">\(\theta \rightarrow 0\)</span>: Poisson
-distribution</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta \rightarrow 0</annotation></semantics></math>:
+Poisson distribution</li>
 <li>
-<span class="math inline">\(\theta \rightarrow \infty\)</span>:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>→</mo><mi>∞</mi></mrow><annotation encoding="application/x-tex">\theta \rightarrow \infty</annotation></semantics></math>:
 Gamma distribution</li>
 </ul>
 </li>
@@ -911,18 +919,33 @@ parameters:
 <li>Linear regression is an <em>additive</em> model
 <ul>
 <li>
-<em>e.g.</em> for two binary variables <span class="math inline">\(\beta_1 = 1.5\)</span>, <span class="math inline">\(\beta_2 = 1.5\)</span>.</li>
-<li>If <span class="math inline">\(x_1=1\)</span> and <span class="math inline">\(x_2=1\)</span>, this adds 3.0 to <span class="math inline">\(E(y|x)\)</span>
+<em>e.g.</em> for two binary variables
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>1</mn></msub><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">\beta_1 = 1.5</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>2</mn></msub><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">\beta_2 = 1.5</annotation></semantics></math>.</li>
+<li>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x_1=1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x_2=1</annotation></semantics></math>,
+this adds 3.0 to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">E(y|x)</annotation></semantics></math>
 </li>
 </ul>
 </li>
 <li>Logistic and log-linear models are <em>multiplicative</em>:
 <ul>
-<li>If <span class="math inline">\(x_1=1\)</span> and <span class="math inline">\(x_2=1\)</span>, this adds 3.0 to <span class="math inline">\(log(\frac{P}{1-P})\)</span>
+<li>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x_1=1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x_2=1</annotation></semantics></math>,
+this adds 3.0 to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mi>P</mi><mrow><mn>1</mn><mo>−</mo><mi>P</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">log(\frac{P}{1-P})</annotation></semantics></math>
 </li>
-<li>Odds-ratio <span class="math inline">\(\frac{P}{1-P}\)</span>
-increases 20-fold: <span class="math inline">\(exp(1.5+1.5)\)</span> or
-<span class="math inline">\(exp(1.5) * exp(1.5)\)</span>
+<li>Odds-ratio
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mi>P</mi><mrow><mn>1</mn><mo>−</mo><mi>P</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{P}{1-P}</annotation></semantics></math>
+increases 20-fold:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1.5</mn><mo>+</mo><mn>1.5</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">exp(1.5+1.5)</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1.5</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>*</mo><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1.5</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">exp(1.5) * exp(1.5)</annotation></semantics></math>
 </li>
 </ul>
 </li>
@@ -935,8 +958,8 @@ increases 20-fold: <span class="math inline">\(exp(1.5+1.5)\)</span> or
 <li>Conceptually similar to what we have already done
 <ul>
 <li>
-<span class="math inline">\(Y_i\)</span> expression of a gene,
-etc</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">Y_i</annotation></semantics></math>
+expression of a gene, etc</li>
 </ul>
 </li>
 <li>Just repeated many times, e.g.:
@@ -951,16 +974,19 @@ groups (1-way ANOVA)</li>
 can be made (i.e. limma, edgeR, DESeq2)</li>
 </ul>
 </li>
-<li>It is in prediction and machine learning where <span class="math inline">\(Y\)</span> is a label like patient outcome, and we
-can have high-dimensional predictors</li>
+<li>It is in prediction and machine learning where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
+is a label like patient outcome, and we can have high-dimensional
+predictors</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="multiple-testing">Multiple testing<a class="anchor" aria-label="anchor" href="#multiple-testing"></a>
 </h2>
 <ul>
-<li>When testing thousands of true null hypotheses with <span class="math inline">\(\alpha = 0.05\)</span>, you expect a 5% type I
-error rate</li>
+<li>When testing thousands of true null hypotheses with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">\alpha = 0.05</annotation></semantics></math>,
+you expect a 5% type I error rate</li>
 <li>What p-values are even smaller than you expect by chance from
 multiple testing?</li>
 <li>Two mainstream approaches for controlling type I error rate:</li>
@@ -989,15 +1015,20 @@ Chapter 6 - testing</a>
 <p>Source: <a href="https://www.huber.embl.de/msmb/06-chap.html#the-benjamini-hochberg-algorithm-for-controlling-the-fdr" class="external-link">MSMB
 Chapter 6</a></p>
 <ol style="list-style-type: decimal">
-<li>order the p-values from <span class="math inline">\(m\)</span>
-hypothesis tests in increasing order, <span class="math inline">\(p_1,
-\ldots, p_m\)</span>
+<li>order the p-values from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+hypothesis tests in increasing order,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>p</mi><mi>m</mi></msub></mrow><annotation encoding="application/x-tex">p_1, \ldots, p_m</annotation></semantics></math>
 </li>
-<li>for some choice of <span class="math inline">\(\phi\)</span> (our
-target FDR), find the largest value of that <span class="math inline">\(k\)</span> that satisfies: <span class="math inline">\(p_k \leq \phi k/m\)</span>
+<li>for some choice of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϕ</mi><annotation encoding="application/x-tex">\phi</annotation></semantics></math>
+(our target FDR), find the largest value of that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+that satisfies:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>k</mi></msub><mo>≤</mo><mi>ϕ</mi><mi>k</mi><mi>/</mi><mi>m</mi></mrow><annotation encoding="application/x-tex">p_k \leq \phi k/m</annotation></semantics></math>
 </li>
-<li>reject the hypotheses <span class="math inline">\(1, \ldots,
-k\)</span>
+<li>reject the hypotheses
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">1, \ldots, k</annotation></semantics></math>
 </li>
 </ol>
 <div class="figure" style="text-align: center">
@@ -1033,7 +1064,8 @@ Benjamini-Hochberg FDR)</li>
 Hypothesis Weighting</a>
 <ul>
 <li>can improve power by modeling the relationship between a covariate
-property (such as mean expression) and probability of rejecting <span class="math inline">\(H_0\)</span>
+property (such as mean expression) and probability of rejecting
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>
 </li>
 <li>works best with lots of tests (ie, thousands)</li>
 <li>implemented in the <a href="https://bioconductor.org/packages/IHW/" class="external-link">IHW</a> Bioconductor
@@ -1050,9 +1082,9 @@ package and in <a href="https://bioconductor.org/packages/DESeq2/" class="extern
 <li>define a separation between observations</li>
 <li>test for a difference across the separation</li>
 </ol>
-<div class="figure">
-<img src="images/doubledipping.jpg" alt=""><p class="caption">Example from: García-Mantrana <em>et al.</em>, Gut
-Microbes 2020</p>
+<div class="float">
+<img src="images/doubledipping.jpg" alt="Example from: García-Mantrana et al., Gut Microbes 2020"><div class="figcaption">Example from: García-Mantrana <em>et al.</em>,
+Gut Microbes 2020</div>
 </div>
 <ul>
 <li>For a full treatment see <a href="https://arxiv.org/abs/2012.02936" class="external-link uri">https://arxiv.org/abs/2012.02936</a> and <a href="https://pubmed.ncbi.nlm.nih.gov/31521605" class="external-link uri">https://pubmed.ncbi.nlm.nih.gov/31521605</a>
@@ -1087,10 +1119,13 @@ expression / differential abundance</p></li>
 <p><strong>Generalized Linear Models</strong> extend linear
 regression to:</p>
 <ul>
-<li>binary <span class="math inline">\(y\)</span> (logistic
-regression)</li>
-<li>count <span class="math inline">\(y\)</span> (log-linear regression
-with e.g. Poisson or Negative Binomial link functions)</li>
+<li>binary
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+(logistic regression)</li>
+<li>count
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+(log-linear regression with e.g. Poisson or Negative Binomial link
+functions)</li>
 </ul>
 </li>
 <li><p>FWER, FDR, local FDR (q-value), Independent Hypothesis
@@ -1130,28 +1165,26 @@ of this lecture is available.</li>
 Markdown is available from Github.</li>
 </ul>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Levi Waldron.</p>
+  <p>Developed by Levi Waldron.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
