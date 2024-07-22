@@ -316,16 +316,6 @@ features are often not due to biological effects but technical ones,
 <li>GC bias, PCR amplification efficiency, …</li>
 </ul>
 </li>
-<li>Euclidian distance and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">1-r</annotation></semantics></math>
-(Pearson cor) are related:
-<ul>
-<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><msub><mi>d</mi><mi>E</mi></msub><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><mrow><mn>2</mn><mi>m</mi></mrow></mfrac><mo>=</mo><mn>1</mn><mo>−</mo><msub><mi>r</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\frac{d_E(x, y)^2}{2m} = 1 - r_{xy}</annotation></semantics></math></li>
-<li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
-= # dimensions</li>
-</ul>
-</li>
 </ul>
 </div>
 <div class="section level2">
@@ -404,7 +394,7 @@ scores</strong>)</p>
 <div class="section level2">
 <h2 id="svd-of-gene-expression-dataset">SVD of gene expression dataset<a class="anchor" aria-label="anchor" href="#svd-of-gene-expression-dataset"></a>
 </h2>
-<p>Scaling:</p>
+<p>Center but do not scale, just to make plots before more legible:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">e.standardize</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>, scale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>SVD:</p>
@@ -700,10 +690,10 @@ computational tractability</li>
 <h2 id="lab-exercise">Lab exercise<a class="anchor" aria-label="anchor" href="#lab-exercise"></a>
 </h2>
 <ul>
-<li>OSCA Basics: <a href="http://bioconductor.org/books/3.17/OSCA.basic/dimensionality-reduction.html" class="external-link">Chapter
+<li>OSCA Basics: <a href="http://bioconductor.org/books/release/OSCA.basic/dimensionality-reduction.html" class="external-link">Chapter
 4 Dimensionality Reduction</a>
 </li>
-<li>Optional if you are interested, OSCA Advanced: <a href="http://bioconductor.org/books/3.17/OSCA.advanced/dimensionality-reduction-redux.html" class="external-link">Chapter
+<li>Optional if you are interested, OSCA Advanced: <a href="http://bioconductor.org/books/release/OSCA.advanced/dimensionality-reduction-redux.html" class="external-link">Chapter
 4 Dimensionality reduction, redux</a>
 </li>
 </ul>
