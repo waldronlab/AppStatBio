@@ -182,9 +182,6 @@ $$x_{gi} \leftarrow \frac{(x_{gi} - \bar{x}_g)}{s_g}$$
 
 - This is done because the differences in overall levels between features are often not due to biological effects but technical ones, *e.g.*:
     - GC bias, PCR amplification efficiency, ...
-- Euclidian distance and $1-r$ (Pearson cor) are related:
-    - $\frac{d_E(x, y)^2}{2m} = 1 - r_{xy}$
-    - $m$ = # dimensions
 
 ## Dimension reduction and PCA
 
@@ -269,7 +266,7 @@ $$\mathbf{Y} = \mathbf{UDV}^\top$$
 
 ## SVD of gene expression dataset
 
-Scaling:
+Center but do not scale, just to make plots before more legible:
 ```{r scaling, cache=TRUE}
 e.standardize <- t(scale(t(e), scale = FALSE))
 ```
@@ -517,8 +514,8 @@ plotReducedDim(sct, dimred="UMAP", colour_by="tissue")
 
 ## Lab exercise
 
-* OSCA Basics: [Chapter 4 Dimensionality Reduction](http://bioconductor.org/books/3.17/OSCA.basic/dimensionality-reduction.html)
-* Optional if you are interested, OSCA Advanced: [Chapter 4 Dimensionality reduction, redux](http://bioconductor.org/books/3.17/OSCA.advanced/dimensionality-reduction-redux.html)
+* OSCA Basics: [Chapter 4 Dimensionality Reduction](http://bioconductor.org/books/release/OSCA.basic/dimensionality-reduction.html)
+* Optional if you are interested, OSCA Advanced: [Chapter 4 Dimensionality reduction, redux](http://bioconductor.org/books/release/OSCA.advanced/dimensionality-reduction-redux.html)
 
 ## Links
 
