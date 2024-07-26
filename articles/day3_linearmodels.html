@@ -108,10 +108,10 @@ Statistics for Modern Biology</a>
 </ul>
 </li>
 <li>
-<a href="http://bioconductor.org/books/3.17/OSCA.multisample/" class="external-link">OSCA
+<a href="http://bioconductor.org/books/release/OSCA.multisample/" class="external-link">OSCA
 multi-sample</a>
 <ul>
-<li>Chapter 4: <a href="http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html" class="external-link">DE
+<li>Chapter 4: <a href="http://bioconductor.org/books/release/OSCA.multisample/multi-sample-comparisons.html" class="external-link">DE
 analyses between conditions</a>
 </li>
 </ul>
@@ -241,7 +241,7 @@ are the regression coefficients</li>
 </ul>
 <p>Random part of model:</p>
 <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i = E[y_i|x_i] + \epsilon_i</annotation></semantics></math></p>
-<p>Assumptions of linear models:
+<p>Assumptions of the linear regression model:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mover><mo>∼</mo><mrow><mi>i</mi><mi>i</mi><mi>d</mi></mrow></mover><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)</annotation></semantics></math></p>
 <ul>
 <li>Normal distribution</li>
@@ -421,7 +421,7 @@ samples, jittered horizontally to avoid overplotting.
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
 <!-- html table generated in R 4.4.1 by xtable 1.8-4 package -->
-<!-- Mon Jul 22 07:45:51 2024 -->
+<!-- Fri Jul 26 07:51:24 2024 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -525,14 +525,13 @@ achieved by:</p>
 <h2 id="regression-on-spider-leg-type-and-position">Regression on spider leg <strong>type</strong> and
 <strong>position</strong><a class="anchor" aria-label="anchor" href="#regression-on-spider-leg-type-and-position"></a>
 </h2>
-<p>Remember there are positions 1-4</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">friction</span> <span class="op">~</span> <span class="va">type</span> <span class="op">+</span> <span class="va">leg</span>, data<span class="op">=</span><span class="va">spider</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
 <!-- html table generated in R 4.4.1 by xtable 1.8-4 package -->
-<!-- Mon Jul 22 07:45:51 2024 -->
+<!-- Fri Jul 26 07:51:25 2024 -->
 <table border="1" class="table">
 <tr>
 <th>
@@ -654,6 +653,171 @@ E[y|x] = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{12} x_1*x_2
 performance</div>
 </div>
 <p>Image credit: <a href="http://personal.stevens.edu/~ysakamot/" class="external-link uri">http://personal.stevens.edu/~ysakamot/</a></p>
+</div>
+<div class="section level2">
+<h2 id="interaction-in-the-spider-leg-model">Interaction in the spider leg model<a class="anchor" aria-label="anchor" href="#interaction-in-the-spider-leg-model"></a>
+</h2>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">friction</span> <span class="op">~</span> <span class="va">type</span> <span class="op">*</span> <span class="va">leg</span>, data<span class="op">=</span><span class="va">spider</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
+<!-- html table generated in R 4.4.1 by xtable 1.8-4 package -->
+<!-- Fri Jul 26 07:51:25 2024 -->
+<table border="1" class="table">
+<tr>
+<th>
+</th>
+<th>
+Estimate
+</th>
+<th>
+Std. Error
+</th>
+<th>
+t value
+</th>
+<th>
+Pr(&gt;|t|)
+</th>
+</tr>
+<tr>
+<td align="right">
+(Intercept)
+</td>
+<td align="right">
+0.9215
+</td>
+<td align="right">
+0.0327
+</td>
+<td align="right">
+28.21
+</td>
+<td align="right">
+0.0000
+</td>
+</tr>
+<tr>
+<td align="right">
+typepush
+</td>
+<td align="right">
+-0.5141
+</td>
+<td align="right">
+0.0462
+</td>
+<td align="right">
+-11.13
+</td>
+<td align="right">
+0.0000
+</td>
+</tr>
+<tr>
+<td align="right">
+legL2
+</td>
+<td align="right">
+0.2239
+</td>
+<td align="right">
+0.0590
+</td>
+<td align="right">
+3.79
+</td>
+<td align="right">
+0.0002
+</td>
+</tr>
+<tr>
+<td align="right">
+legL3
+</td>
+<td align="right">
+0.3524
+</td>
+<td align="right">
+0.0420
+</td>
+<td align="right">
+8.39
+</td>
+<td align="right">
+0.0000
+</td>
+</tr>
+<tr>
+<td align="right">
+legL4
+</td>
+<td align="right">
+0.4793
+</td>
+<td align="right">
+0.0444
+</td>
+<td align="right">
+10.79
+</td>
+<td align="right">
+0.0000
+</td>
+</tr>
+<tr>
+<td align="right">
+typepush:legL2
+</td>
+<td align="right">
+-0.1039
+</td>
+<td align="right">
+0.0835
+</td>
+<td align="right">
+-1.24
+</td>
+<td align="right">
+0.2144
+</td>
+</tr>
+<tr>
+<td align="right">
+typepush:legL3
+</td>
+<td align="right">
+-0.3838
+</td>
+<td align="right">
+0.0594
+</td>
+<td align="right">
+-6.46
+</td>
+<td align="right">
+0.0000
+</td>
+</tr>
+<tr>
+<td align="right">
+typepush:legL4
+</td>
+<td align="right">
+-0.3959
+</td>
+<td align="right">
+0.0628
+</td>
+<td align="right">
+-6.30
+</td>
+<td align="right">
+0.0000
+</td>
+</tr>
+</table>
 </div>
 <div class="section level2">
 <h2 id="model-formulae-contd">Model formulae (cont’d)<a class="anchor" aria-label="anchor" href="#model-formulae-contd"></a>
@@ -910,7 +1074,7 @@ parameters:
 </ol>
 </li>
 </ul>
-<p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="additive-vs--multiplicative-models">Additive vs. multiplicative models<a class="anchor" aria-label="anchor" href="#additive-vs--multiplicative-models"></a>

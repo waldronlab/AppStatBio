@@ -197,7 +197,7 @@ correlation is useful</li>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">sampleInfo</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/genefilter/man/rowFtests.html" class="external-link">rowttests</a></span><span class="op">(</span><span class="va">geneExpression</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.005   0.000   0.006</span></span>
+<span><span class="co">#&gt;   0.005   0.001   0.005</span></span>
 <span><span class="va">pvals</span> <span class="op">&lt;-</span> <span class="va">results</span><span class="op">$</span><span class="va">p.value</span></span></code></pre></div>
 <p>Note that these 8,793 tests are done in about 0.01s</p>
 </div>
