@@ -23,7 +23,7 @@ library(AppStatBio)
 
 Each stage (separated by dashed lines) consists of a number of specific steps, many of which operate on and modify a SingleCellExperiment instance. ([original image](http://bioconductor.org/books/3.17/OSCA.intro/))
 
-## Day 4 outline
+## Day 2 outline
 
 [Book](https://genomicsclass.github.io/book/) chapter 8:
 
@@ -504,7 +504,7 @@ plotReducedDim(sct, dimred="UMAP", colour_by="tissue")
 
 ## Summary: distances and dimension reduction
 
-- **Note**: signs of eigenvalues (square to get variances) and eigenvectors (loadings) can be arbitrarily flipped
+- **Note**: signs of rotations (loadings) and eigenvectors (scores) can be arbitrarily flipped
 - PCA and MDS are useful for dimension reduction when you have **correlated variables**
 - Variables are always centered.  
 - Variables are also scaled unless you know they have the same scale in the population

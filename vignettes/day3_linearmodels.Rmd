@@ -35,8 +35,8 @@ library(AppStatBio)
     - Chapter 6: Inference for high-dimensional data
 -   [Modern Statistics for Modern Biology](https://www.huber.embl.de/msmb/06-chap.html)
     - Chapter 6: Testing 
-- [OSCA multi-sample](http://bioconductor.org/books/3.17/OSCA.multisample/)
-    - Chapter 4: [DE analyses between conditions](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html)
+- [OSCA multi-sample](http://bioconductor.org/books/release/OSCA.multisample/)
+    - Chapter 4: [DE analyses between conditions](http://bioconductor.org/books/release/OSCA.multisample/multi-sample-comparisons.html)
 
 ## Example: friction of spider legs
 
@@ -128,7 +128,7 @@ Random part of model:
 
 $y_i = E[y_i|x_i] + \epsilon_i$
 
-Assumptions of linear models:
+Assumptions of the linear regression model:
 $\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)$
 
 -   Normal distribution
@@ -261,8 +261,6 @@ by:
 
 ## Regression on spider leg **type** and **position**
 
-Remember there are positions 1-4
-
 ```{r}
 fit <- lm(friction ~ type + leg, data=spider)
 ```
@@ -286,6 +284,17 @@ $$
 performance](images/coffee_interaction.jpg)
 
 Image credit: <http://personal.stevens.edu/~ysakamot/>
+
+## Interaction in the spider leg model
+
+```{r}
+fit <- lm(friction ~ type * leg, data=spider)
+```
+
+```{r, results="asis", echo=TRUE, message=FALSE}
+fit.table <- xtable::xtable(fit, label=NULL)
+print(fit.table, type="html")
+```
 
 ## Model formulae (cont'd)
 
