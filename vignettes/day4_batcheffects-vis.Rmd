@@ -146,8 +146,10 @@ plot(
 ```{r eda1}
 library(GSE5859Subset)
 data(GSE5859Subset) ##this loads three tables
-c(class(geneExpression), class(sampleInfo))
-rbind(dim(geneExpression), dim(sampleInfo))
+class(geneExpression)
+dim(geneExpression)
+class(sampleInfo)
+dim(sampleInfo)
 head(sampleInfo)
 ```
 
@@ -165,7 +167,7 @@ Note that these 8,793 tests are done in about 0.01s
 
 ## Volcano plots: Example
 
-```{r vp2, fig.height=3, fig.width=6}
+```{r vp2, echo = FALSE, fig.height=5, fig.width=5}
 par(mar = c(4, 4, 0, 0))
 plot(results$dm,
      -log10(results$p.value),
@@ -217,7 +219,7 @@ hist(permresults$p.value)
 ## P-value histograms: Summary
 
 - Give a quick look at how many significant p-values there may be
-- When using permuted labels, can exposes non-independence among the samples
+- When using permuted labels, can expose non-independence among the samples
     + can be due to batch effects or family structure
 - Most common approaches for correcting batch effects are:
     + `ComBat`: corrects for known batch effects by linear model), and 
@@ -249,7 +251,7 @@ plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo))
 ## Heatmaps
 
 * Detailed representation of high-dimensional dataset.
-    - `ComplexHeatmap` package is the best as of 2023: large datasets, interactive heatmaps, simple defaults but many customizations possible
+    - `ComplexHeatmap` package is the best as of 2024: large datasets, interactive heatmaps, simple defaults but many customizations possible
 
 ```{r ma1, fig.width=12, echo=FALSE}
 suppressPackageStartupMessages(library(ComplexHeatmap))
@@ -271,7 +273,7 @@ Heatmap(ge, use_raster = FALSE, top_annotation = column_ha, right_annotation = r
 
 ## Heatmaps: Summary
 
-- Clustering becomes slow and memory-intensivefor thousands of rows
+- Clustering becomes slow and memory-intensive for thousands of rows
     - probably too detailed for thousands of rows
 - can show co-expressed genes, groups of samples
 
@@ -320,7 +322,7 @@ RColorBrewer::display.brewer.all(n = 7)
 ```{r ge, message=FALSE}
 library(Biobase)
 library(genefilter)
-library(GSE5859) ## BiocInstaller::biocLite("genomicsclass/GSE5859")
+library(GSE5859)
 data(GSE5859)
 geneExpression = exprs(e)
 sampleInfo = pData(e)
@@ -347,6 +349,9 @@ table(year, sampleInfo$ethnicity)
 
 ```{r ge4, cache=TRUE, warning=FALSE}
 pc <- prcomp(t(geneExpression), scale. = TRUE)
+```
+
+```{r, echo=FALSE, warning=FALSE}
 boxplot(
     pc$x[, 1] ~ month,
     varwidth = TRUE,
@@ -419,7 +424,7 @@ table(hcclass, year)
 
 ## Exercises
 
-* OSCA Multi-sample [Chapter 1: Correcting batch effects](http://bioconductor.org/books/3.17/OSCA.multisample/integrating-datasets.html)
+* OSCA Multi-sample [Chapter 1: Correcting batch effects](http://bioconductor.org/books/release/OSCA.multisample/integrating-datasets.html)
 
 ## Links
 
