@@ -1,12 +1,12 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   day1_intro: day1_intro.html
   day2_unsupervised: day2_unsupervised.html
   day3_linearmodels: day3_linearmodels.html
   day4_batcheffects-vis: day4_batcheffects-vis.html
-last_built: 2024-07-29T10:09Z
+last_built: 2025-07-07T13:02Z
 urls:
   reference: http://waldronlab.io/AppStatBio/reference
   article: http://waldronlab.io/AppStatBio/articles
