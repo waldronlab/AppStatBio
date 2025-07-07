@@ -28,6 +28,7 @@ Imports:
     scRNAseq,
     scater,
     scran,
+    sparseMatrixStats,
     survival,
     TeachingDemos,
     tidyverse,
