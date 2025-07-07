@@ -428,7 +428,7 @@ table(hcclass, year)
 
 ## Links
 
--   A built [html](https://rpubs.com/lwaldron/AppStatBio2023_day4)
+-   A built [html](https://waldronlab.io/AppStatBio/articles/day4_batcheffects-vis.html)
     version of this lecture is available.
--   The [source](https://github.com/waldronlab/AppStatBio) R Markdown is
+-   The [source](https://github.com/waldronlab/AppStatBio/blob/main/vignettes/day4_batcheffects-vis.Rmd) R Markdown is
      available from Github.

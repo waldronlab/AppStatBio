@@ -522,5 +522,5 @@ plotReducedDim(sct, dimred="UMAP", colour_by="tissue")
 - A built [html][] version of this lecture is available.
 - The [source][] R Markdown is also available from Github.
 
-[html]: https://rpubs.com/lwaldron/AppStatBio2023_day2
-[source]: https://github.com/waldronlab/AppStatBio
+[html]: https://waldronlab.io/AppStatBio/articles/day2_unsupervised.html
+[source]: https://github.com/waldronlab/AppStatBio/blob/main/vignettes/day2_unsupervised.Rmd

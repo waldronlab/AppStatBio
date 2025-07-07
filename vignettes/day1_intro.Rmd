@@ -573,14 +573,14 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 * Lab Exercises
     - [OSCA Introduction Chapter 3: Getting scRNA-seq datasets
 ](http://bioconductor.org/books/release/OSCA.intro/getting-scrna-seq-datasets.html). Also note the [TENxIO](https://www.bioconductor.org/packages/TENxIO/) package.
-    - [OSCA Introduction Chapter 4: The SingleCellExperiment class](http://bioconductor.org/books/release/OSCA.intro/the-singlecellexperiment-class.html) (as time allows)
+    - [OSCA Introduction Chapter 4: The SingleCellExperiment class](http://bioconductor.org/books/release/OSCA.intro/the-singlecellexperiment-class.html)
 
 * Links
     - A built [html][] version of this lecture is available.
     - The [source][] R Markdown is also available from Github.
 
-[html]: http://waldronlab.io/AppStatBio/
-[source]: https://github.com/waldronlab/AppStatBio
+[html]: https://waldronlab.io/AppStatBio/articles/day1_intro.html
+[source]: https://github.com/waldronlab/AppStatBio/blob/main/vignettes/day1_intro.Rmd
 
 [book]: https://genomicsclass.github.io/book/
 [ePub version]: https://leanpub.com/dataanalysisforthelifesciences/
