@@ -1,5 +1,5 @@
 ---
-title: "Applied Statistics for High-throughput Biology: Session 2"
+title: "Applied Statistics for High-throughput Biology Session 2: Unsupervised Learning & Dimensionality Reduction"
 output: slidy_presentation
 author: "Levi Waldron"
 vignette: >
@@ -34,18 +34,17 @@ Each stage (separated by dashed lines) consists of a number of specific steps, m
 
 ## Metrics and distances
 
-A **metric** satisfies the following five properties:
+A **metric** is a function that defines a distance between elements of a set and satisfies five key properties:
 
-1. non-negativity $d(a, b) \ge 0$
-2. symmetry $d(a, b) = d(b, a)$
-3. identification mark $d(a, a) = 0$
-4. definiteness $d(a, b) = 0$ if and only if $a=b$
-5. triangle inequality $d(a, b) + d(b, c) \ge d(a, c)$
+1.  **Non-negativity:** The distance from point A to point B is always non-negative ($d(a, b) \ge 0$).
+2.  **Symmetry:** The distance from A to B is the same as the distance from B to A ($d(a, b) = d(b, a)$).
+3.  **Identity of indiscernibles:** The distance from a point to itself is zero ($d(a, a) = 0$).
+4.  **Definiteness:** The distance is zero if and only if the points are the same ($d(a, b) = 0 \iff a=b$).
+5.  **Triangle Inequality:** The distance from A to C is never greater than the sum of the distances from A to B and B to C ($d(a, c) \le d(a, b) + d(b, c)$).
 
-- A **distance** is only required to satisfy 1-3.
-- A **similarity function** satisfies 1-2, and **increases** as $a$ and $b$ become more similar
-- A **dissimilarity function** satisfies 1-2, and **decreases** as $a$ and $b$ become more similar
-
+- A **distance** is a more general term, typically required to satisfy only the first three properties.
+- A **similarity function** also satisfies non-negativity and symmetry, but its value **increases** as two objects become more alike.
+- A **dissimilarity function** is similar, but its value **decreases** as objects become more alike.
 
 ## Euclidian distance (metric)
 
@@ -78,6 +77,8 @@ Euclidean d = $\sqrt{ (A_x-B_x)^2 + (A_y-B_y)^2}$.
 - **Side note**: also referred to as *$L_2$ norm*
 
 ## Euclidian distance in high dimensions
+
+This familiar concept from geometry extends directly into higher dimensions, which is essential for analyzing complex biological datasets.
 
 ```{r, echo = FALSE, message=FALSE}
 if(!require(tissuesGeneExpression)){
