@@ -73,7 +73,7 @@ library(AppStatBio)
     coefficients vary by leg pair?
 :::
 
-## Qualitative answers
+## Exploratory Data Analysis
 
 ```{r, echo=FALSE}
 url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/spider_wolff_gorb_2013.csv"
@@ -85,10 +85,22 @@ table(spider$leg,spider$type)
 summary(spider)
 ```
 
-```{r, fig.align='center'}
-boxplot(spider$friction ~ spider$type * spider$leg,
-        col=c("grey90","grey40"), las=2,
-        main="Friction coefficients of different leg pairs")
+## Re-create the boxplot
+
+```{r, fig.align='center', echo=FALSE, fig.cap="Boxplot of friction coefficients by leg type and leg pair"}
+library(ggplot2)
+ggplot(spider, aes(x = interaction(type, leg), y = friction, fill = type)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("grey90", "grey40")) +
+  labs(
+    x = NULL,  # Removes the x-axis title for a cleaner look like the original
+    y = "Friction"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), # Rotates x-axis labels
+    plot.title = element_text(hjust = 0.5), # Centers the plot title
+    legend.position = "none" # Hides the legend as it's redundant with the x-axis labels
+  )
 ```
 
 Notes:
@@ -247,6 +259,21 @@ print(fit.table, type="html")
 ```
 
 -   Interpretation of the dummy variables legL2, legL3, legL4 ?
+
+## Aside: beautiful regression tables using gt
+
+```{r, echo=TRUE, results="asis"}
+library(gtsummary)
+library(gt)
+regression_table <- tbl_regression(fit) |>
+  as_gt() |> # Convert to a gt object for more control
+  gt::tab_header(
+    title = "Linear Regression Model Summary",
+    subtitle = "Analysis of friction based on spider leg type and pair."
+  )
+print(regression_table)
+```
+
 
 ## Regression with multiple predictors
 
