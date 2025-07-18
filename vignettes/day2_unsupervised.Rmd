@@ -17,11 +17,6 @@ knitr::opts_chunk$set(
 library(AppStatBio)
 ```
 
-## Schematic of a typical scRNA-seq analysis workflow
-
-![Single-cell workflow](images/workflow.png)
-
-Each stage (separated by dashed lines) consists of a number of specific steps, many of which operate on and modify a SingleCellExperiment instance. ([original image](http://bioconductor.org/books/3.17/OSCA.intro/))
 
 ## Day 2 outline
 
@@ -31,6 +26,12 @@ Each stage (separated by dashed lines) consists of a number of specific steps, m
 - Principal Components Analysis and Singular Value Decomposition
 - Multidimensional Scaling
 - t-SNE and UMAP
+
+## Schematic of a typical scRNA-seq analysis workflow
+
+![Single-cell workflow](images/workflow.png)
+
+Each stage (separated by dashed lines) consists of a number of specific steps, many of which operate on and modify a SingleCellExperiment instance. ([original image](http://bioconductor.org/books/3.17/OSCA.intro/))
 
 ## Metrics and distances
 
@@ -132,10 +133,16 @@ t(matrix(1:3, ncol = 1)) %*% matrix(1:3, ncol = 1)
 
 ## Note about matrix algebra in R 
 
-* R is very efficient at matrix algebra
-* for very large matricies, see the:
-    + [Matrix](https://CRAN.R-project.org/package=Matrix) CRAN package (sparse matrices)
-    + [rhdf5](https://bioconductor.org/packages/rhdf5/) and [DelayedArray](https://bioconductor.org/packages/DelayedArray/) Bioconductor package (on-disk arrays)
+* "Stock" R may use an unoptimized `LAPACK` for matrix algebra. Large speed
+gains may be made by compiling against:
+    + [OpenBLAS](https://www.openblas.net/)
+    + [Intel Math Kernel Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onemkl.html)
+    + [Apple Accelerate Framework (macOS)](https://developer.apple.com/documentation/accelerate) (default for MacOS R binaries)
+    
+* for very large matricies, consider:
+    + setting the `nu` and `nv` arguments to the `svd()` function
+    + the [Matrix](https://CRAN.R-project.org/package=Matrix) CRAN package (sparse matrices)
+    + the [rhdf5](https://bioconductor.org/packages/rhdf5/) and [DelayedArray](https://bioconductor.org/packages/DelayedArray/) Bioconductor packages (on-disk arrays)
 
 ## 3 sample example
 
@@ -177,12 +184,13 @@ dist(
 
 ## Note on standardization
 
-- In practice, features (e.g. genes) are typically "standardized", *i.e.* converted to z-score:
+- In practice, features (e.g. genes) are typically "standardized", *i.e.* scaled and centered, *i.e.* converted to z-score:
 
 $$x_{gi} \leftarrow \frac{(x_{gi} - \bar{x}_g)}{s_g}$$
 
 - This is done because the differences in overall levels between features are often not due to biological effects but technical ones, *e.g.*:
     - GC bias, PCR amplification efficiency, ...
+- Also, usually only "highly variable genes" are used to avoid scaling noise
 
 ## Dimension reduction and PCA
 
