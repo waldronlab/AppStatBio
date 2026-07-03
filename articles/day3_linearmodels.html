@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Applied Statistics for High-throughput Biology: Session 3 • AppStatBio</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Applied Statistics for High-throughput Biology: Session 3">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">AppStatBio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.26.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/day1_intro.html">Applied Statistics for High-throughput Biology: Session 1</a></li>
-    <li><a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology: Session 2</a></li>
+    <li><a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology Session 2: Unsupervised Learning &amp; Dimensionality Reduction</a></li>
     <li><a class="dropdown-item" href="../articles/day3_linearmodels.html">Applied Statistics for High-throughput Biology: Session 3</a></li>
     <li><a class="dropdown-item" href="../articles/day4_batcheffects-vis.html">Applied Statistics for High-throughput Biology: Session 4</a></li>
   </ul>
@@ -160,7 +160,7 @@ coefficients vary by leg pair?</li>
 </div>
 </div>
 <div class="section level2">
-<h2 id="qualitative-answers">Qualitative answers<a class="anchor" aria-label="anchor" href="#qualitative-answers"></a>
+<h2 id="exploratory-data-analysis">Exploratory Data Analysis<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">spider</span><span class="op">$</span><span class="va">leg</span>,<span class="va">spider</span><span class="op">$</span><span class="va">type</span><span class="op">)</span></span>
@@ -171,18 +171,22 @@ coefficients vary by leg pair?</li>
 <span><span class="co">#&gt;   L3   52   52</span></span>
 <span><span class="co">#&gt;   L4   40   40</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">spider</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      leg                type              friction     </span></span>
-<span><span class="co">#&gt;  Length:282         Length:282         Min.   :0.1700  </span></span>
-<span><span class="co">#&gt;  Class :character   Class :character   1st Qu.:0.3900  </span></span>
-<span><span class="co">#&gt;  Mode  :character   Mode  :character   Median :0.7600  </span></span>
-<span><span class="co">#&gt;                                        Mean   :0.8217  </span></span>
-<span><span class="co">#&gt;                                        3rd Qu.:1.2400  </span></span>
-<span><span class="co">#&gt;                                        Max.   :1.8400</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html" class="external-link">boxplot</a></span><span class="op">(</span><span class="va">spider</span><span class="op">$</span><span class="va">friction</span> <span class="op">~</span> <span class="va">spider</span><span class="op">$</span><span class="va">type</span> <span class="op">*</span> <span class="va">spider</span><span class="op">$</span><span class="va">leg</span>,</span>
-<span>        col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey90"</span>,<span class="st">"grey40"</span><span class="op">)</span>, las<span class="op">=</span><span class="fl">2</span>,</span>
-<span>        main<span class="op">=</span><span class="st">"Friction coefficients of different leg pairs"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-4-1.png" width="700" style="display: block; margin: auto;"></p>
+<span><span class="co">#&gt;         leg             type        friction     </span></span>
+<span><span class="co">#&gt;  Length   :282   Length   :282   Min.   :0.1700  </span></span>
+<span><span class="co">#&gt;  N.unique :  4   N.unique :  2   1st Qu.:0.3900  </span></span>
+<span><span class="co">#&gt;  N.blank  :  0   N.blank  :  0   Median :0.7600  </span></span>
+<span><span class="co">#&gt;  Min.nchar:  2   Min.nchar:  4   Mean   :0.8217  </span></span>
+<span><span class="co">#&gt;  Max.nchar:  2   Max.nchar:  4   3rd Qu.:1.2400  </span></span>
+<span><span class="co">#&gt;                                  Max.   :1.8400</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="re-create-the-boxplot">Re-create the boxplot<a class="anchor" aria-label="anchor" href="#re-create-the-boxplot"></a>
+</h2>
+<div class="figure" style="text-align: center">
+<img src="day3_linearmodels_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="Boxplot of friction coefficients by leg type and leg pair" width="700"><p class="caption">
+Boxplot of friction coefficients by leg type and leg pair
+</p>
+</div>
 <p>Notes:</p>
 <ul>
 <li>Pulling friction is higher</li>
@@ -215,12 +219,12 @@ is a new transformed variable)</li>
 <li>Linear models can have any number of predictors</li>
 <li>Systematic part of model:</li>
 </ul>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">
 E[y|x] = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... + \beta_p x_p
 </annotation></semantics></math></p>
 <ul>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
 is the expected value of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 given
@@ -240,9 +244,9 @@ are the individual predictors or independent variables</li>
 are the regression coefficients</li>
 </ul>
 <p>Random part of model:</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i = E[y_i|x_i] + \epsilon_i</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mi>E</mi><mo stretchy="false" form="prefix">[</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">]</mo><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i = E[y_i|x_i] + \epsilon_i</annotation></semantics></math></p>
 <p>Assumptions of the linear regression model:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mover><mo>∼</mo><mrow><mi>i</mi><mi>i</mi><mi>d</mi></mrow></mover><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)</annotation></semantics></math></p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mover><mo>∼</mo><mrow><mi>i</mi><mi>i</mi><mi>d</mi></mrow></mover><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)</annotation></semantics></math></p>
 <ul>
 <li>Normal distribution</li>
 <li>Mean zero at every value of predictors</li>
@@ -277,7 +281,7 @@ to the reference category (“0”)
 <ul>
 <li>
 <em>e.g.</em>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mi>x</mi></mrow><annotation encoding="application/x-tex">E(y|x) = \beta_0 + \beta_1 x</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mi>x</mi></mrow><annotation encoding="application/x-tex">E(y|x) = \beta_0 + \beta_1 x</annotation></semantics></math>
 </li>
 <li>where x={ 1 if push friction, 0 if pull friction }</li>
 </ul>
@@ -347,7 +351,7 @@ of.”</li>
 <h2 id="return-to-the-spider-legs">Return to the spider legs<a class="anchor" aria-label="anchor" href="#return-to-the-spider-legs"></a>
 </h2>
 <p>Friction coefficient for leg type of first leg pair:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spider.sub</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">spider</span>, <span class="va">leg</span><span class="op">==</span><span class="st">"L1"</span><span class="op">)</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">friction</span> <span class="op">~</span> <span class="va">type</span>, data<span class="op">=</span><span class="va">spider.sub</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
@@ -375,7 +379,7 @@ of.”</li>
 </h2>
 <p>Regression coefficients for <code>friction ~ type</code> for first
 set of spider legs:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
 <span><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
@@ -401,13 +405,12 @@ calculated (standard errors)</li>
 <h2 id="interpretation-of-spider-leg-type-coefficients">Interpretation of spider leg type coefficients<a class="anchor" aria-label="anchor" href="#interpretation-of-spider-leg-type-coefficients"></a>
 </h2>
 <div class="figure">
-<img src="day3_linearmodels_files/figure-html/spider_main_coef-1.png" alt="Diagram of the estimated coefficients in the linear model. The green arrow indicates the Intercept term, which goes from zero to the mean of the reference group (here the 'pull' samples). The orange arrow indicates the difference between the push group and the pull group, which is negative in this example. The circles show the individual samples, jittered horizontally to avoid overplotting." width="700"><p class="caption">
+<img src="day3_linearmodels_files/figure-html/spider_main_coef-1.png" class="r-plt" alt="Diagram of the estimated coefficients in the linear model. The green dashed line indicates the Intercept term (mean of the reference group 'pull'). The orange dashed line indicates the push group mean. The solid green/orange segments explicitly show the intercept distance and the effect difference." width="700"><p class="caption">
 Diagram of the estimated coefficients in the linear model. The green
-arrow indicates the Intercept term, which goes from zero to the mean of
-the reference group (here the ‘pull’ samples). The orange arrow
-indicates the difference between the push group and the pull group,
-which is negative in this example. The circles show the individual
-samples, jittered horizontally to avoid overplotting.
+dashed line indicates the Intercept term (mean of the reference group
+‘pull’). The orange dashed line indicates the push group mean. The solid
+green/orange segments explicitly show the intercept distance and the
+effect difference.
 </p>
 </div>
 </div>
@@ -415,102 +418,327 @@ samples, jittered horizontally to avoid overplotting.
 <h2 id="regression-on-spider-leg-position">regression on spider leg <strong>position</strong><a class="anchor" aria-label="anchor" href="#regression-on-spider-leg-position"></a>
 </h2>
 <p>Remember there are positions 1-4</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">friction</span> <span class="op">~</span> <span class="va">leg</span>, data<span class="op">=</span><span class="va">spider</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
-<!-- html table generated in R 4.5.1 by xtable 1.8-4 package -->
-<!-- Mon Jul  7 13:03:47 2025 -->
-<table border="1" class="table">
-<tr>
-<th>
-</th>
-<th>
-Estimate
-</th>
-<th>
-Std. Error
-</th>
-<th>
-t value
-</th>
-<th>
-Pr(&gt;|t|)
-</th>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">0.664</td>
+<td align="right">0.054</td>
+<td align="right">12.338</td>
+<td align="right">0.000</td>
 </tr>
-<tr>
-<td align="right">
-(Intercept)
-</td>
-<td align="right">
-0.6644
-</td>
-<td align="right">
-0.0538
-</td>
-<td align="right">
-12.34
-</td>
-<td align="right">
-0.0000
-</td>
+<tr class="even">
+<td align="left">legL2</td>
+<td align="right">0.172</td>
+<td align="right">0.097</td>
+<td align="right">1.766</td>
+<td align="right">0.078</td>
 </tr>
-<tr>
-<td align="right">
-legL2
-</td>
-<td align="right">
-0.1719
-</td>
-<td align="right">
-0.0973
-</td>
-<td align="right">
-1.77
-</td>
-<td align="right">
-0.0784
-</td>
+<tr class="odd">
+<td align="left">legL3</td>
+<td align="right">0.160</td>
+<td align="right">0.069</td>
+<td align="right">2.318</td>
+<td align="right">0.021</td>
 </tr>
-<tr>
-<td align="right">
-legL3
-</td>
-<td align="right">
-0.1605
-</td>
-<td align="right">
-0.0693
-</td>
-<td align="right">
-2.32
-</td>
-<td align="right">
-0.0212
-</td>
+<tr class="even">
+<td align="left">legL4</td>
+<td align="right">0.281</td>
+<td align="right">0.073</td>
+<td align="right">3.841</td>
+<td align="right">0.000</td>
 </tr>
-<tr>
-<td align="right">
-legL4
-</td>
-<td align="right">
-0.2813
-</td>
-<td align="right">
-0.0732
-</td>
-<td align="right">
-3.84
-</td>
-<td align="right">
-0.0002
-</td>
-</tr>
+</tbody>
 </table>
 <ul>
 <li>Interpretation of the dummy variables legL2, legL3, legL4 ?</li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="aside-beautiful-regression-tables-using-gt">Aside: beautiful regression tables using gt<a class="anchor" aria-label="anchor" href="#aside-beautiful-regression-tables-using-gt"></a>
+</h2>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ddsjoberg/gtsummary" class="external-link">gtsummary</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com" class="external-link">gt</a></span><span class="op">)</span></span>
+<span><span class="va">regression_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_regression.html" class="external-link">tbl_regression</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/as_gt.html" class="external-link">as_gt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Convert to a gt object for more control</span></span>
+<span>  <span class="fu">gt</span><span class="fu">::</span><span class="fu"><a href="https://gt.rstudio.com/reference/tab_header.html" class="external-link">tab_header</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Linear Regression Model Summary"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Analysis of friction based on spider leg type and pair."</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">regression_table</span><span class="op">)</span></span></code></pre></div>
+<div id="lefoodfiee" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<p><style>#lefoodfiee table { font-family: system-ui, ‘Segoe UI’,
+Roboto, Helvetica, Arial, sans-serif, ‘Apple Color Emoji’, ‘Segoe UI
+Emoji’, ‘Segoe UI Symbol’, ‘Noto Color Emoji’; -webkit-font-smoothing:
+antialiased; -moz-osx-font-smoothing: grayscale; }</p>
+<p>#lefoodfiee thead, #lefoodfiee tbody, #lefoodfiee tfoot, #lefoodfiee
+tr, #lefoodfiee td, #lefoodfiee th { border-style: none; }</p>
+<p>#lefoodfiee p { margin: 0; padding: 0; }</p>
+<p>#lefoodfiee .gt_table { display: table; border-collapse: collapse;
+line-height: normal; margin-left: auto; margin-right: auto; color:
+#333333; font-size: 16px; font-weight: normal; font-style: normal;
+background-color: #FFFFFF; width: auto; border-top-style: solid;
+border-top-width: 2px; border-top-color: #A8A8A8; border-right-style:
+none; border-right-width: 2px; border-right-color: #D3D3D3;
+border-bottom-style: solid; border-bottom-width: 2px;
+border-bottom-color: #A8A8A8; border-left-style: none;
+border-left-width: 2px; border-left-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_caption { padding-top: 4px; padding-bottom: 4px;
+}</p>
+<p>#lefoodfiee .gt_title { color: #333333; font-size: 125%; font-weight:
+initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px;
+padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width:
+0; }</p>
+<p>#lefoodfiee .gt_subtitle { color: #333333; font-size: 85%;
+font-weight: initial; padding-top: 3px; padding-bottom: 5px;
+padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF;
+border-top-width: 0; }</p>
+<p>#lefoodfiee .gt_heading { background-color: #FFFFFF; text-align:
+center; border-bottom-color: #FFFFFF; border-left-style: none;
+border-left-width: 1px; border-left-color: #D3D3D3; border-right-style:
+none; border-right-width: 1px; border-right-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_bottom_border { border-bottom-style: solid;
+border-bottom-width: 2px; border-bottom-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_col_headings { border-top-style: solid;
+border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style:
+solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;
+border-left-style: none; border-left-width: 1px; border-left-color:
+#D3D3D3; border-right-style: none; border-right-width: 1px;
+border-right-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_col_heading { color: #333333; background-color:
+#FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit;
+border-left-style: none; border-left-width: 1px; border-left-color:
+#D3D3D3; border-right-style: none; border-right-width: 1px;
+border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px;
+padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x:
+hidden; }</p>
+<p>#lefoodfiee .gt_column_spanner_outer { color: #333333;
+background-color: #FFFFFF; font-size: 100%; font-weight: normal;
+text-transform: inherit; padding-top: 0; padding-bottom: 0;
+padding-left: 4px; padding-right: 4px; }</p>
+<p>#lefoodfiee .gt_column_spanner_outer:first-child { padding-left: 0;
+}</p>
+<p>#lefoodfiee .gt_column_spanner_outer:last-child { padding-right: 0;
+}</p>
+<p>#lefoodfiee .gt_column_spanner { border-bottom-style: solid;
+border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align:
+bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden;
+display: inline-block; width: 100%; }</p>
+<p>#lefoodfiee .gt_spanner_row { border-bottom-style: hidden; }</p>
+<p>#lefoodfiee .gt_group_heading { padding-top: 8px; padding-bottom:
+8px; padding-left: 5px; padding-right: 5px; color: #333333;
+background-color: #FFFFFF; font-size: 100%; font-weight: initial;
+text-transform: inherit; border-top-style: solid; border-top-width: 2px;
+border-top-color: #D3D3D3; border-bottom-style: solid;
+border-bottom-width: 2px; border-bottom-color: #D3D3D3;
+border-left-style: none; border-left-width: 1px; border-left-color:
+#D3D3D3; border-right-style: none; border-right-width: 1px;
+border-right-color: #D3D3D3; vertical-align: middle; text-align: left;
+}</p>
+<p>#lefoodfiee .gt_empty_group_heading { padding: 0.5px; color: #333333;
+background-color: #FFFFFF; font-size: 100%; font-weight: initial;
+border-top-style: solid; border-top-width: 2px; border-top-color:
+#D3D3D3; border-bottom-style: solid; border-bottom-width: 2px;
+border-bottom-color: #D3D3D3; vertical-align: middle; }</p>
+<p>#lefoodfiee .gt_from_md &gt; :first-child { margin-top: 0; }</p>
+<p>#lefoodfiee .gt_from_md &gt; :last-child { margin-bottom: 0; }</p>
+<p>#lefoodfiee .gt_row { padding-top: 8px; padding-bottom: 8px;
+padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style:
+solid; border-top-width: 1px; border-top-color: #D3D3D3;
+border-left-style: none; border-left-width: 1px; border-left-color:
+#D3D3D3; border-right-style: none; border-right-width: 1px;
+border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;
+}</p>
+<p>#lefoodfiee .gt_stub { color: #333333; background-color: #FFFFFF;
+font-size: 100%; font-weight: initial; text-transform: inherit;
+border-right-style: solid; border-right-width: 2px; border-right-color:
+#D3D3D3; padding-left: 5px; padding-right: 5px; }</p>
+<p>#lefoodfiee .gt_stub_row_group { color: #333333; background-color:
+#FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit;
+border-right-style: solid; border-right-width: 2px; border-right-color:
+#D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top;
+}</p>
+<p>#lefoodfiee .gt_row_group_first td { border-top-width: 2px; }</p>
+<p>#lefoodfiee .gt_row_group_first th { border-top-width: 2px; }</p>
+<p>#lefoodfiee .gt_summary_row { color: #333333; background-color:
+#FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px;
+padding-left: 5px; padding-right: 5px; }</p>
+<p>#lefoodfiee .gt_first_summary_row { border-top-style: solid;
+border-top-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_first_summary_row.thick { border-top-width: 2px;
+}</p>
+<p>#lefoodfiee .gt_last_summary_row { padding-top: 8px; padding-bottom:
+8px; padding-left: 5px; padding-right: 5px; border-bottom-style: solid;
+border-bottom-width: 2px; border-bottom-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_grand_summary_row { color: #333333; background-color:
+#FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px;
+padding-left: 5px; padding-right: 5px; }</p>
+<p>#lefoodfiee .gt_first_grand_summary_row { padding-top: 8px;
+padding-bottom: 8px; padding-left: 5px; padding-right: 5px;
+border-top-style: double; border-top-width: 6px; border-top-color:
+#D3D3D3; }</p>
+<p>#lefoodfiee .gt_last_grand_summary_row_top { padding-top: 8px;
+padding-bottom: 8px; padding-left: 5px; padding-right: 5px;
+border-bottom-style: double; border-bottom-width: 6px;
+border-bottom-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_striped { background-color: rgba(128, 128, 128,
+0.05); }</p>
+<p>#lefoodfiee .gt_table_body { border-top-style: solid;
+border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style:
+solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_footnotes { color: #333333; background-color:
+#FFFFFF; border-bottom-style: none; border-bottom-width: 2px;
+border-bottom-color: #D3D3D3; border-left-style: none;
+border-left-width: 2px; border-left-color: #D3D3D3; border-right-style:
+none; border-right-width: 2px; border-right-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_footnote { margin: 0px; font-size: 90%; padding-top:
+4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }</p>
+<p>#lefoodfiee .gt_sourcenotes { color: #333333; background-color:
+#FFFFFF; border-bottom-style: none; border-bottom-width: 2px;
+border-bottom-color: #D3D3D3; border-left-style: none;
+border-left-width: 2px; border-left-color: #D3D3D3; border-right-style:
+none; border-right-width: 2px; border-right-color: #D3D3D3; }</p>
+<p>#lefoodfiee .gt_sourcenote { font-size: 90%; padding-top: 4px;
+padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }</p>
+<p>#lefoodfiee .gt_left { text-align: left; }</p>
+<p>#lefoodfiee .gt_center { text-align: center; }</p>
+<p>#lefoodfiee .gt_right { text-align: right; font-variant-numeric:
+tabular-nums; }</p>
+<p>#lefoodfiee .gt_font_normal { font-weight: normal; }</p>
+<p>#lefoodfiee .gt_font_bold { font-weight: bold; }</p>
+<p>#lefoodfiee .gt_font_italic { font-style: italic; }</p>
+<p>#lefoodfiee .gt_super { font-size: 65%; }</p>
+<p>#lefoodfiee .gt_footnote_marks { font-size: 75%; vertical-align:
+0.4em; position: initial; }</p>
+<p>#lefoodfiee .gt_asterisk { font-size: 100%; vertical-align: 0; }</p>
+<p>#lefoodfiee .gt_indent_1 { text-indent: 5px; }</p>
+<p>#lefoodfiee .gt_indent_2 { text-indent: 10px; }</p>
+<p>#lefoodfiee .gt_indent_3 { text-indent: 15px; }</p>
+<p>#lefoodfiee .gt_indent_4 { text-indent: 20px; }</p>
+<p>#lefoodfiee .gt_indent_5 { text-indent: 25px; }</p>
+<p>#lefoodfiee .katex-display { display: inline-flex !important;
+margin-bottom: 0.75em !important; }</p>
+#lefoodfiee div.Reactable &gt; div.rt-table &gt; div.rt-thead &gt;
+div.rt-tr.rt-tr-group-header &gt; div.rt-th-group:after { height: 0px
+!important; } </style></p>
+<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading">
+<td colspan="4" class="gt_heading gt_title gt_font_normal" style>
+Linear Regression Model Summary
+</td>
+</tr>
+<tr class="gt_heading">
+<td colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>
+Analysis of friction based on spider leg type and pair.
+</td>
+</tr>
+<tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="label">
+<span class="gt_from_md"><strong>Characteristic</strong></span>
+</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="estimate">
+<span class="gt_from_md"><strong>Beta</strong></span>
+</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low">
+<span class="gt_from_md"><strong>95% CI</strong></span>
+</th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value">
+<span class="gt_from_md"><strong>p-value</strong></span>
+</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr>
+<td headers="label" class="gt_row gt_left">
+leg
+</td>
+<td headers="estimate" class="gt_row gt_center">
+<br>
+</td>
+<td headers="conf.low" class="gt_row gt_center">
+<br>
+</td>
+<td headers="p.value" class="gt_row gt_center">
+<br>
+</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">
+    L1
+</td>
+<td headers="estimate" class="gt_row gt_center">
+—
+</td>
+<td headers="conf.low" class="gt_row gt_center">
+—
+</td>
+<td headers="p.value" class="gt_row gt_center">
+<br>
+</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">
+    L2
+</td>
+<td headers="estimate" class="gt_row gt_center">
+0.17
+</td>
+<td headers="conf.low" class="gt_row gt_center">
+-0.02, 0.36
+</td>
+<td headers="p.value" class="gt_row gt_center">
+0.078
+</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">
+    L3
+</td>
+<td headers="estimate" class="gt_row gt_center">
+0.16
+</td>
+<td headers="conf.low" class="gt_row gt_center">
+0.02, 0.30
+</td>
+<td headers="p.value" class="gt_row gt_center">
+0.021
+</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">
+    L4
+</td>
+<td headers="estimate" class="gt_row gt_center">
+0.28
+</td>
+<td headers="conf.low" class="gt_row gt_center">
+0.14, 0.43
+</td>
+<td headers="p.value" class="gt_row gt_center">
+&lt;0.001
+</td>
+</tr>
+</tbody>
+<tfoot><tr class="gt_sourcenotes">
+<td class="gt_sourcenote" colspan="4">
+<span class="gt_from_md">Abbreviation: CI = Confidence Interval</span>
+</td>
+</tr></tfoot>
+</table>
+</div>
 </div>
 <div class="section level2">
 <h2 id="regression-with-multiple-predictors">Regression with multiple predictors<a class="anchor" aria-label="anchor" href="#regression-with-multiple-predictors"></a>
@@ -528,113 +756,518 @@ achieved by:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">friction</span> <span class="op">~</span> <span class="va">type</span> <span class="op">+</span> <span class="va">leg</span>, data<span class="op">=</span><span class="va">spider</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
-<!-- html table generated in R 4.5.1 by xtable 1.8-4 package -->
-<!-- Mon Jul  7 13:03:47 2025 -->
-<table border="1" class="table">
+<code class="sourceCode R"><span><span class="fu">gtsummary</span><span class="fu">::</span><span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_regression.html" class="external-link">tbl_regression</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+<div id="weytkovhgs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#weytkovhgs table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#weytkovhgs thead, #weytkovhgs tbody, #weytkovhgs tfoot, #weytkovhgs tr, #weytkovhgs td, #weytkovhgs th {
+  border-style: none;
+}
+
+#weytkovhgs p {
+  margin: 0;
+  padding: 0;
+}
+
+#weytkovhgs .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#weytkovhgs .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#weytkovhgs .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#weytkovhgs .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#weytkovhgs .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#weytkovhgs .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#weytkovhgs .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#weytkovhgs .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#weytkovhgs .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#weytkovhgs .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#weytkovhgs .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#weytkovhgs .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#weytkovhgs .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#weytkovhgs .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#weytkovhgs .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#weytkovhgs .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#weytkovhgs .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#weytkovhgs .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#weytkovhgs .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#weytkovhgs .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#weytkovhgs .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#weytkovhgs .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#weytkovhgs .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#weytkovhgs .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#weytkovhgs .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#weytkovhgs .gt_left {
+  text-align: left;
+}
+
+#weytkovhgs .gt_center {
+  text-align: center;
+}
+
+#weytkovhgs .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#weytkovhgs .gt_font_normal {
+  font-weight: normal;
+}
+
+#weytkovhgs .gt_font_bold {
+  font-weight: bold;
+}
+
+#weytkovhgs .gt_font_italic {
+  font-style: italic;
+}
+
+#weytkovhgs .gt_super {
+  font-size: 65%;
+}
+
+#weytkovhgs .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#weytkovhgs .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#weytkovhgs .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#weytkovhgs .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#weytkovhgs .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#weytkovhgs .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#weytkovhgs .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#weytkovhgs .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#weytkovhgs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead><tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Characteristic</strong></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="estimate"><span class="gt_from_md"><strong>Beta</strong></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low"><span class="gt_from_md"><strong>95% CI</strong></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value"><span class="gt_from_md"><strong>p-value</strong></span></th>
+    </tr></thead>
+<tbody class="gt_table_body">
 <tr>
-<th>
-</th>
-<th>
-Estimate
-</th>
-<th>
-Std. Error
-</th>
-<th>
-t value
-</th>
-<th>
-Pr(&gt;|t|)
-</th>
+<td headers="label" class="gt_row gt_left">type</td>
+<td headers="estimate" class="gt_row gt_center"><br></td>
+<td headers="conf.low" class="gt_row gt_center"><br></td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td align="right">
-(Intercept)
-</td>
-<td align="right">
-1.0539
-</td>
-<td align="right">
-0.0282
-</td>
-<td align="right">
-37.43
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    pull</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="conf.low" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td align="right">
-typepush
-</td>
-<td align="right">
--0.7790
-</td>
-<td align="right">
-0.0248
-</td>
-<td align="right">
--31.38
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    push</td>
+<td headers="estimate" class="gt_row gt_center">-0.78</td>
+<td headers="conf.low" class="gt_row gt_center">-0.83, -0.73</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td align="right">
-legL2
-</td>
-<td align="right">
-0.1719
-</td>
-<td align="right">
-0.0457
-</td>
-<td align="right">
-3.76
-</td>
-<td align="right">
-0.0002
-</td>
+<td headers="label" class="gt_row gt_left">leg</td>
+<td headers="estimate" class="gt_row gt_center"><br></td>
+<td headers="conf.low" class="gt_row gt_center"><br></td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td align="right">
-legL3
-</td>
-<td align="right">
-0.1605
-</td>
-<td align="right">
-0.0325
-</td>
-<td align="right">
-4.94
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    L1</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="conf.low" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td align="right">
-legL4
-</td>
-<td align="right">
-0.2813
-</td>
-<td align="right">
-0.0344
-</td>
-<td align="right">
-8.18
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    L2</td>
+<td headers="estimate" class="gt_row gt_center">0.17</td>
+<td headers="conf.low" class="gt_row gt_center">0.08, 0.26</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    L3</td>
+<td headers="estimate" class="gt_row gt_center">0.16</td>
+<td headers="conf.low" class="gt_row gt_center">0.10, 0.22</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    L4</td>
+<td headers="estimate" class="gt_row gt_center">0.28</td>
+<td headers="conf.low" class="gt_row gt_center">0.21, 0.35</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
+</tr>
+</tbody>
+<tfoot><tr class="gt_sourcenotes">
+<td class="gt_sourcenote" colspan="4"><span class="gt_from_md">Abbreviation: CI = Confidence Interval</span></td>
+    </tr></tfoot>
 </table>
+</div>
 <ul>
 <li>this model still doesn’t represent how the friction differences
 between different leg positions are modified by whether it is pulling or
@@ -645,7 +1278,7 @@ pushing</li>
 <h2 id="interaction-effect-modification">Interaction (effect modification)<a class="anchor" aria-label="anchor" href="#interaction-effect-modification"></a>
 </h2>
 <p>Interaction is modeled as the product of two covariates:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><msub><mi>β</mi><mn>12</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>*</mo><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><msub><mi>β</mi><mn>12</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>*</mo><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">
 E[y|x] = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{12} x_1*x_2
 </annotation></semantics></math></p>
 <div class="float">
@@ -660,164 +1293,542 @@ performance</div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">friction</span> <span class="op">~</span> <span class="va">type</span> <span class="op">*</span> <span class="va">leg</span>, data<span class="op">=</span><span class="va">spider</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit.table</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">fit</span>, label<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.table</span>, type<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code></pre></div>
-<!-- html table generated in R 4.5.1 by xtable 1.8-4 package -->
-<!-- Mon Jul  7 13:03:47 2025 -->
-<table border="1" class="table">
+<code class="sourceCode R"><span><span class="fu">gtsummary</span><span class="fu">::</span><span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_regression.html" class="external-link">tbl_regression</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+<div id="ayrcpilmne" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ayrcpilmne table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ayrcpilmne thead, #ayrcpilmne tbody, #ayrcpilmne tfoot, #ayrcpilmne tr, #ayrcpilmne td, #ayrcpilmne th {
+  border-style: none;
+}
+
+#ayrcpilmne p {
+  margin: 0;
+  padding: 0;
+}
+
+#ayrcpilmne .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ayrcpilmne .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ayrcpilmne .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ayrcpilmne .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ayrcpilmne .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ayrcpilmne .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ayrcpilmne .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ayrcpilmne .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ayrcpilmne .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ayrcpilmne .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ayrcpilmne .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ayrcpilmne .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ayrcpilmne .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ayrcpilmne .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ayrcpilmne .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ayrcpilmne .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ayrcpilmne .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ayrcpilmne .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ayrcpilmne .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ayrcpilmne .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ayrcpilmne .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ayrcpilmne .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ayrcpilmne .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ayrcpilmne .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ayrcpilmne .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ayrcpilmne .gt_left {
+  text-align: left;
+}
+
+#ayrcpilmne .gt_center {
+  text-align: center;
+}
+
+#ayrcpilmne .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ayrcpilmne .gt_font_normal {
+  font-weight: normal;
+}
+
+#ayrcpilmne .gt_font_bold {
+  font-weight: bold;
+}
+
+#ayrcpilmne .gt_font_italic {
+  font-style: italic;
+}
+
+#ayrcpilmne .gt_super {
+  font-size: 65%;
+}
+
+#ayrcpilmne .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ayrcpilmne .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ayrcpilmne .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ayrcpilmne .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ayrcpilmne .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ayrcpilmne .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ayrcpilmne .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ayrcpilmne .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ayrcpilmne div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead><tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Characteristic</strong></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="estimate"><span class="gt_from_md"><strong>Beta</strong></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="conf.low"><span class="gt_from_md"><strong>95% CI</strong></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value"><span class="gt_from_md"><strong>p-value</strong></span></th>
+    </tr></thead>
+<tbody class="gt_table_body">
 <tr>
-<th>
-</th>
-<th>
-Estimate
-</th>
-<th>
-Std. Error
-</th>
-<th>
-t value
-</th>
-<th>
-Pr(&gt;|t|)
-</th>
+<td headers="label" class="gt_row gt_left">type</td>
+<td headers="estimate" class="gt_row gt_center"><br></td>
+<td headers="conf.low" class="gt_row gt_center"><br></td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td align="right">
-(Intercept)
-</td>
-<td align="right">
-0.9215
-</td>
-<td align="right">
-0.0327
-</td>
-<td align="right">
-28.21
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    pull</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="conf.low" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td align="right">
-typepush
-</td>
-<td align="right">
--0.5141
-</td>
-<td align="right">
-0.0462
-</td>
-<td align="right">
--11.13
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    push</td>
+<td headers="estimate" class="gt_row gt_center">-0.51</td>
+<td headers="conf.low" class="gt_row gt_center">-0.61, -0.42</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td align="right">
-legL2
-</td>
-<td align="right">
-0.2239
-</td>
-<td align="right">
-0.0590
-</td>
-<td align="right">
-3.79
-</td>
-<td align="right">
-0.0002
-</td>
+<td headers="label" class="gt_row gt_left">leg</td>
+<td headers="estimate" class="gt_row gt_center"><br></td>
+<td headers="conf.low" class="gt_row gt_center"><br></td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td align="right">
-legL3
-</td>
-<td align="right">
-0.3524
-</td>
-<td align="right">
-0.0420
-</td>
-<td align="right">
-8.39
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    L1</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="conf.low" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td align="right">
-legL4
-</td>
-<td align="right">
-0.4793
-</td>
-<td align="right">
-0.0444
-</td>
-<td align="right">
-10.79
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    L2</td>
+<td headers="estimate" class="gt_row gt_center">0.22</td>
+<td headers="conf.low" class="gt_row gt_center">0.11, 0.34</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td align="right">
-typepush:legL2
-</td>
-<td align="right">
--0.1039
-</td>
-<td align="right">
-0.0835
-</td>
-<td align="right">
--1.24
-</td>
-<td align="right">
-0.2144
-</td>
+<td headers="label" class="gt_row gt_left">    L3</td>
+<td headers="estimate" class="gt_row gt_center">0.35</td>
+<td headers="conf.low" class="gt_row gt_center">0.27, 0.44</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td align="right">
-typepush:legL3
-</td>
-<td align="right">
--0.3838
-</td>
-<td align="right">
-0.0594
-</td>
-<td align="right">
--6.46
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">    L4</td>
+<td headers="estimate" class="gt_row gt_center">0.48</td>
+<td headers="conf.low" class="gt_row gt_center">0.39, 0.57</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
 </tr>
 <tr>
-<td align="right">
-typepush:legL4
-</td>
-<td align="right">
--0.3959
-</td>
-<td align="right">
-0.0628
-</td>
-<td align="right">
--6.30
-</td>
-<td align="right">
-0.0000
-</td>
+<td headers="label" class="gt_row gt_left">type * leg</td>
+<td headers="estimate" class="gt_row gt_center"><br></td>
+<td headers="conf.low" class="gt_row gt_center"><br></td>
+<td headers="p.value" class="gt_row gt_center"><br></td>
 </tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    push * L2</td>
+<td headers="estimate" class="gt_row gt_center">-0.10</td>
+<td headers="conf.low" class="gt_row gt_center">-0.27, 0.06</td>
+<td headers="p.value" class="gt_row gt_center">0.2</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    push * L3</td>
+<td headers="estimate" class="gt_row gt_center">-0.38</td>
+<td headers="conf.low" class="gt_row gt_center">-0.50, -0.27</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    push * L4</td>
+<td headers="estimate" class="gt_row gt_center">-0.40</td>
+<td headers="conf.low" class="gt_row gt_center">-0.52, -0.27</td>
+<td headers="p.value" class="gt_row gt_center">&lt;0.001</td>
+</tr>
+</tbody>
+<tfoot><tr class="gt_sourcenotes">
+<td class="gt_sourcenote" colspan="4"><span class="gt_from_md">Abbreviation: CI = Confidence Interval</span></td>
+    </tr></tfoot>
 </table>
+</div>
 </div>
 <div class="section level2">
 <h2 id="model-formulae-contd">Model formulae (cont’d)<a class="anchor" aria-label="anchor" href="#model-formulae-contd"></a>
@@ -904,7 +1915,7 @@ not needed</li>
 <div class="section level2">
 <h2 id="components-of-a-glm">Components of a GLM<a class="anchor" aria-label="anchor" href="#components-of-a-glm"></a>
 </h2>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
 g\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}
 </annotation></semantics></math></p>
 <ul>
@@ -922,7 +1933,7 @@ distributions</li>
 predictors (linear predictor)</li>
 <li>
 <strong>Link</strong> [denoted by
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>.</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(.)</annotation></semantics></math>]
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>.</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(.)</annotation></semantics></math>]
 specifies the relationship between the expected value of the random
 component and the systematic component
 <ul>
@@ -937,16 +1948,16 @@ component and the systematic component
 <ul>
 <li><p>Useful for log-transformed microarray data</p></li>
 <li><p><strong>The model</strong>:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i = E[y|x] + \epsilon_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi} + \epsilon_i</annotation></semantics></math></p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i = E[y|x] + \epsilon_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi} + \epsilon_i</annotation></semantics></math></p></li>
 <li><p><strong>Random component</strong> of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">y_i</annotation></semantics></math>
 is normally distributed:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mover><mo>∼</mo><mrow><mi>i</mi><mi>i</mi><mi>d</mi></mrow></mover><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)</annotation></semantics></math></p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mover><mo>∼</mo><mrow><mi>i</mi><mi>i</mi><mi>d</mi></mrow></mover><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\epsilon_i \stackrel{iid}{\sim} N(0, \sigma_\epsilon^2)</annotation></semantics></math></p></li>
 <li><p><strong>Systematic component</strong> (linear predictor):
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}</annotation></semantics></math></p></li>
 <li><p><strong>Link function</strong> here is the <em>identity
 link</em>:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(E(y | x)) = E(y | x)</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>E</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>E</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(E(y | x)) = E(y | x)</annotation></semantics></math>.
 We are modeling the mean directly, no transformation.</p></li>
 </ul>
 </div>
@@ -957,7 +1968,7 @@ We are modeling the mean directly, no transformation.</p></li>
 <li><p>Useful for binary outcomes, e.g. Single Nucleotide Polymorphisms
 or somatic variants</p></li>
 <li><p><strong>The model</strong>:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mn>1</mn><mo>−</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>1</mn><mo>−</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
 Logit(P(x)) = log \left( \frac{P(x)}{1-P(x)} \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}
 </annotation></semantics></math></p></li>
 <li><p><strong>Random component</strong>:
@@ -970,10 +1981,10 @@ follows a Binomial distribution (outcome is a binary variable)</p></li>
 <li><p><strong>Link function</strong>: <em>logit</em> (log of the odds
 that the event occurs)</p></li>
 </ul>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mn>1</mn><mo>−</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>1</mn><mo>−</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 g(P(x)) = logit(P(x)) = log\left( \frac{P(x)}{1-P(x)} \right)
 </annotation></semantics></math></p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>g</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 P(x) = g^{-1}\left( \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi}
  \right)
 </annotation></semantics></math></p>
@@ -982,7 +1993,7 @@ P(x) = g^{-1}\left( \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_
 <h2 id="log-linear-glm">Log-linear GLM<a class="anchor" aria-label="anchor" href="#log-linear-glm"></a>
 </h2>
 <p>The systematic part of the GLM is:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo>+</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msub><mi>x</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>β</mi><mi>p</mi></msub><msub><mi>x</mi><mrow><mi>p</mi><mi>i</mi></mrow></msub><mo>+</mo><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 log\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_p x_{pi} + log(t_i)
 </annotation></semantics></math></p>
 <ul>
@@ -990,7 +2001,7 @@ log\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \be
 <ul>
 <li>can account for differences in sequencing depth by an
 <em>offset</em>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">log(t_i)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">log(t_i)</annotation></semantics></math>
 </li>
 <li>guarantees non-negative expected number of counts</li>
 <li>often used in conjunction with <strong>Poisson</strong> or
@@ -1002,7 +2013,7 @@ log\left( E[y|x] \right) = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \be
 <div class="section level2">
 <h2 id="poisson-error-model">Poisson error model<a class="anchor" aria-label="anchor" href="#poisson-error-model"></a>
 </h2>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>λ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>λ</mi></mrow></msup><mfrac><msup><mi>λ</mi><mi>k</mi></msup><mrow><mi>k</mi><mi>!</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>λ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>e</mi><mrow><mi>−</mi><mi>λ</mi></mrow></msup><mfrac><msup><mi>λ</mi><mi>k</mi></msup><mrow><mi>k</mi><mi>!</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 f(k, \lambda) = e^{-\lambda} \frac{\lambda^k}{k!}
 </annotation></semantics></math></p>
 <ul>
@@ -1014,7 +2025,7 @@ events (e.g. # of reads counted), and</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
 is the mean number of events, so
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
 </li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
@@ -1028,7 +2039,7 @@ is also the variance of the number of events</li>
 <li>
 <em>aka</em> gamma–Poisson mixture distribution</li>
 </ul>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>λ</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mn>1</mn><mo>+</mo><mi>θ</mi><mi>k</mi></mrow><mi>θ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>k</mi><mi>!</mi><mspace width="0.167em"></mspace><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>θ</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>θ</mi><mi>m</mi></mrow><mrow><mn>1</mn><mo>+</mo><mi>θ</mi><mi>m</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>k</mi></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>θ</mi><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>θ</mi></msup><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">for </mtext><mspace width="0.333em"></mspace></mrow><mi>k</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>λ</mi><mo>,</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mfrac><mrow><mn>1</mn><mo>+</mo><mi>θ</mi><mi>k</mi></mrow><mi>θ</mi></mfrac><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>k</mi><mi>!</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">Γ</mi><mo stretchy="false" form="prefix">(</mo><mfrac><mn>1</mn><mi>θ</mi></mfrac><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>θ</mi><mi>m</mi></mrow><mrow><mn>1</mn><mo>+</mo><mi>θ</mi><mi>m</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>k</mi></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>θ</mi><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>θ</mi></msup><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">for </mtext><mspace width="0.333em"></mspace></mrow><mi>k</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi></mrow><annotation encoding="application/x-tex">
 f(k, \lambda, \theta) = \frac{\Gamma(\frac{1 + \theta k}{\theta})}{k! \, \Gamma(\frac{1}{\theta})} 
     \left(\frac{\theta m}{1+\theta m}\right)^k 
     \left(1+\theta m\right)^\theta
@@ -1043,7 +2054,7 @@ events (e.g. # of reads counted),</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>
 is still the mean number of events, so
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">E[y|x]</annotation></semantics></math>
 </li>
 <li>An additional <strong>dispersion parameter</strong>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
@@ -1074,7 +2085,7 @@ parameters:
 </ol>
 </li>
 </ul>
-<p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="day3_linearmodels_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="additive-vs--multiplicative-models">Additive vs. multiplicative models<a class="anchor" aria-label="anchor" href="#additive-vs--multiplicative-models"></a>
@@ -1091,7 +2102,7 @@ parameters:
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x_2=1</annotation></semantics></math>,
 this adds 3.0 to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">E(y|x)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">E(y|x)</annotation></semantics></math>
 </li>
 </ul>
 </li>
@@ -1102,14 +2113,14 @@ this adds 3.0 to
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x_2=1</annotation></semantics></math>,
 this adds 3.0 to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mi>P</mi><mrow><mn>1</mn><mo>−</mo><mi>P</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">log(\frac{P}{1-P})</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mfrac><mi>P</mi><mrow><mn>1</mn><mo>−</mo><mi>P</mi></mrow></mfrac><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">log(\frac{P}{1-P})</annotation></semantics></math>
 </li>
 <li>Odds-ratio
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mi>P</mi><mrow><mn>1</mn><mo>−</mo><mi>P</mi></mrow></mfrac><annotation encoding="application/x-tex">\frac{P}{1-P}</annotation></semantics></math>
 increases 20-fold:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1.5</mn><mo>+</mo><mn>1.5</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">exp(1.5+1.5)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mn>1.5</mn><mo>+</mo><mn>1.5</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">exp(1.5+1.5)</annotation></semantics></math>
 or
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1.5</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>*</mo><mi>e</mi><mi>x</mi><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1.5</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">exp(1.5) * exp(1.5)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mn>1.5</mn><mo stretchy="false" form="postfix">)</mo><mo>*</mo><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mn>1.5</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">exp(1.5) * exp(1.5)</annotation></semantics></math>
 </li>
 </ul>
 </li>
@@ -1196,7 +2207,7 @@ that satisfies:
 </li>
 </ol>
 <div class="figure" style="text-align: center">
-<img src="images/fig-testing-awpvvisfdr-1.png" alt="Benjamini-Hochberg FDR, visually" width="49%" height="20%"><img src="images/fig-testing-BH-1.png" alt="Benjamini-Hochberg FDR, visually" width="49%" height="20%"><p class="caption">
+<img src="images/fig-testing-awpvvisfdr-1.png" class="r-plt" alt="Benjamini-Hochberg FDR, visually" width="49%" height="20%"><img src="images/fig-testing-BH-1.png" class="r-plt" alt="Benjamini-Hochberg FDR, visually" width="49%" height="20%"><p class="caption">
 Benjamini-Hochberg FDR, visually
 </p>
 </div>
@@ -1323,10 +2334,10 @@ multi’omic technology?</li>
 <h2 id="links">Links<a class="anchor" aria-label="anchor" href="#links"></a>
 </h2>
 <ul>
-<li>A built <a href="https://rpubs.com/lwaldron/AppStatBio2023_day3" class="external-link">html</a> version
-of this lecture is available.</li>
-<li>The <a href="https://github.com/waldronlab/AppStatBio" class="external-link">source</a> R
-Markdown is available from Github.</li>
+<li>A built <a href="https://waldronlab.io/AppStatBio/articles/day3_linearmodels.html" class="external-link">html</a>
+version of this lecture is available.</li>
+<li>The <a href="https://github.com/waldronlab/AppStatBio/blob/main/vignettes/day3_linearmodels.Rmd" class="external-link">source</a>
+R Markdown is available from Github.</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -1340,7 +2351,7 @@ Markdown is available from Github.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

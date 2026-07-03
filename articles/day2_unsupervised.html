@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Applied Statistics for High-throughput Biology: Session 2 • AppStatBio</title>
+<title>Applied Statistics for High-throughput Biology Session 2: Unsupervised Learning &amp; Dimensionality Reduction • AppStatBio</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Applied Statistics for High-throughput Biology: Session 2">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Applied Statistics for High-throughput Biology Session 2: Unsupervised Learning &amp; Dimensionality Reduction">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">AppStatBio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.26.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/day1_intro.html">Applied Statistics for High-throughput Biology: Session 1</a></li>
-    <li><a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology: Session 2</a></li>
+    <li><a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology Session 2: Unsupervised Learning &amp; Dimensionality Reduction</a></li>
     <li><a class="dropdown-item" href="../articles/day3_linearmodels.html">Applied Statistics for High-throughput Biology: Session 3</a></li>
     <li><a class="dropdown-item" href="../articles/day4_batcheffects-vis.html">Applied Statistics for High-throughput Biology: Session 4</a></li>
   </ul>
@@ -57,7 +57,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Applied Statistics for High-throughput Biology: Session 2</h1>
+      <h1>Applied Statistics for High-throughput Biology Session 2: Unsupervised Learning &amp; Dimensionality Reduction</h1>
                         <h4 data-toc-skip class="author">Levi
 Waldron</h4>
             
@@ -68,17 +68,6 @@ Waldron</h4>
 
     
     
-<div class="section level2">
-<h2 id="schematic-of-a-typical-scrna-seq-analysis-workflow">Schematic of a typical scRNA-seq analysis workflow<a class="anchor" aria-label="anchor" href="#schematic-of-a-typical-scrna-seq-analysis-workflow"></a>
-</h2>
-<div class="float">
-<img src="images/workflow.png" alt="Single-cell workflow"><div class="figcaption">Single-cell workflow</div>
-</div>
-<p>Each stage (separated by dashed lines) consists of a number of
-specific steps, many of which operate on and modify a
-SingleCellExperiment instance. (<a href="http://bioconductor.org/books/3.17/OSCA.intro/" class="external-link">original
-image</a>)</p>
-</div>
 <div class="section level2">
 <h2 id="day-2-outline">Day 2 outline<a class="anchor" aria-label="anchor" href="#day-2-outline"></a>
 </h2>
@@ -92,43 +81,51 @@ image</a>)</p>
 </ul>
 </div>
 <div class="section level2">
+<h2 id="schematic-of-a-typical-scrna-seq-analysis-workflow">Schematic of a typical scRNA-seq analysis workflow<a class="anchor" aria-label="anchor" href="#schematic-of-a-typical-scrna-seq-analysis-workflow"></a>
+</h2>
+<div class="float">
+<img src="images/workflow.png" alt="Single-cell workflow"><div class="figcaption">Single-cell workflow</div>
+</div>
+<p>Each stage (separated by dashed lines) consists of a number of
+specific steps, many of which operate on and modify a
+SingleCellExperiment instance. (<a href="http://bioconductor.org/books/3.17/OSCA.intro/" class="external-link">original
+image</a>)</p>
+</div>
+<div class="section level2">
 <h2 id="metrics-and-distances">Metrics and distances<a class="anchor" aria-label="anchor" href="#metrics-and-distances"></a>
 </h2>
-<p>A <strong>metric</strong> satisfies the following five
-properties:</p>
+<p>A <strong>metric</strong> is a function that defines a distance
+between elements of a set and satisfies five key properties:</p>
 <ol style="list-style-type: decimal">
-<li>non-negativity
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">d(a, b) \ge 0</annotation></semantics></math>
-</li>
-<li>symmetry
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo>,</mo><mi>a</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d(a, b) = d(b, a)</annotation></semantics></math>
-</li>
-<li>identification mark
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>a</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">d(a, a) = 0</annotation></semantics></math>
-</li>
-<li>definiteness
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">d(a, b) = 0</annotation></semantics></math>
-if and only if
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a=b</annotation></semantics></math>
-</li>
-<li>triangle inequality
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d(a, b) + d(b, c) \ge d(a, c)</annotation></semantics></math>
-</li>
+<li>
+<strong>Non-negativity:</strong> The distance from point A to point
+B is always non-negative
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">d(a, b) \ge 0</annotation></semantics></math>).</li>
+<li>
+<strong>Symmetry:</strong> The distance from A to B is the same as
+the distance from B to A
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo>,</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">d(a, b) = d(b, a)</annotation></semantics></math>).</li>
+<li>
+<strong>Identity of indiscernibles:</strong> The distance from a
+point to itself is zero
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">d(a, a) = 0</annotation></semantics></math>).</li>
+<li>
+<strong>Definiteness:</strong> The distance is zero if and only if
+the points are the same
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn><mo>⇔</mo><mi>a</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">d(a, b) = 0 \iff a=b</annotation></semantics></math>).</li>
+<li>
+<strong>Triangle Inequality:</strong> The distance from A to C is
+never greater than the sum of the distances from A to B and B to C
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mo>≤</mo><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo>,</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">d(a, c) \le d(a, b) + d(b, c)</annotation></semantics></math>).</li>
 </ol>
 <ul>
-<li>A <strong>distance</strong> is only required to satisfy 1-3.</li>
-<li>A <strong>similarity function</strong> satisfies 1-2, and
-<strong>increases</strong> as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
-become more similar</li>
-<li>A <strong>dissimilarity function</strong> satisfies 1-2, and
-<strong>decreases</strong> as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
-become more similar</li>
+<li>A <strong>distance</strong> is a more general term, typically
+required to satisfy only the first three properties.</li>
+<li>A <strong>similarity function</strong> also satisfies non-negativity
+and symmetry, but its value <strong>increases</strong> as two objects
+become more alike.</li>
+<li>A <strong>dissimilarity function</strong> is similar, but its value
+<strong>decreases</strong> as objects become more alike.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -136,9 +133,9 @@ become more similar</li>
 </h2>
 <ul>
 <li>Remember grade school:
-<img src="day2_unsupervised_files/figure-html/unnamed-chunk-2-1.png" width="700"><center>
+<img src="day2_unsupervised_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="700"><center>
 Euclidean d =
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>A</mi><mi>x</mi></msub><mo>−</mo><msub><mi>B</mi><mi>x</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>A</mi><mi>y</mi></msub><mo>−</mo><msub><mi>B</mi><mi>y</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow></msqrt><annotation encoding="application/x-tex">\sqrt{ (A_x-B_x)^2 + (A_y-B_y)^2}</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>A</mi><mi>x</mi></msub><mo>−</mo><msub><mi>B</mi><mi>x</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>A</mi><mi>y</mi></msub><mo>−</mo><msub><mi>B</mi><mi>y</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow></msqrt><annotation encoding="application/x-tex">\sqrt{ (A_x-B_x)^2 + (A_y-B_y)^2}</annotation></semantics></math>.
 </center>
 </li>
 <li>
@@ -151,16 +148,25 @@ norm</em>
 <div class="section level2">
 <h2 id="euclidian-distance-in-high-dimensions">Euclidian distance in high dimensions<a class="anchor" aria-label="anchor" href="#euclidian-distance-in-high-dimensions"></a>
 </h2>
+<p>This familiar concept from geometry extends directly into higher
+dimensions, which is essential for analyzing complex biological
+datasets.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## BiocManager::install("genomicsclass/tissuesGeneExpression") #if needed</span></span>
 <span><span class="co">## BiocManager::install("genomicsclass/GSE5859") #if needed</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">GSE5859</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">tissuesGeneExpression</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tissuesGeneExpression</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="co">##gene expression data</span></span>
+<span></span>
+<span><span class="co"># Modern approach: store expression and metadata together</span></span>
+<span><span class="va">sce</span> <span class="op">&lt;-</span> <span class="fu">SingleCellExperiment</span><span class="op">(</span></span>
+<span>  assays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>logcounts <span class="op">=</span> <span class="va">e</span><span class="op">)</span>,</span>
+<span>  colData <span class="op">=</span> <span class="fu">S4Vectors</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/DataFrame-class.html" class="external-link">DataFrame</a></span><span class="op">(</span>tissue <span class="op">=</span> <span class="va">tissue</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">sce</span><span class="op">)</span> <span class="co">## gene expression data</span></span>
 <span><span class="co">#&gt; [1] 22215   189</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">tissue</span><span class="op">)</span> <span class="co">##tissue[i] corresponds to e[,i]</span></span>
-<span><span class="co">#&gt; tissue</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">sce</span><span class="op">$</span><span class="va">tissue</span><span class="op">)</span> <span class="co">## samples per tissue</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  cerebellum       colon endometrium hippocampus      kidney       liver </span></span>
 <span><span class="co">#&gt;          38          34          15          31          39          26 </span></span>
 <span><span class="co">#&gt;    placenta </span></span>
@@ -178,11 +184,11 @@ norm</em>
 <li>sample
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 is defined by a point in 22,215 dimensional space:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mrow><mn>1</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>Y</mi><mrow><mn>22215</mn><mo>,</mo><mi>i</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><annotation encoding="application/x-tex">(Y_{1,i},\dots,Y_{22215,i})^\top</annotation></semantics></math>.</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mrow><mn>1</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>Y</mi><mrow><mn>22215</mn><mo>,</mo><mi>i</mi></mrow></msub><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup></mrow><annotation encoding="application/x-tex">(Y_{1,i},\dots,Y_{22215,i})^\top</annotation></semantics></math>.</li>
 <li>feature
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>
 is defined by a point in 189 dimensions
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mn>189</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mn>189</mn></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><annotation encoding="application/x-tex">(Y_{g,189},\dots,Y_{g,189})^\top</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mn>189</mn></mrow></msub><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup></mrow><annotation encoding="application/x-tex">(Y_{g,1},\dots,Y_{g,189})^\top</annotation></semantics></math>
 </li>
 </ul>
 </li>
@@ -193,13 +199,18 @@ two samples
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
 is:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><munderover><mo>∑</mo><mrow><mi>g</mi><mo>=</mo><mn>1</mn></mrow><mn>22215</mn></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>−</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex"> \mbox{dist}(i,j) = \sqrt{ \sum_{g=1}^{22215} (Y_{g,i}-Y_{g,j })^2 } </annotation></semantics></math></p>
-<p>and the distance between two features
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">dist</mtext><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msqrt><mrow><munder><mo>∑</mo><mi>g</mi></munder><mo stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>−</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mi>j</mi></mrow></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex"> \text{dist}(i,j) = \sqrt{ \sum_{g} (Y_{g,i}-Y_{g,j})^2 } </annotation></semantics></math></p>
+<p>where the sum runs over all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mn>22215</mn></mrow><annotation encoding="application/x-tex">g = 1, \dots, 22215</annotation></semantics></math>
+genes, and the distance between two features
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>
 is:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>h</mi><mo>,</mo><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>189</mn></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mrow><mi>h</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>−</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mi>i</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex"> \mbox{dist}(h,g) = \sqrt{ \sum_{i=1}^{189} (Y_{h,i}-Y_{g,i})^2 } </annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">dist</mtext><mo stretchy="false" form="prefix">(</mo><mi>h</mi><mo>,</mo><mi>g</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msqrt><mrow><munder><mo>∑</mo><mi>i</mi></munder><mo stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mrow><mi>h</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>−</mo><msub><mi>Y</mi><mrow><mi>g</mi><mo>,</mo><mi>i</mi></mrow></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex"> \text{dist}(h,g) = \sqrt{ \sum_{i} (Y_{h,i}-Y_{g,i})^2 } </annotation></semantics></math></p>
+<p>where the sum runs over all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mn>189</mn></mrow><annotation encoding="application/x-tex">i = 1, \dots, 189</annotation></semantics></math>
+samples.</p>
 </div>
 <div class="section level2">
 <h2 id="euclidian-distance-in-matrix-algebra-notation">Euclidian distance in matrix algebra notation<a class="anchor" aria-label="anchor" href="#euclidian-distance-in-matrix-algebra-notation"></a>
@@ -209,7 +220,7 @@ is:</p>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
 can be written as:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝐘</mi><mi>i</mi></msub><mo>−</mo><msub><mi>𝐘</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝐘</mi><mi>i</mi></msub><mo>−</mo><msub><mi>𝐘</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex"> \mbox{dist}(i,j) = \sqrt{ (\mathbf{Y}_i - \mathbf{Y}_j)^\top(\mathbf{Y}_i - \mathbf{Y}_j) }</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">dist</mtext><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msqrt><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>𝐘</mi><mi>i</mi></msub><mo>−</mo><msub><mi>𝐘</mi><mi>j</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>𝐘</mi><mi>i</mi></msub><mo>−</mo><msub><mi>𝐘</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></msqrt></mrow><annotation encoding="application/x-tex"> \text{dist}(i,j) = \sqrt{ (\mathbf{Y}_i - \mathbf{Y}_j)^\top(\mathbf{Y}_i - \mathbf{Y}_j) }</annotation></semantics></math></p>
 <p>with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐘</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\mathbf{Y}_i</annotation></semantics></math>
 and
@@ -235,15 +246,26 @@ and
 <h2 id="note-about-matrix-algebra-in-r">Note about matrix algebra in R<a class="anchor" aria-label="anchor" href="#note-about-matrix-algebra-in-r"></a>
 </h2>
 <ul>
-<li>R is very efficient at matrix algebra</li>
-<li>for very large matricies, see the:
+<li>“Stock” R may use an unoptimized <code>LAPACK</code> for matrix
+algebra. Large speed gains may be made by compiling against:
 <ul>
+<li><a href="https://www.openblas.net/" class="external-link">OpenBLAS</a></li>
+<li><a href="https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onemkl.html" class="external-link">Intel
+Math Kernel Library</a></li>
 <li>
-<a href="https://CRAN.R-project.org/package=Matrix" class="external-link">Matrix</a> CRAN
-package (sparse matrices)</li>
-<li>
-<a href="https://bioconductor.org/packages/rhdf5/" class="external-link">rhdf5</a> and <a href="https://bioconductor.org/packages/DelayedArray/" class="external-link">DelayedArray</a>
-Bioconductor package (on-disk arrays)</li>
+<a href="https://developer.apple.com/documentation/accelerate" class="external-link">Apple
+Accelerate Framework (macOS)</a> (default for MacOS R binaries)</li>
+</ul>
+</li>
+<li>for very large matricies, consider:
+<ul>
+<li>setting the <code>nu</code> and <code>nv</code> arguments to the
+<code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code> function</li>
+<li>the <a href="https://CRAN.R-project.org/package=Matrix" class="external-link">Matrix</a>
+CRAN package (sparse matrices)</li>
+<li>the <a href="https://bioconductor.org/packages/rhdf5/" class="external-link">rhdf5</a> and
+<a href="https://bioconductor.org/packages/DelayedArray/" class="external-link">DelayedArray</a>
+Bioconductor packages (on-disk arrays)</li>
 </ul>
 </li>
 </ul>
@@ -255,9 +277,9 @@ Bioconductor package (on-disk arrays)</li>
 <code class="sourceCode R"><span><span class="va">kidney1</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">kidney2</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">colon1</span> <span class="op">&lt;-</span> <span class="va">e</span><span class="op">[</span>, <span class="fl">87</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">kidney1</span> <span class="op">-</span> <span class="va">kidney2</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">kidney1</span> <span class="op">-</span> <span class="va">kidney2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 85.8546</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">kidney1</span> <span class="op">-</span> <span class="va">colon1</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">kidney1</span> <span class="op">-</span> <span class="va">colon1</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 122.8919</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -279,11 +301,11 @@ Bioconductor package (on-disk arrays)</li>
 <p>Excerpt from ?dist:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span></span>
-<span>    <span class="va">x</span>,</span>
-<span>    method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
-<span>    diag <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    upper <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    p <span class="op">=</span> <span class="fl">2</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
+<span>  diag <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  upper <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  p <span class="op">=</span> <span class="fl">2</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>
@@ -305,9 +327,10 @@ that will probably crash your R session.</p>
 </h2>
 <ul>
 <li>In practice, features (e.g. genes) are typically “standardized”,
-<em>i.e.</em> converted to z-score:</li>
+<em>i.e.</em> scaled and centered, <em>i.e.</em> converted to
+z-score:</li>
 </ul>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>g</mi><mi>i</mi></mrow></msub><mo>←</mo><mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mrow><mi>g</mi><mi>i</mi></mrow></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>g</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>s</mi><mi>g</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">x_{gi} \leftarrow \frac{(x_{gi} - \bar{x}_g)}{s_g}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>g</mi><mi>i</mi></mrow></msub><mo>←</mo><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mrow><mi>g</mi><mi>i</mi></mrow></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>g</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><msub><mi>s</mi><mi>g</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">x_{gi} \leftarrow \frac{(x_{gi} - \bar{x}_g)}{s_g}</annotation></semantics></math></p>
 <ul>
 <li>This is done because the differences in overall levels between
 features are often not due to biological effects but technical ones,
@@ -316,6 +339,8 @@ features are often not due to biological effects but technical ones,
 <li>GC bias, PCR amplification efficiency, …</li>
 </ul>
 </li>
+<li>Also, usually only “highly variable genes” are used to avoid scaling
+noise</li>
 </ul>
 </div>
 <div class="section level2">
@@ -339,12 +364,12 @@ features are often not due to biological effects but technical ones,
 <div class="section level2">
 <h2 id="visualizing-twin-pairs-data">Visualizing twin pairs data<a class="anchor" aria-label="anchor" href="#visualizing-twin-pairs-data"></a>
 </h2>
-<p><img src="day2_unsupervised_files/figure-html/vistwins-1.png" width="700"></p>
+<p><img src="day2_unsupervised_files/figure-html/vistwins-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="not-much-distance-is-lost-in-the-second-dimension">Not much distance is lost in the second dimension<a class="anchor" aria-label="anchor" href="#not-much-distance-is-lost-in-the-second-dimension"></a>
 </h2>
-<p><img src="day2_unsupervised_files/figure-html/twindists-1.png" width="700"></p>
+<p><img src="day2_unsupervised_files/figure-html/twindists-1.png" class="r-plt" alt="" width="700"></p>
 <ul>
 <li>Not much loss of height differences when just using average heights
 of twin pairs.
@@ -407,11 +432,11 @@ scores</strong>)</p>
 <h2 id="components-of-svd-results">Components of SVD results<a class="anchor" aria-label="anchor" href="#components-of-svd-results"></a>
 </h2>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">u</span><span class="op">)</span>     <span class="co"># loadings</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">u</span><span class="op">)</span> <span class="co"># loadings</span></span>
 <span><span class="co">#&gt; [1] 22215   189</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">d</span><span class="op">)</span>  <span class="co"># eigenvalues</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">d</span><span class="op">)</span> <span class="co"># eigenvalues</span></span>
 <span><span class="co">#&gt; [1] 189</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">v</span><span class="op">)</span>     <span class="co"># d %*% vT = scores</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">v</span><span class="op">)</span> <span class="co"># d %*% vT = scores</span></span>
 <span><span class="co">#&gt; [1] 189 189</span></span></code></pre></div>
 <center>
 <img src="images/SVD1.png" alt="SVD" align="middle" style="height: 200px;">
@@ -427,7 +452,7 @@ scores</strong>)</p>
 <code class="sourceCode R"><span><span class="fu">rafalib</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rafalib/man/mypar.html" class="external-link">mypar</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">e.standardize</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">u</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">~</span> <span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day2_unsupervised_files/figure-html/pcavssvd-1.png" width="700"></p>
+<p><img src="day2_unsupervised_files/figure-html/pcavssvd-1.png" class="r-plt" alt="" width="700"></p>
 <p><strong>Lesson:</strong> u and v can each be multiplied by -1
 arbitrarily</p>
 </div>
@@ -453,27 +478,28 @@ original axes</li>
 <h2 id="visualizing-pca-loadings">Visualizing PCA loadings<a class="anchor" aria-label="anchor" href="#visualizing-pca-loadings"></a>
 </h2>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>,</span>
-<span>     xlab <span class="op">=</span> <span class="st">"Index of genes"</span>,</span>
-<span>     ylab <span class="op">=</span> <span class="st">"Loadings of PC1"</span>,</span>
-<span>     main <span class="op">=</span> <span class="st">"PC1 loadings of each gene"</span><span class="op">)</span> <span class="co">#or, predict(p)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.03</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day2_unsupervised_files/figure-html/visloadings-1.png" width="700"></p>
+<code class="sourceCode R"><span><span class="va">df_loadings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">)</span><span class="op">)</span>, Loading <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df_loadings</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Index</span>, y <span class="op">=</span> <span class="va">Loading</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_hline</span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.03</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"PC1 loadings of each gene"</span>, x <span class="op">=</span> <span class="st">"Index of genes"</span>, y <span class="op">=</span> <span class="st">"Loadings of PC1"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="day2_unsupervised_files/figure-html/visloadings-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="genes-with-high-pc1-loadings">Genes with high PC1 loadings<a class="anchor" aria-label="anchor" href="#genes-with-high-pc1-loadings"></a>
 </h2>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">e.pc1genes</span> <span class="op">&lt;-</span></span>
-<span>    <span class="va">e.standardize</span><span class="op">[</span><span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.03</span> <span class="op">|</span></span>
-<span>                           <span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0.03</span>,<span class="op">]</span></span>
+<span>  <span class="va">e.standardize</span><span class="op">[</span><span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.03</span> <span class="op">|</span></span>
+<span>    <span class="va">p</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0.03</span>, <span class="op">]</span></span>
 <span><span class="fu">pheatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html" class="external-link">pheatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">e.pc1genes</span>,</span>
-<span>    scale <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span>    show_rownames <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    show_colnames <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="va">e.pc1genes</span>,</span>
+<span>  scale <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  show_rownames <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  show_colnames <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="day2_unsupervised_files/figure-html/pheatmaploadings-1.png" width="700"></p>
+<p><img src="day2_unsupervised_files/figure-html/pheatmaploadings-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="pca-interpretation-eigenvalues">PCA interpretation: eigenvalues<a class="anchor" aria-label="anchor" href="#pca-interpretation-eigenvalues"></a>
@@ -485,15 +511,18 @@ original axes</li>
 each decomposed variable is multiplied by.</li>
 </ul>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">rafalib</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rafalib/man/mypar.html" class="external-link">mypar</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
-<span>    <span class="va">p</span><span class="op">$</span><span class="va">sdev</span> <span class="op">^</span> <span class="fl">2</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">sdev</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>,</span>
-<span>    xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">150</span><span class="op">)</span>,</span>
-<span>    type <span class="op">=</span> <span class="st">"b"</span>,</span>
-<span>    ylab <span class="op">=</span> <span class="st">"% variance explained"</span>,</span>
-<span>    main <span class="op">=</span> <span class="st">"Screeplot"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="day2_unsupervised_files/figure-html/screeplot-1.png" width="480" style="display: block; margin: auto;"></p>
+<code class="sourceCode R"><span><span class="va">df_scree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  PC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">sdev</span><span class="op">)</span>,</span>
+<span>  Variance <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">sdev</span><span class="op">^</span><span class="fl">2</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">sdev</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>,</span>
+<span>  Cumulative <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">sdev</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">sdev</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df_scree</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">150</span>, <span class="op">]</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC</span>, y <span class="op">=</span> <span class="va">Variance</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Screeplot"</span>, y <span class="op">=</span> <span class="st">"% variance explained"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="day2_unsupervised_files/figure-html/screeplot-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="pca-interpretation-eigenvalues-1">PCA interpretation: eigenvalues<a class="anchor" aria-label="anchor" href="#pca-interpretation-eigenvalues-1"></a>
@@ -501,15 +530,12 @@ each decomposed variable is multiplied by.</li>
 <p>Alternatively as cumulative % variance explained (using
 <code><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum()</a></code> function)</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">rafalib</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rafalib/man/mypar.html" class="external-link">mypar</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">sdev</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">sdev</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>,</span>
-<span>    ylab <span class="op">=</span> <span class="st">"cumulative % variance explained"</span>,</span>
-<span>    ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,</span>
-<span>    type <span class="op">=</span> <span class="st">"b"</span>,</span>
-<span>    main <span class="op">=</span> <span class="st">"Cumulative screeplot"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="day2_unsupervised_files/figure-html/cumscreeplot-1.png" width="700" style="display: block; margin: auto;"></p>
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df_scree</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC</span>, y <span class="op">=</span> <span class="va">Cumulative</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Cumulative screeplot"</span>, y <span class="op">=</span> <span class="st">"Cumulative % variance explained"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_cartesian</span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="day2_unsupervised_files/figure-html/cumscreeplot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="pca-interpretation-scores">PCA interpretation: scores<a class="anchor" aria-label="anchor" href="#pca-interpretation-scores"></a>
@@ -531,7 +557,7 @@ already scaled by eigenvalues:
 <div class="section level2">
 <h2 id="pca-interpretation-scores-1">PCA interpretation: scores<a class="anchor" aria-label="anchor" href="#pca-interpretation-scores-1"></a>
 </h2>
-<p><img src="day2_unsupervised_files/figure-html/scores-1.png" width="700"></p>
+<p><img src="day2_unsupervised_files/figure-html/scores-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="multi-dimensional-scaling-mds">Multi-dimensional Scaling (MDS)<a class="anchor" aria-label="anchor" href="#multi-dimensional-scaling-mds"></a>
@@ -545,7 +571,7 @@ distances</li>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">e.standardize</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cmdscale.html" class="external-link">cmdscale</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day2_unsupervised_files/figure-html/plotmds-1.png" width="700"></p>
+<p><img src="day2_unsupervised_files/figure-html/plotmds-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="t-sne">t-SNE<a class="anchor" aria-label="anchor" href="#t-sne"></a>
@@ -568,7 +594,7 @@ from the <strong>same</strong> sample.</li>
 <li>perplexity =
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mi>N</mi></msqrt><annotation encoding="application/x-tex">\sqrt{N}</annotation></semantics></math>
 is one rule of thumb.
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mi>/</mi><mn>5</mn><mo>,</mo><mn>50</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">max(N/5, 50)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mi>/</mi><mn>5</mn><mo>,</mo><mn>50</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">max(N/5, 50)</annotation></semantics></math>
 is another (default of <a href="https://cran.r-project.org/package=Rtsne" class="external-link">Rtsne</a>)</li>
 <li>Here is a <a href="https://towardsdatascience.com/how-to-tune-hyperparameters-of-tsne-7c0596a18868" class="external-link">good
 post by Nikolay Oskolkov</a> on this topic.</li>
@@ -596,10 +622,13 @@ used for statistical inference</li>
 <h2 id="pca-of-zeisel-single-cell-rna-seq-dataset">PCA of Zeisel single-cell RNA-seq dataset<a class="anchor" aria-label="anchor" href="#pca-of-zeisel-single-cell-rna-seq-dataset"></a>
 </h2>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sce.zeisel</span> <span class="op">&lt;-</span> <span class="fu">fixedPCA</span><span class="op">(</span><span class="va">sce.zeisel</span>, subset.row<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred<span class="op">=</span><span class="st">"PCA"</span>, colour_by<span class="op">=</span><span class="st">"level1class"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sce.zeisel</span> <span class="op">&lt;-</span> <span class="fu">fixedPCA</span><span class="op">(</span><span class="va">sce.zeisel</span>, subset.row <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in fixedPCA(sce.zeisel, subset.row = NULL): 'fixedPCA' is deprecated.</span></span>
+<span><span class="co">#&gt; Use 'scrapper::runPca.se' instead.</span></span>
+<span><span class="co">#&gt; See help("Deprecated")</span></span>
+<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred <span class="op">=</span> <span class="st">"PCA"</span>, colour_by <span class="op">=</span> <span class="st">"level1class"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="day2_unsupervised_files/figure-html/plotpcazeisel-1.png" alt="Principal Components Analysis of Zeisel dataset" width="700"><p class="caption">
+<img src="day2_unsupervised_files/figure-html/plotpcazeisel-1.png" class="r-plt" alt="Principal Components Analysis of Zeisel dataset" width="700"><p class="caption">
 Principal Components Analysis of Zeisel dataset
 </p>
 </div>
@@ -608,10 +637,10 @@ Principal Components Analysis of Zeisel dataset
 <h2 id="t-sne-of-the-same-dataset">t-SNE of the same dataset<a class="anchor" aria-label="anchor" href="#t-sne-of-the-same-dataset"></a>
 </h2>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sce.zeisel</span> <span class="op">&lt;-</span> <span class="fu">runTSNE</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred<span class="op">=</span><span class="st">"PCA"</span><span class="op">)</span></span>
-<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred<span class="op">=</span><span class="st">"TSNE"</span>, colour_by<span class="op">=</span><span class="st">"level1class"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sce.zeisel</span> <span class="op">&lt;-</span> <span class="fu">runTSNE</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred <span class="op">=</span> <span class="st">"PCA"</span><span class="op">)</span></span>
+<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred <span class="op">=</span> <span class="st">"TSNE"</span>, colour_by <span class="op">=</span> <span class="st">"level1class"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="day2_unsupervised_files/figure-html/tsenzeisel-1.png" alt="t-SNE clustering of Zeisel dataset" width="700"><p class="caption">
+<img src="day2_unsupervised_files/figure-html/tsenzeisel-1.png" class="r-plt" alt="t-SNE clustering of Zeisel dataset" width="700"><p class="caption">
 t-SNE clustering of Zeisel dataset
 </p>
 </div>
@@ -633,10 +662,10 @@ exploratory analysis in order to see the random variability</li>
 <h2 id="umap-of-the-same-dataset">UMAP of the same dataset<a class="anchor" aria-label="anchor" href="#umap-of-the-same-dataset"></a>
 </h2>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sce.zeisel</span> <span class="op">&lt;-</span> <span class="fu">runUMAP</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred<span class="op">=</span><span class="st">"PCA"</span><span class="op">)</span></span>
-<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred<span class="op">=</span><span class="st">"UMAP"</span>, colour_by<span class="op">=</span><span class="st">"level1class"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sce.zeisel</span> <span class="op">&lt;-</span> <span class="fu">runUMAP</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred <span class="op">=</span> <span class="st">"PCA"</span><span class="op">)</span></span>
+<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce.zeisel</span>, dimred <span class="op">=</span> <span class="st">"UMAP"</span>, colour_by <span class="op">=</span> <span class="st">"level1class"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="day2_unsupervised_files/figure-html/umapzeisel-1.png" alt="UMAP representation of the Zeisel dataset" width="700"><p class="caption">
+<img src="day2_unsupervised_files/figure-html/umapzeisel-1.png" class="r-plt" alt="UMAP representation of the Zeisel dataset" width="700"><p class="caption">
 UMAP representation of the Zeisel dataset
 </p>
 </div>
@@ -646,23 +675,19 @@ UMAP representation of the Zeisel dataset
 </h2>
 <p>Using default parameters and no log transformation</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sct</span> <span class="op">&lt;-</span> <span class="fu">SingleCellExperiment</span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
-<span><span class="va">sct</span><span class="op">$</span><span class="va">tissue</span> <span class="op">&lt;-</span> <span class="va">tissue</span></span>
-<span><span class="co"># fake the log normalization because it is undesirable for microarray data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">assays</span><span class="op">(</span><span class="va">sct</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"logcounts"</span> </span>
-<span><span class="va">sct</span> <span class="op">&lt;-</span> <span class="fu">fixedPCA</span><span class="op">(</span><span class="va">sct</span>, subset.row<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="va">sct</span> <span class="op">&lt;-</span> <span class="fu">runTSNE</span><span class="op">(</span><span class="va">sct</span>, dimred<span class="op">=</span><span class="st">"PCA"</span><span class="op">)</span></span>
-<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sct</span>, dimred<span class="op">=</span><span class="st">"TSNE"</span>, colour_by<span class="op">=</span><span class="st">"tissue"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day2_unsupervised_files/figure-html/umaptsnezeisel-1.png" width="700"></p>
+<code class="sourceCode R"><span><span class="co"># We already set up `sce` with `tissue` earlier</span></span>
+<span><span class="va">sce</span> <span class="op">&lt;-</span> <span class="fu">runTSNE</span><span class="op">(</span><span class="va">sce</span>, dimred <span class="op">=</span> <span class="st">"PCA"</span><span class="op">)</span></span>
+<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce</span>, dimred <span class="op">=</span> <span class="st">"TSNE"</span>, colour_by <span class="op">=</span> <span class="st">"tissue"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="day2_unsupervised_files/figure-html/umaptsnezeisel-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="umap-of-tissue-microarray-data">UMAP of tissue microarray data<a class="anchor" aria-label="anchor" href="#umap-of-tissue-microarray-data"></a>
 </h2>
 <p>Also using default parameters and no log transformation</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sct</span> <span class="op">&lt;-</span> <span class="fu">runUMAP</span><span class="op">(</span><span class="va">sct</span>, dimred<span class="op">=</span><span class="st">"PCA"</span><span class="op">)</span></span>
-<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sct</span>, dimred<span class="op">=</span><span class="st">"UMAP"</span>, colour_by<span class="op">=</span><span class="st">"tissue"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day2_unsupervised_files/figure-html/nologumap-1.png" width="700"></p>
+<code class="sourceCode R"><span><span class="va">sce</span> <span class="op">&lt;-</span> <span class="fu">runUMAP</span><span class="op">(</span><span class="va">sce</span>, dimred <span class="op">=</span> <span class="st">"PCA"</span><span class="op">)</span></span>
+<span><span class="fu">plotReducedDim</span><span class="op">(</span><span class="va">sce</span>, dimred <span class="op">=</span> <span class="st">"UMAP"</span>, colour_by <span class="op">=</span> <span class="st">"tissue"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="day2_unsupervised_files/figure-html/nologumap-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="summary-distances-and-dimension-reduction">Summary: distances and dimension reduction<a class="anchor" aria-label="anchor" href="#summary-distances-and-dimension-reduction"></a>
@@ -690,6 +715,16 @@ computational tractability</li>
 <h2 id="lab-exercise">Lab exercise<a class="anchor" aria-label="anchor" href="#lab-exercise"></a>
 </h2>
 <ul>
+<li>
+<strong>Check your BLAS</strong>: Matrix multiplication speed relies
+heavily on your Basic Linear Algebra Subprograms (BLAS). In the lab,
+verify you are using an optimized BLAS (like OpenBLAS, Intel MKL, or
+Apple Accelerate). You can check this by running
+<code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code> in your R console and looking for the “Matrix
+products:” and “BLAS:” fields. If it points to <code>libRblas.so</code>
+or <code>libR.dylib</code> (instead of e.g. <code>libopenblas.so</code>
+or <code>vecLib</code>), you might be using the unoptimized
+default!</li>
 <li>OSCA Basics: <a href="http://bioconductor.org/books/release/OSCA.basic/dimensionality-reduction.html" class="external-link">Chapter
 4 Dimensionality Reduction</a>
 </li>
@@ -702,10 +737,10 @@ computational tractability</li>
 <h2 id="links">Links<a class="anchor" aria-label="anchor" href="#links"></a>
 </h2>
 <ul>
-<li>A built <a href="https://rpubs.com/lwaldron/AppStatBio2023_day2" class="external-link">html</a> version
-of this lecture is available.</li>
-<li>The <a href="https://github.com/waldronlab/AppStatBio" class="external-link">source</a> R
-Markdown is also available from Github.</li>
+<li>A built <a href="https://waldronlab.io/AppStatBio/articles/day2_unsupervised.html" class="external-link">html</a>
+version of this lecture is available.</li>
+<li>The <a href="https://github.com/waldronlab/AppStatBio/blob/main/vignettes/day2_unsupervised.Rmd" class="external-link">source</a>
+R Markdown is also available from Github.</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -719,7 +754,7 @@ Markdown is also available from Github.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

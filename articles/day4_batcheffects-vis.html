@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Applied Statistics for High-throughput Biology: Session 4 • AppStatBio</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Applied Statistics for High-throughput Biology: Session 4">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">AppStatBio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.26.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/day1_intro.html">Applied Statistics for High-throughput Biology: Session 1</a></li>
-    <li><a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology: Session 2</a></li>
+    <li><a class="dropdown-item" href="../articles/day2_unsupervised.html">Applied Statistics for High-throughput Biology Session 2: Unsupervised Learning &amp; Dimensionality Reduction</a></li>
     <li><a class="dropdown-item" href="../articles/day3_linearmodels.html">Applied Statistics for High-throughput Biology: Session 3</a></li>
     <li><a class="dropdown-item" href="../articles/day4_batcheffects-vis.html">Applied Statistics for High-throughput Biology: Session 4</a></li>
   </ul>
@@ -102,70 +102,72 @@ we never expected to see.” - John W. Tukey</p>
 </blockquote>
 <ul>
 <li>Discover biases, systematic errors and unexpected variability in
-data</li>
-<li>Graphical approach to detecting these issues</li>
-<li>Represents a first step in data analysis and guides hypothesis
-testing</li>
-<li>Opportunities for discovery in the outliers</li>
+data.</li>
+<li>Graphical approach to detecting these issues. Represents a first
+step in data analysis and guides hypothesis testing.</li>
+<li>EDA helps us check the assumptions of our statistical tests.</li>
+<li>Opportunities for discovery are often in the outliers.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="quantile-quantile-plots">Quantile Quantile Plots<a class="anchor" aria-label="anchor" href="#quantile-quantile-plots"></a>
 </h3>
 <ul>
-<li>Quantiles divide a distribution into equally sized bins</li>
-<li>Division into 100 bins gives percentiles</li>
-<li>Quantiles of a theoretical distribution are plotted against an
-experimental distribution
-<ul>
-<li>alternatively, quantiles of two experimental distributions</li>
-</ul>
-</li>
-<li>Given a perfect fit,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x=y</annotation></semantics></math>
-</li>
-<li>Useful in determining data distribution (normal, t, etc.)</li>
+<li>
+<strong>Why use them?</strong> A primary tool for checking if our
+data follows a theoretical distribution.`</li>
+<li>Quantiles divide a distribution into equally sized bins (e.g., 100
+bins for percentiles).</li>
+<li>We plot the quantiles from our data against the theoretical
+quantiles of a distribution (e.g., the normal distribution).</li>
+<li>If our data perfectly matches the theoretical distribution, the
+points will form a straight line
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">y=x</annotation></semantics></math>).
+Deviations from the line indicate our data does not fit that
+distribution.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="example-quantile-quantile-plots">Example: Quantile Quantile Plots<a class="anchor" aria-label="anchor" href="#example-quantile-quantile-plots"></a>
 </h3>
-<p><img src="day4_batcheffects-vis_files/figure-html/qq1-1.png" width="768"></p>
+<p><img src="day4_batcheffects-vis_files/figure-html/qq1-1.png" class="r-plt" alt="" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="boxplots-about">Boxplots: About<a class="anchor" aria-label="anchor" href="#boxplots-about"></a>
 </h3>
 <ul>
-<li>Provide a graph that is easy to interpret where data is not normally
-distributed</li>
-<li>Would be an appropriate choice to explore income data, as
-distribution is highly skewed</li>
-<li>Particularly informative in relation to outliers and range</li>
-<li>Possible to compare multiple distributions side by side</li>
+<li>
+<strong>Why use them?</strong> Boxplots excel at showing the
+distribution of data, especially when it is not normally distributed
+(e.g., highly skewed data like income).</li>
+<li>They provide a simple, easy-to-interpret summary of the data’s
+range, center, and spread, while clearly highlighting outliers.</li>
+<li>Their greatest advantage comes from placing them side-by-side to
+compare distributions across multiple groups at once.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="boxplots-example">Boxplots: Example<a class="anchor" aria-label="anchor" href="#boxplots-example"></a>
 </h3>
-<img src="day4_batcheffects-vis_files/figure-html/bp1-1.png" width="768"><center>
-Three different views of a continuous variable
+<img src="day4_batcheffects-vis_files/figure-html/bp1-1.png" class="r-plt" alt="" width="960"><center>
+Three different views of a continuous variable. The boxplot clearly
+shows the skew and outliers.
 </center>
 </div>
 <div class="section level3">
 <h3 id="scatterplots-and-correlation-about">Scatterplots And Correlation: About<a class="anchor" aria-label="anchor" href="#scatterplots-and-correlation-about"></a>
 </h3>
 <ul>
-<li>For two continuous variables, scatter plot and calculation of
-correlation is useful</li>
-<li>Provides a graphical and numeric estimation of relationships</li>
-<li>Quick and easy with <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> and <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor()</a></code>
-</li>
+<li>For two continuous variables, a scatter plot graphically shows the
+relationship, while correlation provides a single number to summarize
+its strength and direction.</li>
+<li>Quick and easy with <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> and <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor()</a></code>.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="scatterplots-and-correlation-example">Scatterplots And Correlation: Example<a class="anchor" aria-label="anchor" href="#scatterplots-and-correlation-example"></a>
 </h3>
-<p><img src="day4_batcheffects-vis_files/figure-html/cor1-1.png" width="768"></p>
+<p><img src="day4_batcheffects-vis_files/figure-html/cor1-1.png" class="r-plt" alt="" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="exploratory-data-analysis-in-high-dimensions">Exploratory data analysis in high dimensions<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis-in-high-dimensions"></a>
@@ -206,26 +208,53 @@ correlation is useful</li>
 <div class="section level3">
 <h3 id="volcano-plots-example">Volcano plots: Example<a class="anchor" aria-label="anchor" href="#volcano-plots-example"></a>
 </h3>
-<p><img src="day4_batcheffects-vis_files/figure-html/vp2-1.png" width="480"></p>
+<pre><code><span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:Hmisc':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     src, summarize</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:MASS':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     select</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span></code></pre>
+<p><img src="day4_batcheffects-vis_files/figure-html/vp2-1.png" class="r-plt" alt="" width="480"></p>
 </div>
 <div class="section level3">
 <h3 id="volcano-plots-summary">Volcano plots: Summary<a class="anchor" aria-label="anchor" href="#volcano-plots-summary"></a>
 </h3>
 <ul>
-<li>Many small p-values with small effect size indicate low within-group
-variability</li>
-<li>Inspect for asymmetry</li>
-<li>Can color points by significance threshold</li>
+<li>A volcano plot lets us visualize both the <strong>statistical
+significance</strong> (p-value) and <strong>biological
+significance</strong> (effect size or fold change) at the same time for
+thousands of genes.</li>
+<li>
+<strong>Top-right/left corners:</strong> Genes with large effect
+sizes and high statistical significance. These are often the most
+interesting candidates.</li>
+<li>
+<strong>Top-center:</strong> Genes that are statistically
+significant but have a small effect size.</li>
+<li>
+<strong>Bottom:</strong> Genes that are not statistically
+significant, regardless of their effect size.</li>
+<li>Can color points by significance threshold. Check for asymmetry,
+which might indicate biases.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="p-value-histograms-setup">P-value histograms: Setup<a class="anchor" aria-label="anchor" href="#p-value-histograms-setup"></a>
 </h3>
 <ul>
-<li>If all null hypotheses are true, expect a flat histogram of
-p-values:</li>
+<li>If all null hypotheses are true (i.e., no genes are truly
+differentially expressed), we expect a <strong>flat histogram</strong>
+of p-values, where every p-value from 0 to 1 is equally likely.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">geneExpression</span><span class="op">)</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">geneExpression</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -235,130 +264,123 @@ p-values:</li>
 <div class="section level3">
 <h3 id="p-value-histograms-example">P-value histograms: Example<a class="anchor" aria-label="anchor" href="#p-value-histograms-example"></a>
 </h3>
-<p><img src="day4_batcheffects-vis_files/figure-html/pvalhist2-1.png" width="700"></p>
+<p><img src="day4_batcheffects-vis_files/figure-html/pvalhist2-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="p-value-histograms-example-2-permutation">P-value histograms: Example 2 (permutation)<a class="anchor" aria-label="anchor" href="#p-value-histograms-example-2-permutation"></a>
 </h3>
 <p>Note that permuting these data doesn’t produce an ideal null p-value
 histogram due to batch effects:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">permg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
 <span><span class="va">permresults</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/genefilter/man/rowFtests.html" class="external-link">rowttests</a></span><span class="op">(</span><span class="va">geneExpression</span>, <span class="va">permg</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">permresults</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day4_batcheffects-vis_files/figure-html/pvalhist3-1.png" width="700"></p>
+<span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>pvalue <span class="op">=</span> <span class="va">permresults</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">pvalue</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.05</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"gray"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Permuted Data p-values"</span>, x <span class="op">=</span> <span class="st">"p-value"</span>, y <span class="op">=</span> <span class="st">"Frequency"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="day4_batcheffects-vis_files/figure-html/pvalhist3-1.png" class="r-plt" alt="" width="384"></p>
 </div>
 <div class="section level3">
 <h3 id="p-value-histograms-summary">P-value histograms: Summary<a class="anchor" aria-label="anchor" href="#p-value-histograms-summary"></a>
 </h3>
 <ul>
-<li>Give a quick look at how many significant p-values there may be</li>
-<li>When using permuted labels, can expose non-independence among the
-samples
-<ul>
-<li>can be due to batch effects or family structure</li>
+<li>Give a quick look at the overall results of a high-throughput
+experiment. A spike near zero suggests the presence of differentially
+expressed genes.</li>
+<li>A non-uniform histogram for permuted data is a red flag, suggesting
+non-independence between samples, often due to hidden batch
+effects.</li>
 </ul>
-</li>
-<li>Most common approaches for correcting batch effects are:
-<ul>
-<li>
-<code>ComBat</code>: corrects for known batch effects by linear
-model), and</li>
-<li>
-<code>sva</code>: creates surrogate variables for unknown batch
-effects, corrects the structure of permutation p-values</li>
-<li>correction using control (housekeeping) genes</li>
-<li>
-<code>batchelor</code> for single-cell analysis</li>
-</ul>
-</li>
-</ul>
-<p><code>ComBat</code> and <code>sva</code> are available from the <a href="https://www.bioconductor.org/packages/sva" class="external-link">sva</a> Bioconductor
-package</p>
 </div>
 <div class="section level3">
 <h3 id="ma-plot">MA plot<a class="anchor" aria-label="anchor" href="#ma-plot"></a>
 </h3>
 <ul>
-<li>just a scatterplot rotated
-45<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mi>o</mi></msup><annotation encoding="application/x-tex">^o</annotation></semantics></math>
-</li>
+<li>
+<strong>Why use it?</strong> An MA plot is a clever transformation
+of a scatter plot, designed to better visualize differences between two
+samples (or one sample and a reference). It’s just a scatterplot rotated
+45<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mi>o</mi></msup><annotation encoding="application/x-tex">^o</annotation></semantics></math>.</li>
+<li>The rotation helps us see systematic biases. The ‘A’ (Average) on
+the x-axis represents overall signal intensity, and the ‘M’ (Minus, or
+log-ratio) on the y-axis represents the fold change. This makes it much
+easier to see if the fold change is dependent on gene intensity.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">rafalib</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rafalib/man/mypar.html" class="external-link">mypar</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">geneExpression</span>, <span class="fl">1</span>, <span class="va">median</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">geneExpression</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">pseudo</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">(</span><span class="va">geneExpression</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">pseudo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>, <span class="op">(</span><span class="va">geneExpression</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">pseudo</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day4_batcheffects-vis_files/figure-html/pvalhist4-1.png" width="700"></p>
+<span><span class="va">df_ma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  Sample <span class="op">=</span> <span class="va">geneExpression</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>,</span>
+<span>  Pseudo <span class="op">=</span> <span class="va">pseudo</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    A <span class="op">=</span> <span class="op">(</span><span class="va">Sample</span> <span class="op">+</span> <span class="va">Pseudo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,</span>
+<span>    M <span class="op">=</span> <span class="va">Sample</span> <span class="op">-</span> <span class="va">Pseudo</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_ma</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Pseudo</span>, y <span class="op">=</span> <span class="va">Sample</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"red"</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Standard scatter plot"</span>, x <span class="op">=</span> <span class="st">"Median across samples"</span>, y <span class="op">=</span> <span class="st">"Sample 1"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_ma</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">A</span>, y <span class="op">=</span> <span class="va">M</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"red"</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"MA plot"</span>, x <span class="op">=</span> <span class="st">"Average (A)"</span>, y <span class="op">=</span> <span class="st">"Minus (M)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></span></code></pre></div>
+<p><img src="day4_batcheffects-vis_files/figure-html/pvalhist4-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="ma-plot-summary">MA plot: Summary<a class="anchor" aria-label="anchor" href="#ma-plot-summary"></a>
 </h3>
 <ul>
-<li>useful for quality control of high-dimensional data</li>
-<li>plot all data values for a sample against another sample or a median
-“pseudosample”</li>
+<li>Useful for quality control of high-dimensional data.</li>
+<li>In an ideal MA plot, the cloud of points is centered on y=0 with no
+trend.</li>
 <li>
-<code>affyPLM::MAplots</code> better MA plots
-<ul>
-<li>adds a smoothing line to highlight departures from horizontal
-line</li>
-<li>plots a “cloud” rather than many data points</li>
-</ul>
-</li>
+<code>affyPLM::MAplots</code> creates better MA plots, adding a
+smoothing line to highlight departures from the horizontal.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="heatmaps">Heatmaps<a class="anchor" aria-label="anchor" href="#heatmaps"></a>
 </h3>
 <ul>
-<li>Detailed representation of high-dimensional dataset.
-<ul>
+<li>Detailed representation of a high-dimensional dataset. The
+<code>ComplexHeatmap</code> package is the best as of 2025.</li>
 <li>
-<code>ComplexHeatmap</code> package is the best as of 2024: large
-datasets, interactive heatmaps, simple defaults but many customizations
-possible</li>
+<strong>Important Note:</strong> Before plotting, we usually
+<strong>scale</strong> the data for each gene. This ensures the color
+pattern is driven by relative expression changes, not by a few highly
+expressed genes dominating the color scale.</li>
 </ul>
-</li>
-</ul>
-<p><img src="day4_batcheffects-vis_files/figure-html/ma1-1.png" width="1152"></p>
+<p><img src="day4_batcheffects-vis_files/figure-html/ma1-1.png" class="r-plt" alt="" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="heatmaps-summary">Heatmaps: Summary<a class="anchor" aria-label="anchor" href="#heatmaps-summary"></a>
 </h3>
 <ul>
-<li>Clustering becomes slow and memory-intensive for thousands of rows
-<ul>
-<li>probably too detailed for thousands of rows</li>
-</ul>
-</li>
-<li>can show co-expressed genes, groups of samples</li>
+<li>Clustering becomes slow for thousands of rows but is great for
+visualizing co-expressed genes and sample groups.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="colors">Colors<a class="anchor" aria-label="anchor" href="#colors"></a>
 </h3>
 <ul>
-<li>Types of color pallettes:
-<ul>
-<li>
-<strong>sequential</strong>: shows a gradient</li>
-<li>
-<strong>diverging</strong>: goes in two directions from a
-center</li>
-<li>
-<strong>qualitative</strong>: for categorical variables</li>
+<li>Palettes: <strong>sequential</strong> (gradient),
+<strong>diverging</strong> (two directions from a center),
+<strong>qualitative</strong> (categorical).</li>
+<li>Keep color blindness in mind (10% of men). <code>RColorBrewer</code>
+has colorblind-friendly options.</li>
 </ul>
-</li>
-<li>Keep color blindness in mind (10% of all men)</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="colors-contd">Colors (cont’d)<a class="anchor" aria-label="anchor" href="#colors-contd"></a>
-</h3>
-<p>Combination of <code>RColorBrewer</code> package and
-<code><a href="https://rdrr.io/r/grDevices/colorRamp.html" class="external-link">colorRampPalette()</a></code> can create anything you want</p>
-<p><img src="day4_batcheffects-vis_files/figure-html/brewer-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="plots-to-avoid">Plots To Avoid<a class="anchor" aria-label="anchor" href="#plots-to-avoid"></a>
@@ -368,10 +390,14 @@ center</li>
 Help</p>
 </blockquote>
 <ul>
-<li>Avoid pie charts</li>
-<li>Avoid doughnut charts too</li>
-<li>Avoid pseudo 3D</li>
-<li>Use color judiciously</li>
+<li>
+<strong>Avoid pie charts and doughnut charts.</strong> Humans are
+much better at judging length and position than angles and areas. A
+simple bar chart is almost always a better, clearer alternative.</li>
+<li>
+<strong>Avoid pseudo 3D plots.</strong> They distort the data and
+make comparisons difficult.</li>
+<li>Use color judiciously to highlight, not to decorate.</li>
 </ul>
 </div>
 </div>
@@ -382,103 +408,107 @@ Help</p>
 <h3 id="pervasiveness-of-batch-effects">Pervasiveness of batch Effects<a class="anchor" aria-label="anchor" href="#pervasiveness-of-batch-effects"></a>
 </h3>
 <ul>
-<li>pervasive in genomics (e.g. <a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=20838408" class="external-link">Leek <em>et
-al.</em> Nat Rev Genet. 2010 Oct;11(10):733-9.</a>)</li>
-<li>affect DNA and RNA sequencing, proteomics, imaging, microarray…</li>
-<li>have caused high-profile problems and retractions
+<li>Pervasive in genomics and have caused high-profile retractions.</li>
+<li>You can’t get rid of them, but you can design your experiment to
+manage them.</li>
+<li>
+<strong>The Golden Rule:</strong> Make sure batch is not confounded
+with your variable of interest.</li>
+<li>Consider this <strong>nightmare scenario</strong>:</li>
+</ul>
+<blockquote>
 <ul>
-<li>you can’t get rid of them</li>
-<li>but you can make sure they are not confounded with your
-experiment</li>
+<li>
+<strong>Batch 1:</strong> All your “Control” samples, processed on
+Monday.</li>
+<li>
+<strong>Batch 2:</strong> All your “Treatment” samples, processed on
+Tuesday.</li>
+</ul>
+<p>If you find a difference, is it due to the treatment or the
+processing day? It’s <strong>impossible to know</strong>.</p>
+</blockquote>
+<p>Prevent such “confounding” through <strong>blocking</strong> and
+<strong>randomization</strong> during experimental design.</p>
+</div>
+<div class="section level3">
+<h3 id="blocking-and-randomization">Blocking and Randomization<a class="anchor" aria-label="anchor" href="#blocking-and-randomization"></a>
+</h3>
+<ul>
+<li>
+<em>Randomization</em> is the process of randomly assigning
+participants or experimental units to different treatments or batches.
+<ul>
+<li>Randomization is the only way to guarantee there can be no
+systematic relationship between treatment and batch, or between study
+subject and treatment</li>
+</ul>
+</li>
+<li>
+<em>Blocking</em> is the process of grouping similar experimental
+units together to control for known sources of variability (e.g., time,
+technician, reagent lot).
+<ul>
+<li>For example, if you have multiple technicians, you can block by
+technician to ensure each treatment is applied by each technician.</li>
+<li>This helps reduce variability and improve the accuracy of your
+results.</li>
+<li>Only works for known sources of variability</li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="batch-effects---an-example">Batch Effects - an example<a class="anchor" aria-label="anchor" href="#batch-effects---an-example"></a>
-</h3>
-<ul>
-<li>Nat Genet. 2007 Feb;39(2):226-31. Epub 2007 Jan 7.</li>
-<li>Title: <em>Common genetic variants account for differences in gene
-expression among ethnic groups.</em>
-<ul>
-<li>“The results show that specific genetic variation among populations
-contributes appreciably to differences in gene expression
-phenotypes.”</li>
-</ul>
-</li>
-</ul>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/Biobase" class="external-link">Biobase</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">genefilter</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">GSE5859</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">GSE5859</span><span class="op">)</span></span>
-<span><span class="va">geneExpression</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/exprs.html" class="external-link">exprs</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
-<span><span class="va">sampleInfo</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html" class="external-link">pData</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span></code></pre></div>
-<ul>
-<li>Note: the <code>ExpressionSet</code> object is obsolete, we use
-<code>SummarizedExperiment</code> now</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="date-of-processing-as-a-proxy-for-batch">Date of processing as a proxy for batch<a class="anchor" aria-label="anchor" href="#date-of-processing-as-a-proxy-for-batch"></a>
-</h3>
-<ul>
-<li>Sample metadata included <em>date of processing</em>:</li>
-</ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">sampleInfo</span><span class="op">$</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; 2002-10-31 2002-11-15 2002-11-19 2002-11-21 2002-11-22 2002-11-27 </span></span>
-<span><span class="co">#&gt;          2          2          2          5          4          2</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">year</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">sampleInfo</span><span class="op">$</span><span class="va">date</span>, <span class="st">"%y"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">year</span> <span class="op">&lt;-</span> <span class="va">year</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span></span>
-<span><span class="va">month</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">sampleInfo</span><span class="op">$</span><span class="va">date</span>, <span class="st">"%m"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">12</span> <span class="op">*</span> <span class="va">year</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">sampleInfo</span><span class="op">$</span><span class="va">ethnicity</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     </span></span>
-<span><span class="co">#&gt; year ASN CEU HAN</span></span>
-<span><span class="co">#&gt;    0   0  32   0</span></span>
-<span><span class="co">#&gt;    1   0  54   0</span></span>
-<span><span class="co">#&gt;    2   0  13   0</span></span>
-<span><span class="co">#&gt;    3  80   3   0</span></span>
-<span><span class="co">#&gt;    4   2   0  24</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="visualizing-batch-effects-by-pca">Visualizing batch effects by PCA<a class="anchor" aria-label="anchor" href="#visualizing-batch-effects-by-pca"></a>
-</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">geneExpression</span><span class="op">)</span>, scale. <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day4_batcheffects-vis_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-</div>
-<div class="section level3">
-<h3 id="visualizing-batch-effects-by-mds">Visualizing batch effects by MDS<a class="anchor" aria-label="anchor" href="#visualizing-batch-effects-by-mds"></a>
-</h3>
-<p>A starting point for a color palette:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">display.brewer.all</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span>, colorblindFriendly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day4_batcheffects-vis_files/figure-html/ge5-1.png" width="700"></p>
-<p>Interpolate one color per month on a quantitative palette:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">col3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span>, <span class="st">"Greys"</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="st">"black"</span><span class="op">)</span></span>
-<span><span class="va">MYcols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html" class="external-link">colorRampPalette</a></span><span class="op">(</span><span class="va">col3</span>, space <span class="op">=</span> <span class="st">"Lab"</span><span class="op">)</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="visualizing-batch-effects-by-mds-1">Visualizing batch effects by MDS<a class="anchor" aria-label="anchor" href="#visualizing-batch-effects-by-mds-1"></a>
-</h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">geneExpression</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">mds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cmdscale.html" class="external-link">cmdscale</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mds</span>, col <span class="op">=</span> <span class="va">MYcols</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">month</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>     main <span class="op">=</span> <span class="st">"MDS shaded by month"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="day4_batcheffects-vis_files/figure-html/mds1-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="the-batch-effects-impact-clustering">The batch effects impact clustering<a class="anchor" aria-label="anchor" href="#the-batch-effects-impact-clustering"></a>
 </h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hcclass</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">hcclass</span>, <span class="va">year</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Data from a real study where date of processing was confounded with ethnicity</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/Biobase" class="external-link">Biobase</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: BiocGenerics</span></span>
+<span><span class="co">#&gt; Loading required package: generics</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'generics'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     explain</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,</span></span>
+<span><span class="co">#&gt;     setequal, union</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     combine</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     IQR, mad, sd, var, xtabs</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     anyDuplicated, aperm, append, as.data.frame, basename, cbind,</span></span>
+<span><span class="co">#&gt;     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,</span></span>
+<span><span class="co">#&gt;     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,</span></span>
+<span><span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span></span>
+<span><span class="co">#&gt;     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,</span></span>
+<span><span class="co">#&gt;     unsplit, which.max, which.min</span></span>
+<span><span class="co">#&gt; Welcome to Bioconductor</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     Vignettes contain introductory material; view with</span></span>
+<span><span class="co">#&gt;     'browseVignettes()'. To cite Bioconductor, see</span></span>
+<span><span class="co">#&gt;     'citation("Biobase")', and for packages 'citation("pkgname")'.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'Biobase'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:Hmisc':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     contents</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">genefilter</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">GSE5859</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">GSE5859</span><span class="op">)</span></span>
+<span><span class="va">geneExpression</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/exprs.html" class="external-link">exprs</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
+<span><span class="va">sampleInfo</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html" class="external-link">pData</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
+<span><span class="va">year</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">sampleInfo</span><span class="op">$</span><span class="va">date</span>, <span class="st">"%y"</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">sampleInfo</span><span class="op">$</span><span class="va">date</span>, <span class="st">"%y"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">hcclass</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">geneExpression</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">hcclass</span>, <span class="va">year</span><span class="op">)</span> <span class="co"># Clustering is driven by year of processing, not biology</span></span>
 <span><span class="co">#&gt;        year</span></span>
 <span><span class="co">#&gt; hcclass  0  1  2  3  4</span></span>
 <span><span class="co">#&gt;       1  0  2  8  1  0</span></span>
@@ -490,52 +520,46 @@ phenotypes.”</li>
 <div class="section level3">
 <h3 id="approaches-to-correcting-for-batch-effects">Approaches to correcting for batch effects<a class="anchor" aria-label="anchor" href="#approaches-to-correcting-for-batch-effects"></a>
 </h3>
+<p>Methods can be categorized by their approach and data type:</p>
 <ul>
 <li>
-<em>No correction</em>
+<strong>Simple Rescaling (e.g.,
+<code>batchelor::rescaleBatches()</code>):</strong>
 <ul>
-<li>in my experience, the best choice for machine learning
-applications</li>
+<li>Rescales batches to have the same mean/variance.</li>
+<li>Good for single-cell data because it maintains sparsity (zeros stay
+zeros).</li>
 </ul>
 </li>
 <li>
-<a href="http://bioconductor.org/books/3.17/OSCA.multisample/integrating-datasets.html#by-rescaling-the-counts" class="external-link">Simple
-rescaling</a>
+<strong>For Known Batches (Bulk RNA-seq):</strong>
 <ul>
-<li>Rescale observations (cells) to the same mean, variance in each
-batch</li>
-<li>maintains sparsity (ie zeros remain zeros)</li>
-<li><code>batchelor::rescaleBatches()</code></li>
+<li>
+<strong><code><a href="https://rdrr.io/pkg/limma/man/removeBatchEffect.html" class="external-link">limma::removeBatchEffect()</a></code></strong> or
+<strong><code>sva::ComBat()</code></strong>: Use a linear model to
+regress out the effect of known batch variables (e.g., processing date,
+sequencing machine). Assumes cell type composition is similar across
+batches.</li>
 </ul>
 </li>
 <li>
-<em>Linear modeling to regress out batch effects</em>
+<strong>For Unknown Batches (Bulk RNA-seq):</strong>
 <ul>
-<li>use when batches are known. Fits a linear model and use
-residuals</li>
-<li>assumes the same composition of cells across batches</li>
 <li>
-<code><a href="https://rdrr.io/pkg/limma/man/removeBatchEffect.html" class="external-link">limma::removeBatchEffect()</a></code>, <code>sva::comBat()</code>,
-<code>batchelor::regressBatches()</code>
-</li>
+<strong><code>sva::sva()</code></strong>: Identifies and creates
+“surrogate variables” that capture hidden sources of variation.
+Excellent when you don’t know the exact source of the batch effect but
+the p-value histogram looks problematic.</li>
 </ul>
 </li>
 <li>
-<em>Linear modeling to achieve a flat p-value histogram when
-permuting labels</em>
+<strong>For Single-Cell Data Integration:</strong>
 <ul>
-<li>can be used when batches are unknown</li>
-<li>“Surrogate Variables Analysis” implemented by the <a href="https://bioconductor.org/packages/sva/" class="external-link">sva</a> package</li>
-</ul>
-</li>
 <li>
-<em>Mutual Nearest Neighbors</em>
-<ul>
-<li>developed specifically for single-cell RNA-seq</li>
-<li>no assumption of the same composition of cells across batches, but
-still assumes no meaningful biological differences exist between
-batches</li>
-<li><code>batchelor::fastMNN()</code></li>
+<strong><code>batchelor::fastMNN()</code></strong>: Finds Mutual
+Nearest Neighbors (MNNs) between batches to align them. Powerful for
+single-cell RNA-seq because it does <strong>not</strong> assume the same
+composition of cells across batches.</li>
 </ul>
 </li>
 </ul>
@@ -544,42 +568,22 @@ batches</li>
 <h3 id="batch-effects---summary">Batch Effects - summary<a class="anchor" aria-label="anchor" href="#batch-effects---summary"></a>
 </h3>
 <ul>
-<li>batches can be corrected for <strong>only</strong> if not
-overlapping with conditions of interest
-<ul>
-<li>if confounded with treatment or outcome of interest, nothing can
-help you</li>
-<li>randomization of samples to batches in study design protects against
-this</li>
-</ul>
-</li>
-<li>during experimental design:
-<ul>
-<li>keep track of anything that might cause a batch effect for post-hoc
-analysis</li>
-<li>include control samples in each batch</li>
-</ul>
-</li>
-<li>tend to affect many or all measurements by a little bit</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="exercises">Exercises<a class="anchor" aria-label="anchor" href="#exercises"></a>
-</h3>
-<ul>
-<li>OSCA Multi-sample <a href="http://bioconductor.org/books/release/OSCA.multisample/integrating-datasets.html" class="external-link">Chapter
-1: Correcting batch effects</a>
-</li>
+<li>Batch effects can ONLY be corrected if they are not confounded with
+your variable of interest.</li>
+<li><strong>Randomization is your best defense.</strong></li>
+<li>Always record info that might become a batch effect (date,
+technician, reagent lot, etc.).</li>
+<li>Include control samples in each batch.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="links">Links<a class="anchor" aria-label="anchor" href="#links"></a>
 </h3>
 <ul>
-<li>A built <a href="https://rpubs.com/lwaldron/AppStatBio2023_day4" class="external-link">html</a> version
-of this lecture is available.</li>
-<li>The <a href="https://github.com/waldronlab/AppStatBio" class="external-link">source</a> R
-Markdown is available from Github.</li>
+<li>A built <a href="https://waldronlab.io/AppStatBio/articles/day4_batcheffects-vis.html" class="external-link">html</a>
+version of this lecture is available.</li>
+<li>The <a href="https://github.com/waldronlab/AppStatBio/blob/main/vignettes/day4_batcheffects-vis.Rmd" class="external-link">source</a>
+R Markdown is available from Github.</li>
 </ul>
 </div>
 </div>
@@ -594,7 +598,7 @@ Markdown is available from Github.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
