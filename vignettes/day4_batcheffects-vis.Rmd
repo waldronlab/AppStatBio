@@ -49,35 +49,37 @@ library(AppStatBio)
 
 ## Example: Quantile Quantile Plots
 
-```{r qq1, echo=FALSE, fig.width=8}
-suppressPackageStartupMessages(library(UsingR))
-suppressPackageStartupMessages(library(rafalib))
+```{r qq1, echo=FALSE, fig.width=10, fig.height=4, warning=FALSE}
+suppressPackageStartupMessages({
+  library(UsingR)
+  library(rafalib)
+  library(ggplot2)
+  library(patchwork)
+})
+
 # height qq plot
-x <- father.son$fheight
-ps <- (seq(0, 99) + 0.5) / 100
-qs <- quantile(x, ps)
-normalqs <- qnorm(ps, mean(x), popsd(x))
-par(mfrow = c(1, 3))
-plot(normalqs,
-     qs,
-     xlab = "Normal Percentiles",
-     ylab = "Height Percentiles",
-     main = "Height Q-Q Plot")
-abline(0, 1)
+p1 <- ggplot(data.frame(x = father.son$fheight), aes(sample = x)) +
+  stat_qq() + stat_qq_line() +
+  labs(title = "Height Q-Q Plot", x = "Theoretical Normal Quantiles", y = "Height Quantiles") +
+  theme_minimal()
+
 # t-distributed for 12 df
-x <- rt(1000, 12)
-qqnorm(x,
-       xlab = "t quantiles",
-       main = "T Quantiles (df=12) Q-Q Plot",
-       ylim = c(-6, 6))
-qqline(x)
+p2 <- ggplot(data.frame(x = rt(1000, 12)), aes(sample = x)) +
+  stat_qq(distribution = qt, dparams = list(df = 12)) + 
+  stat_qq_line(distribution = qt, dparams = list(df = 12)) +
+  labs(title = "T Quantiles (df=12) Q-Q Plot", x = "Theoretical t quantiles", y = "Sample Quantiles") +
+  coord_cartesian(ylim = c(-6, 6)) +
+  theme_minimal()
+
 # t-distributed for 3 df
-x <- rt(1000, 3)
-qqnorm(x,
-       xlab = "t quantiles",
-       main = "T Quantiles (df=3) Q-Q Plot",
-       ylim = c(-6, 6))
-qqline(x)
+p3 <- ggplot(data.frame(x = rt(1000, 3)), aes(sample = x)) +
+  stat_qq(distribution = qt, dparams = list(df = 3)) + 
+  stat_qq_line(distribution = qt, dparams = list(df = 3)) +
+  labs(title = "T Quantiles (df=3) Q-Q Plot", x = "Theoretical t quantiles", y = "Sample Quantiles") +
+  coord_cartesian(ylim = c(-6, 6)) +
+  theme_minimal()
+
+p1 | p2 | p3
 ```
 
 ## Boxplots: About
@@ -88,11 +90,30 @@ qqline(x)
 
 ## Boxplots: Example
 
-```{r bp1, echo=FALSE, fig.width=8, fig.height=4}
-par(mfrow=c(1, 3))
-hist(exec.pay, main = "CEO Compensation")
-qqnorm(exec.pay, main = "CEO Compensation")
-boxplot(exec.pay, ylab="10,000s of dollars", ylim=c(0,400), main = "CEO Compensation")
+```{r bp1, echo=FALSE, fig.width=10, fig.height=4, warning=FALSE}
+library(ggplot2)
+library(patchwork)
+
+df_exec <- data.frame(pay = exec.pay)
+
+p1 <- ggplot(df_exec, aes(x = pay)) + 
+  geom_histogram(bins = 30, fill = "gray", color = "black") + 
+  labs(title = "CEO Compensation", x = "10,000s of dollars", y = "Count") +
+  theme_minimal()
+
+p2 <- ggplot(df_exec, aes(sample = pay)) + 
+  stat_qq() + stat_qq_line() + 
+  labs(title = "CEO Compensation Q-Q Plot") +
+  theme_minimal()
+
+p3 <- ggplot(df_exec, aes(y = pay)) + 
+  geom_boxplot(fill = "lightblue") + 
+  coord_cartesian(ylim = c(0, 400)) +
+  labs(title = "CEO Compensation", y = "10,000s of dollars") +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+
+p1 | p2 | p3
 ```
 <center>
 Three different views of a continuous variable. The boxplot clearly shows the skew and outliers.
@@ -105,35 +126,29 @@ Three different views of a continuous variable. The boxplot clearly shows the sk
 
 ## Scatterplots And Correlation: Example
 
-```{r cor1, echo=FALSE, fig.width=8, fig.height=4}
-par(mfrow = c(1, 3))
-plot(
-  father.son$fheight,
-  father.son$sheight,
-  xlab = "Father's height in inches",
-  ylab = "Son's height in inches",
-  main = paste("correlation =", signif(
-    cor(father.son$fheight, father.son$sheight), 2
-  ))
-)
-plot(
-  cars$speed,
-  cars$dist,
-  xlab = "Speed",
-  ylab = "Stopping Distance",
-  main = paste("correlation =", signif(cor(
-    cars$speed, cars$dist
-  ), 2))
-)
-plot(
-  faithful$eruptions,
-  faithful$waiting,
-  xlab = "Eruption Duration",
-  ylab = "Waiting Time",
-  main = paste("correlation =", signif(
-    cor(faithful$eruptions, faithful$waiting), 2
-  ))
-)
+```{r cor1, echo=FALSE, fig.width=10, fig.height=4, warning=FALSE}
+library(ggplot2)
+library(patchwork)
+
+p1 <- ggplot(father.son, aes(x = fheight, y = sheight)) +
+  geom_point(alpha = 0.5) +
+  labs(title = paste("correlation =", signif(cor(father.son$fheight, father.son$sheight), 2)),
+       x = "Father's height in inches", y = "Son's height in inches") +
+  theme_minimal()
+
+p2 <- ggplot(cars, aes(x = speed, y = dist)) +
+  geom_point(alpha = 0.5) +
+  labs(title = paste("correlation =", signif(cor(cars$speed, cars$dist), 2)),
+       x = "Speed", y = "Stopping Distance") +
+  theme_minimal()
+
+p3 <- ggplot(faithful, aes(x = eruptions, y = waiting)) +
+  geom_point(alpha = 0.5) +
+  labs(title = paste("correlation =", signif(cor(faithful$eruptions, faithful$waiting), 2)),
+       x = "Eruption Duration", y = "Waiting Time") +
+  theme_minimal()
+
+p1 | p2 | p3
 ```
 
 ## Exploratory data analysis in high dimensions
@@ -163,17 +178,27 @@ Note that these 8,793 tests are done in about 0.01s
 
 ## Volcano plots: Example
 
-```{r vp2, echo = FALSE, fig.height=5, fig.width=5}
-par(mar = c(4, 4, 0, 0))
-plot(results$dm,
-     -log10(results$p.value),
-     xlab = "Effect size (difference in group means)",
-     ylab = "- log (base 10) p-values")
-abline(h = -log10(0.05 / nrow(geneExpression)), col = "red")
-legend("bottomright",
-       lty = 1,
-       col = "red",
-       legend = "Bonferroni = 0.05")
+```{r vp2, echo = FALSE, fig.height=5, fig.width=5, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+
+bonferroni_thresh <- -log10(0.05 / nrow(geneExpression))
+
+df_volcano <- data.frame(
+  EffectSize = results$dm,
+  NegLogP = -log10(results$p.value)
+) %>%
+  mutate(Significant = NegLogP > bonferroni_thresh)
+
+ggplot(df_volcano, aes(x = EffectSize, y = NegLogP, color = Significant)) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_hline(yintercept = bonferroni_thresh, color = "red", linetype = "dashed") +
+  scale_color_manual(values = c("black", "red")) +
+  labs(x = "Effect size (difference in group means)", y = "-log10(p-value)") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  annotate("text", x = max(df_volcano$EffectSize), y = bonferroni_thresh + 0.2, 
+           label = "Bonferroni = 0.05", color = "red", hjust = 1)
 ```
 
 ## Volcano plots: Summary
@@ -198,20 +223,42 @@ nullpvals <- rowttests(randomData, g)$p.value
 
 ## P-value histograms: Example
 
-```{r pvalhist2, echo=FALSE, fig.height=3}
-par(mfrow = c(1, 2))
-hist(pvals, ylim = c(0, 1400))
-hist(nullpvals, ylim = c(0, 1400))
+```{r pvalhist2, echo=FALSE, fig.height=3, fig.width=8, warning=FALSE}
+library(ggplot2)
+library(patchwork)
+
+df_pvals <- data.frame(
+  Original = pvals,
+  Random = nullpvals
+)
+
+p1 <- ggplot(df_pvals, aes(x = Original)) +
+  geom_histogram(breaks = seq(0, 1, 0.05), fill = "gray", color = "black") +
+  coord_cartesian(ylim = c(0, 1400)) +
+  labs(title = "Original Data p-values", x = "p-value", y = "Frequency") +
+  theme_minimal()
+
+p2 <- ggplot(df_pvals, aes(x = Random)) +
+  geom_histogram(breaks = seq(0, 1, 0.05), fill = "gray", color = "black") +
+  coord_cartesian(ylim = c(0, 1400)) +
+  labs(title = "Random Data p-values", x = "p-value", y = "Frequency") +
+  theme_minimal()
+
+p1 | p2
 ```
 
 ## P-value histograms: Example 2 (permutation)
 
 Note that permuting these data doesn't produce an ideal null p-value histogram due to batch effects:
 
-```{r pvalhist3, fig.height=3}
+```{r pvalhist3, fig.height=3, fig.width=4, warning=FALSE}
 permg <- sample(g)
 permresults <- rowttests(geneExpression, permg)
-hist(permresults$p.value)
+
+ggplot(data.frame(pvalue = permresults$p.value), aes(x = pvalue)) +
+  geom_histogram(breaks = seq(0, 1, 0.05), fill = "gray", color = "black") +
+  labs(title = "Permuted Data p-values", x = "p-value", y = "Frequency") +
+  theme_minimal()
 ```
 
 ## P-value histograms: Summary
@@ -224,11 +271,34 @@ hist(permresults$p.value)
 - **Why use it?** An MA plot is a clever transformation of a scatter plot, designed to better visualize differences between two samples (or one sample and a reference). It's just a scatterplot rotated 45$^o$.
 - The rotation helps us see systematic biases. The 'A' (Average) on the x-axis represents overall signal intensity, and the 'M' (Minus, or log-ratio) on the y-axis represents the fold change. This makes it much easier to see if the fold change is dependent on gene intensity.
 
-```{r pvalhist4, fig.height=3}
-rafalib::mypar(1, 2)
+```{r pvalhist4, fig.height=4, fig.width=8, warning=FALSE}
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+
 pseudo <- apply(geneExpression, 1, median)
-plot(geneExpression[, 1], pseudo) # Standard scatter plot
-plot((geneExpression[, 1] + pseudo) / 2, (geneExpression[, 1] - pseudo)) # MA plot
+df_ma <- data.frame(
+  Sample = geneExpression[, 1],
+  Pseudo = pseudo
+) %>%
+  mutate(
+    A = (Sample + Pseudo) / 2,
+    M = Sample - Pseudo
+  )
+
+p1 <- ggplot(df_ma, aes(x = Pseudo, y = Sample)) +
+  geom_point(alpha = 0.3, size = 1) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Standard scatter plot", x = "Median across samples", y = "Sample 1") +
+  theme_minimal()
+
+p2 <- ggplot(df_ma, aes(x = A, y = M)) +
+  geom_point(alpha = 0.3, size = 1) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "MA plot", x = "Average (A)", y = "Minus (M)") +
+  theme_minimal()
+
+p1 | p2
 ```
 
 ## MA plot: Summary
