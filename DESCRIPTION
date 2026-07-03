@@ -1,6 +1,6 @@
 Package: AppStatBio
 Title: Course Materials for Applied Statistics for High-throughput Biology
-Version: 0.0.0.9000
+Version: 1.26.0
 Authors@R: 
     person("Levi", "Waldron", , "levi.waldron@sph.cuny.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2725-0694"))
@@ -13,10 +13,12 @@ Imports:
     BiocSingular,
     Biostrings,
     broom,
+    broom.helpers,
     ComplexHeatmap,
     downloader,
     DiagrammeR,
     genefilter,
+    gtsummary,
     GSE5859,
     GSE5859Subset,
     IRanges,
