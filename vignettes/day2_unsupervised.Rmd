@@ -58,21 +58,21 @@ A **metric** is a function that defines a distance between elements of a set and
 ```{r, echo=FALSE, fig.height=3.5}
 rafalib::mypar()
 plot(
-    c(0, 1, 1),
-    c(0, 0, 1),
-    pch = 16,
-    cex = 2,
-    xaxt = "n",
-    yaxt = "n",
-    xlab = "",
-    ylab = "",
-    bty = "n",
-    xlim = c(-0.25, 1.25),
-    ylim = c(-0.25, 1.25)
+  c(0, 1, 1),
+  c(0, 0, 1),
+  pch = 16,
+  cex = 2,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  bty = "n",
+  xlim = c(-0.25, 1.25),
+  ylim = c(-0.25, 1.25)
 )
 lines(c(0, 1, 1, 0), c(0, 0, 1, 0))
-text(0, .2, expression(paste('(A'[x] * ',A'[y] * ')')), cex = 1.5)
-text(1, 1.2, expression(paste('(B'[x] * ',B'[y] * ')')), cex = 1.5)
+text(0, .2, expression(paste("(A"[x] * ",A"[y] * ")")), cex = 1.5)
+text(1, 1.2, expression(paste("(B"[x] * ",B"[y] * ")")), cex = 1.5)
 text(-0.1, 0, "A", cex = 2)
 text(1.1, 1, "B", cex = 2)
 ```
@@ -87,10 +87,10 @@ Euclidean d = $\sqrt{ (A_x-B_x)^2 + (A_y-B_y)^2}$.
 This familiar concept from geometry extends directly into higher dimensions, which is essential for analyzing complex biological datasets.
 
 ```{r, echo = FALSE, message=FALSE}
-if(!require(tissuesGeneExpression)){
+if (!require(tissuesGeneExpression)) {
   BiocManager::install("genomicsclass/tissuesGeneExpression")
 }
-if(!require(GSE5859)){
+if (!require(GSE5859)) {
   BiocManager::install("genomicsclass/GSE5859")
 }
 ```
@@ -118,7 +118,7 @@ Interested in identifying similar *samples* and similar *genes*
 - Points are no longer on the Cartesian plane
 - instead they are in higher dimensions. For example:
     - sample $i$ is defined by a point in 22,215 dimensional space: $(Y_{1,i},\dots,Y_{22215,i})^\top$. 
-    - feature $g$ is defined by a point in 189 dimensions $(Y_{g,189},\dots,Y_{g,189})^\top$
+    - feature $g$ is defined by a point in 189 dimensions $(Y_{g,1},\dots,Y_{g,189})^\top$
 
 Euclidean distance as for two dimensions. E.g., the distance between two samples $i$ and $j$ is:
 
@@ -163,8 +163,8 @@ gains may be made by compiling against:
 kidney1 <- e[, 1]
 kidney2 <- e[, 2]
 colon1 <- e[, 87]
-sqrt(sum((kidney1 - kidney2) ^ 2))
-sqrt(sum((kidney1 - colon1) ^ 2))
+sqrt(sum((kidney1 - kidney2)^2))
+sqrt(sum((kidney1 - colon1)^2))
 ```
 
 ## 3 sample example using dist()
@@ -181,11 +181,11 @@ Excerpt from ?dist:
 
 ```{r distfun, eval=FALSE}
 dist(
-    x,
-    method = "euclidean",
-    diag = FALSE,
-    upper = FALSE,
-    p = 2
+  x,
+  method = "euclidean",
+  diag = FALSE,
+  upper = FALSE,
+  p = 2
 )
 ```
 
@@ -221,47 +221,48 @@ cor(t(y))
 ## Visualizing twin pairs data
 
 ```{r vistwins, echo=FALSE}
-z1 = (y[1,] + y[2,]) / 2 #the sum
-z2 = (y[1,] - y[2,])   #the difference
+z1 <- (y[1, ] + y[2, ]) / 2 # the sum
+z2 <- (y[1, ] - y[2, ]) # the difference
 
-z = rbind(z1, z2) #matrix now same dimensions as y
+z <- rbind(z1, z2) # matrix now same dimensions as y
 
 thelim <- c(-3, 3)
 rafalib::mypar(1, 2)
 
 plot(
-    y[1,],
-    y[2,],
-    xlab = "Twin 1 (standardized height)",
-    ylab = "Twin 2 (standardized height)",
-    xlim = thelim,
-    ylim = thelim,
-    main = "Original twin heights"
+  y[1, ],
+  y[2, ],
+  xlab = "Twin 1 (standardized height)",
+  ylab = "Twin 2 (standardized height)",
+  xlim = thelim,
+  ylim = thelim,
+  main = "Original twin heights"
 )
 points(y[1, 1:2], y[2, 1:2], col = 2, pch = 16)
 
 plot(
-    z[1,],
-    z[2,],
-    xlim = thelim,
-    ylim = thelim,
-    xlab = "Average height",
-    ylab = "Difference in height",
-    main = "Manual PCA-like projection"
+  z[1, ],
+  z[2, ],
+  xlim = thelim,
+  ylim = thelim,
+  xlab = "Average height",
+  ylab = "Difference in height",
+  main = "Manual PCA-like projection"
 )
-points(z[1, 1:2] , z[2, 1:2], col = 2, pch = 16)
+points(z[1, 1:2], z[2, 1:2], col = 2, pch = 16)
 ```
 
 ## Not much distance is lost in the second dimension
 
 ```{r twindists, echo=FALSE}
 rafalib::mypar()
-d = dist(t(y))
-d3 = dist(z[1, ]) * sqrt(2) ##distance computed using just first dimension mypar(1,1)
+d <- dist(t(y))
+d3 <- dist(z[1, ]) * sqrt(2) ## distance computed using just first dimension mypar(1,1)
 plot(as.numeric(d),
-     as.numeric(d3),
-     xlab = "Pairwise distances in 2 dimensions",
-     ylab = "Pairwise distances in 1 dimension")
+  as.numeric(d3),
+  xlab = "Pairwise distances in 2 dimensions",
+  ylab = "Pairwise distances in 1 dimension"
+)
 abline(0, 1, col = "red")
 ```
 
@@ -302,9 +303,9 @@ names(s)
 ## Components of SVD results
 
 ```{r dimsvd}
-dim(s$u)     # loadings
-length(s$d)  # eigenvalues
-dim(s$v)     # d %*% vT = scores
+dim(s$u) # loadings
+length(s$d) # eigenvalues
+dim(s$v) # d %*% vT = scores
 ```
 <center>
 <img src="images/SVD1.png" alt="SVD" align="middle" style="height: 200px;">
@@ -346,13 +347,13 @@ ggplot(df_loadings, aes(x = Index, y = Loading)) +
 
 ```{r pheatmaploadings, fig.height=3.5}
 e.pc1genes <-
-    e.standardize[p$rotation[, 1] < -0.03 |
-                           p$rotation[, 1] > 0.03,]
+  e.standardize[p$rotation[, 1] < -0.03 |
+    p$rotation[, 1] > 0.03, ]
 pheatmap::pheatmap(
-    e.pc1genes,
-    scale = "none",
-    show_rownames = TRUE,
-    show_colnames = FALSE
+  e.pc1genes,
+  scale = "none",
+  show_rownames = TRUE,
+  show_colnames = FALSE
 )
 ```
 
@@ -368,7 +369,8 @@ df_scree <- data.frame(
 )
 
 ggplot(df_scree[1:150, ], aes(x = PC, y = Variance)) +
-  geom_line() + geom_point(size = 1) +
+  geom_line() +
+  geom_point(size = 1) +
   labs(title = "Screeplot", y = "% variance explained") +
   theme_minimal()
 ```
@@ -459,15 +461,15 @@ sce.zeisel <- logNormCounts(sce.zeisel)
 ```
 
 ```{r plotpcazeisel, fig.cap="Principal Components Analysis of Zeisel dataset"}
-sce.zeisel <- fixedPCA(sce.zeisel, subset.row=NULL)
-plotReducedDim(sce.zeisel, dimred="PCA", colour_by="level1class")
+sce.zeisel <- fixedPCA(sce.zeisel, subset.row = NULL)
+plotReducedDim(sce.zeisel, dimred = "PCA", colour_by = "level1class")
 ```
 
 ## t-SNE of the same dataset
 
 ```{r tsenzeisel, fig.cap="t-SNE clustering of Zeisel dataset"}
-sce.zeisel <- runTSNE(sce.zeisel, dimred="PCA")
-plotReducedDim(sce.zeisel, dimred="TSNE", colour_by="level1class")
+sce.zeisel <- runTSNE(sce.zeisel, dimred = "PCA")
+plotReducedDim(sce.zeisel, dimred = "TSNE", colour_by = "level1class")
 ```
 
 ## UMAP vs t-SNE
@@ -481,8 +483,8 @@ plotReducedDim(sce.zeisel, dimred="TSNE", colour_by="level1class")
 ## UMAP of the same dataset
 
 ```{r umapzeisel, fig.cap = "UMAP representation of the Zeisel dataset"}
-sce.zeisel <- runUMAP(sce.zeisel, dimred="PCA")
-plotReducedDim(sce.zeisel, dimred="UMAP", colour_by="level1class")
+sce.zeisel <- runUMAP(sce.zeisel, dimred = "PCA")
+plotReducedDim(sce.zeisel, dimred = "UMAP", colour_by = "level1class")
 ```
 
 ## tSNE of tissue microarray data
@@ -491,8 +493,8 @@ Using default parameters and no log transformation
 
 ```{r umaptsnezeisel}
 # We already set up `sce` with `tissue` earlier
-sce <- runTSNE(sce, dimred="PCA")
-plotReducedDim(sce, dimred="TSNE", colour_by="tissue")
+sce <- runTSNE(sce, dimred = "PCA")
+plotReducedDim(sce, dimred = "TSNE", colour_by = "tissue")
 ```
 
 ## UMAP of tissue microarray data
@@ -500,8 +502,8 @@ plotReducedDim(sce, dimred="TSNE", colour_by="tissue")
 Also using default parameters and no log transformation
 
 ```{r nologumap}
-sce <- runUMAP(sce, dimred="PCA")
-plotReducedDim(sce, dimred="UMAP", colour_by="tissue")
+sce <- runUMAP(sce, dimred = "PCA")
+plotReducedDim(sce, dimred = "UMAP", colour_by = "tissue")
 ```
 
 ## Summary: distances and dimension reduction
