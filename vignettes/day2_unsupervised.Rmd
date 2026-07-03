@@ -105,7 +105,7 @@ data(tissuesGeneExpression)
 # Modern approach: store expression and metadata together
 sce <- SingleCellExperiment(
   assays = list(logcounts = e),
-  colData = DataFrame(tissue = tissue)
+  colData = S4Vectors::DataFrame(tissue = tissue)
 )
 dim(sce) ## gene expression data
 table(sce$tissue) ## samples per tissue

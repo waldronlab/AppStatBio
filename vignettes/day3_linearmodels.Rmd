@@ -236,12 +236,12 @@ spider.sub |>
   geom_jitter(width = 0.1, color = "grey50", alpha = 0.7) +
   # Intercept line and arrow
   geom_hline(yintercept = coefs[1], color = "#1B9E77", linetype = "dashed") +
-  annotate("segment", x = 1, xend = 1, y = 0, yend = coefs[1], 
-           color = "#1B9E77", arrow = arrow(length = unit(0.1, "inches")), linewidth = 1) +
+annotate("segment", x = 1, xend = 1, y = 0, yend = coefs[1], 
+         color = "#1B9E77", arrow = grid::arrow(length = grid::unit(0.1, "inches")), linewidth = 1) +
   # Difference arrow
   geom_hline(yintercept = coefs[1] + coefs[2], color = "#D95F02", linetype = "dashed") +
-  annotate("segment", x = 2, xend = 2, y = coefs[1], yend = coefs[1] + coefs[2], 
-           color = "#D95F02", arrow = arrow(length = unit(0.1, "inches")), linewidth = 1) +
+annotate("segment", x = 2, xend = 2, y = coefs[1], yend = coefs[1] + coefs[2], 
+         color = "#D95F02", arrow = grid::arrow(length = grid::unit(0.1, "inches")), linewidth = 1) +
   # Base line
   geom_hline(yintercept = 0, color = "black") +
   labs(
