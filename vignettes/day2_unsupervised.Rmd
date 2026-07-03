@@ -14,7 +14,12 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(AppStatBio)
+suppressPackageStartupMessages({
+  library(AppStatBio)
+  library(SingleCellExperiment)
+  library(scater)
+  library(ggplot2)
+})
 ```
 
 
@@ -96,8 +101,14 @@ if(!require(GSE5859)){
 library(GSE5859)
 library(tissuesGeneExpression)
 data(tissuesGeneExpression)
-dim(e) ##gene expression data
-table(tissue) ##tissue[i] corresponds to e[,i]
+
+# Modern approach: store expression and metadata together
+sce <- SingleCellExperiment(
+  assays = list(logcounts = e),
+  colData = S4Vectors::DataFrame(tissue = tissue)
+)
+dim(sce) ## gene expression data
+table(sce$tissue) ## samples per tissue
 ```
 
 Interested in identifying similar *samples* and similar *genes*
@@ -321,11 +332,12 @@ plot(s$u[, 1] ~ p$rotation[, 1])
 ## Visualizing PCA loadings
 
 ```{r visloadings}
-plot(p$rotation[, 1],
-     xlab = "Index of genes",
-     ylab = "Loadings of PC1",
-     main = "PC1 loadings of each gene") #or, predict(p)
-abline(h = c(-0.03, 0.03), col = "red")
+df_loadings <- data.frame(Index = seq_len(nrow(p$rotation)), Loading = p$rotation[, 1])
+ggplot(df_loadings, aes(x = Index, y = Loading)) +
+  geom_point(alpha = 0.5, size = 1) +
+  geom_hline(yintercept = c(-0.03, 0.03), color = "red", linetype = "dashed") +
+  labs(title = "PC1 loadings of each gene", x = "Index of genes", y = "Loadings of PC1") +
+  theme_minimal()
 ```
 
 ## Genes with high PC1 loadings
@@ -347,14 +359,16 @@ pheatmap::pheatmap(
 - $\mathbf{D}$ (**eigenvalues**): standard deviation scaling factor that each decomposed variable is multiplied by.
 
 ```{r screeplot, fig.height=3, fig.width=5, echo=TRUE, fig.align='center'}
-rafalib::mypar()
-plot(
-    p$sdev ^ 2 / sum(p$sdev ^ 2) * 100,
-    xlim = c(0, 150),
-    type = "b",
-    ylab = "% variance explained",
-    main = "Screeplot"
+df_scree <- data.frame(
+  PC = seq_along(p$sdev),
+  Variance = p$sdev^2 / sum(p$sdev^2) * 100,
+  Cumulative = cumsum(p$sdev^2) / sum(p$sdev^2) * 100
 )
+
+ggplot(df_scree[1:150, ], aes(x = PC, y = Variance)) +
+  geom_line() + geom_point(size = 1) +
+  labs(title = "Screeplot", y = "% variance explained") +
+  theme_minimal()
 ```
 
 ## PCA interpretation: eigenvalues
@@ -362,14 +376,11 @@ plot(
 Alternatively as cumulative % variance explained (using `cumsum()` function)
 
 ```{r cumscreeplot, fig.height=4, echo=TRUE, fig.align='center'}
-rafalib::mypar()
-plot(
-    cumsum(p$sdev ^ 2) / sum(p$sdev ^ 2) * 100,
-    ylab = "cumulative % variance explained",
-    ylim = c(0, 100),
-    type = "b",
-    main = "Cumulative screeplot"
-)
+ggplot(df_scree, aes(x = PC, y = Cumulative)) +
+  geom_line() +
+  labs(title = "Cumulative screeplot", y = "Cumulative % variance explained") +
+  coord_cartesian(ylim = c(0, 100)) +
+  theme_minimal()
 ```
 
 ## PCA interpretation: scores
@@ -384,22 +395,10 @@ plot(
 ## PCA interpretation: scores
 
 ```{r scores, fig.height=5, echo=FALSE}
-rafalib::mypar()
-plot(
-    p$x[, 1:2],
-    xlab = "PC1",
-    ylab = "PC2",
-    main = "plot of p$x[, 1:2]",
-    col = factor(tissue),
-    pch = as.integer(factor(tissue))
-)
-legend(
-    "topright",
-    legend = levels(factor(tissue)),
-    col = 1:length(unique(tissue)),
-    pch = 1:length(unique(tissue)),
-    bty = 'n'
-)
+# Using scater for modern SingleCellExperiment PCA plotting
+sce <- runPCA(sce, exprs_values = "logcounts")
+plotPCA(sce, colour_by = "tissue") +
+  ggtitle("PCA plot of tissue data")
 ```
 
 ## Multi-dimensional Scaling (MDS)
@@ -414,15 +413,11 @@ mds <- cmdscale(d)
 ```
 
 ```{r plotmds, echo=FALSE}
-rafalib::mypar()
-plot(mds, col = factor(tissue), pch = as.integer(factor(tissue)))
-legend(
-    "topright",
-    legend = levels(factor(tissue)),
-    col = 1:length(unique(tissue)),
-    bty = 'n',
-    pch = 1:length(unique(tissue))
-)
+mds_df <- data.frame(Dim1 = mds[, 1], Dim2 = mds[, 2], tissue = tissue)
+ggplot(mds_df, aes(x = Dim1, y = Dim2, color = tissue)) +
+  geom_point(size = 2) +
+  labs(title = "MDS Plot of tissues", x = "Coordinate 1", y = "Coordinate 2") +
+  theme_minimal()
 ```
 
 ## t-SNE
@@ -493,13 +488,9 @@ plotReducedDim(sce.zeisel, dimred="UMAP", colour_by="level1class")
 Using default parameters and no log transformation
 
 ```{r umaptsnezeisel}
-sct <- SingleCellExperiment(e)
-sct$tissue <- tissue
-# fake the log normalization because it is undesirable for microarray data
-names(assays(sct)) <- "logcounts" 
-sct <- fixedPCA(sct, subset.row=NULL)
-sct <- runTSNE(sct, dimred="PCA")
-plotReducedDim(sct, dimred="TSNE", colour_by="tissue")
+# We already set up `sce` with `tissue` earlier
+sce <- runTSNE(sce, dimred="PCA")
+plotReducedDim(sce, dimred="TSNE", colour_by="tissue")
 ```
 
 ## UMAP of tissue microarray data
@@ -507,8 +498,8 @@ plotReducedDim(sct, dimred="TSNE", colour_by="tissue")
 Also using default parameters and no log transformation
 
 ```{r nologumap}
-sct <- runUMAP(sct, dimred="PCA")
-plotReducedDim(sct, dimred="UMAP", colour_by="tissue")
+sce <- runUMAP(sce, dimred="PCA")
+plotReducedDim(sce, dimred="UMAP", colour_by="tissue")
 ```
 
 ## Summary: distances and dimension reduction
@@ -523,6 +514,7 @@ plotReducedDim(sct, dimred="UMAP", colour_by="tissue")
 
 ## Lab exercise
 
+* **Check your BLAS**: Matrix multiplication speed relies heavily on your Basic Linear Algebra Subprograms (BLAS). In the lab, verify you are using an optimized BLAS (like OpenBLAS, Intel MKL, or Apple Accelerate). You can check this by running `sessionInfo()` in your R console and looking for the "Matrix products:" and "BLAS:" fields. If it points to `libRblas.so` or `libR.dylib` (instead of e.g. `libopenblas.so` or `vecLib`), you might be using the unoptimized default!
 * OSCA Basics: [Chapter 4 Dimensionality Reduction](http://bioconductor.org/books/release/OSCA.basic/dimensionality-reduction.html)
 * Optional if you are interested, OSCA Advanced: [Chapter 4 Dimensionality reduction, redux](http://bioconductor.org/books/release/OSCA.advanced/dimensionality-reduction-redux.html)
 
