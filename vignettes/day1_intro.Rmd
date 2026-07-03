@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 suppressPackageStartupMessages(library(AppStatBio))
+suppressPackageStartupMessages(library(ggplot2))
 ```
 
 # Front matter
@@ -71,13 +72,15 @@ My research interests:
 
 Normally distributed random variable with mean $\mu = 0$ / standard deviation $\sigma = 1$, and a sample of $n=100$
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 set.seed(1)
-x = rnorm(100)
-res = hist(x, main = "Standard Normal Distribution\n mean 0, std. dev. 1", prob =
-               TRUE)
-xdens = seq(min(res$breaks), max(res$breaks), by = 0.01)
-lines(xdens, dnorm(xdens))
+x <- rnorm(100)
+df <- data.frame(x = x)
+ggplot(df, aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightgrey", color = "black") +
+  stat_function(fun = dnorm, color = "blue", linewidth = 1) +
+  labs(title = "Standard Normal Distribution\n mean 0, std. dev. 1", x = "Value", y = "Density") +
+  theme_minimal()
 ```
 
 ## Random Variables - examples
@@ -85,16 +88,14 @@ lines(xdens, dnorm(xdens))
 Poisson distributed random variable ($\lambda = 2$), and a sample of $n=100$.
 
 ```{r, echo=FALSE}
-x = rpois(100, lambda = 2)
-res = hist(
-    x,
-    main = "Poisson Distribution",
-    prob = FALSE,
-    col = "lightgrey",
-    breaks = seq(-0.5, round(max(x)) + 0.5, by = 0.5)
-)
-xdens = seq(min(x), max(x), by = 1)
-lines(xdens, length(x) * dpois(xdens, lambda = 2), lw = 2)
+x <- rpois(100, lambda = 2)
+df <- data.frame(x = x)
+ggplot(df, aes(x = x)) +
+  geom_bar(fill = "lightgrey", color = "black") +
+  geom_point(data = data.frame(x = 0:max(x), y = 100 * dpois(0:max(x), lambda = 2)), aes(x = x, y = y), color = "blue", size = 2) +
+  geom_line(data = data.frame(x = 0:max(x), y = 100 * dpois(0:max(x), lambda = 2)), aes(x = x, y = y), color = "blue", linewidth = 1) +
+  labs(title = "Poisson Distribution", x = "Value", y = "Frequency") +
+  theme_minimal()
 ```
 
 ## Random Variables - examples
@@ -102,16 +103,14 @@ lines(xdens, length(x) * dpois(xdens, lambda = 2), lw = 2)
 Negative Binomially distributed random variable ($size=30, \mu=2$), and a sample of $n=100$.
 
 ```{r, echo=FALSE}
-x = rnbinom(100, size = 30, mu = 2)
-res = hist(
-    x,
-    main = "Negative Binomial Distribution",
-    prob = FALSE,
-    col = "lightgrey",
-    breaks = seq(-0.5, round(max(x)) + 0.5, by = 0.5)
-)
-xdens = seq(min(x), max(x), by = 1)
-lines(xdens, length(x) * dnbinom(xdens, size = 30, mu = 2), lw = 2)
+x <- rnbinom(100, size = 30, mu = 2)
+df <- data.frame(x = x)
+ggplot(df, aes(x = x)) +
+  geom_bar(fill = "lightgrey", color = "black") +
+  geom_point(data = data.frame(x = 0:max(x), y = 100 * dnbinom(0:max(x), size = 30, mu = 2)), aes(x = x, y = y), color = "blue", size = 2) +
+  geom_line(data = data.frame(x = 0:max(x), y = 100 * dnbinom(0:max(x), size = 30, mu = 2)), aes(x = x, y = y), color = "blue", linewidth = 1) +
+  labs(title = "Negative Binomial Distribution", x = "Value", y = "Frequency") +
+  theme_minimal()
 ```
 
 ## Random Variables - examples
@@ -120,16 +119,14 @@ lines(xdens, length(x) * dnbinom(xdens, size = 30, mu = 2), lw = 2)
     - use for binary outcomes
     
 ```{r, echo=FALSE}
-x = rbinom(100, size = 20, prob = 0.25)
-res = hist(
-    x,
-    main = "Binomial Distribution",
-    prob = FALSE,
-    col = "lightgrey",
-    breaks = seq(-0.5, round(max(x)) + 0.5, by = 0.5)
-)
-xdens = seq(min(x), max(x), by = 1)
-lines(xdens, length(x) * dbinom(xdens, size = 20, prob = 0.25), lw = 2)
+x <- rbinom(100, size = 20, prob = 0.25)
+df <- data.frame(x = x)
+ggplot(df, aes(x = x)) +
+  geom_bar(fill = "lightgrey", color = "black") +
+  geom_point(data = data.frame(x = 0:max(x), y = 100 * dbinom(0:max(x), size = 20, prob = 0.25)), aes(x = x, y = y), color = "blue", size = 2) +
+  geom_line(data = data.frame(x = 0:max(x), y = 100 * dbinom(0:max(x), size = 20, prob = 0.25)), aes(x = x, y = y), color = "blue", linewidth = 1) +
+  labs(title = "Binomial Distribution", x = "Value", y = "Frequency") +
+  theme_minimal()
 ```
 
 # Hypothesis Testing
@@ -300,22 +297,21 @@ reps <- 100
 N <- 30
 alpha <- 0.05
 my.conf.ints <- replicate(reps, t.test(rnorm(N), conf.level = 1-alpha)$conf.int)
-plot(x = rep(range(my.conf.ints), reps / 2),
-     y = 1:reps,
-     main = paste(reps, "samples of size N=", N),
-     type = "n")
-abline(v = 0, lw = 2, lty = 3)
-for (i in seq(1, reps)) {
-    acceptH0 <- my.conf.ints[1, i] < 0 & my.conf.ints[2, i] > 0
-    segments(
-        x0 = my.conf.ints[1, i],
-        y0 = i,
-        x1 = my.conf.ints[2, i],
-        y1 = i,
-        lw = ifelse(acceptH0, 1, 2),
-        col = ifelse(acceptH0, "black", "red")
-    )
-}
+df <- data.frame(
+  sample = 1:reps,
+  lower = my.conf.ints[1, ],
+  upper = my.conf.ints[2, ]
+)
+df$contains_zero <- df$lower < 0 & df$upper > 0
+
+ggplot(df, aes(y = sample)) +
+  geom_segment(aes(x = lower, xend = upper, yend = sample, color = contains_zero, linewidth = contains_zero)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  scale_color_manual(values = c("FALSE" = "red", "TRUE" = "black")) +
+  scale_linewidth_manual(values = c("FALSE" = 1, "TRUE" = 0.5)) +
+  labs(title = paste(reps, "samples of size N=", N), x = "Confidence Interval", y = "Sample") +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
 ## Intervals for any confidence level
@@ -363,6 +359,24 @@ Which of the following are true?
 * Small p-values are particularly:
     - variable under repeated sampling, and
     - sensitive to test assumptions
+
+## Distribution of p-values under the null hypothesis
+
+When the null hypothesis is true, p-values are uniformly distributed between 0 and 1. This means that even if there is no true effect, we will still observe p-values < 0.05 in 5% of our tests purely by chance.
+
+```{r, echo=FALSE, fig.height=4, fig.width=6}
+set.seed(123)
+n_tests <- 1000
+# Simulate 1000 t-tests where there is no difference (both groups from standard normal)
+p_vals <- replicate(n_tests, t.test(rnorm(10), rnorm(10))$p.value)
+
+ggplot(data.frame(p = p_vals), aes(x = p)) +
+  geom_histogram(breaks = seq(0, 1, by = 0.05), fill = "lightgrey", color = "black") +
+  geom_hline(yintercept = n_tests * 0.05, linetype = "dashed", color = "red") +
+  labs(title = "Histogram of p-values when Null Hypothesis is True",
+       x = "p-value", y = "Frequency") +
+  theme_minimal()
+```
 
 ## Use and mis-use of the p-value (cont'd)
 
@@ -562,9 +576,33 @@ alphabetFrequency(dnastring, baseOnly=TRUE, as.prob=TRUE)
 ![Summarized Experiment](images/SE.svg)
 * Source: https://bioconductor.org/packages/SummarizedExperiment/
 
-## (Ranged)SummarizedExperiment
+## (Ranged)SummarizedExperiment in Practice
 
-* `RangedSummarizedExperiment` is the _de facto_ standard for "rectangular" data with metadata
+* `SummarizedExperiment` is the _de facto_ standard for "rectangular" data with metadata
+* Let's build a real `SummarizedExperiment` using the tissue gene expression data:
+
+```{r, message=FALSE, warning=FALSE}
+suppressPackageStartupMessages(library(SummarizedExperiment))
+# We can use the genomicsclass tissuesGeneExpression data
+suppressPackageStartupMessages(library(tissuesGeneExpression))
+data(tissuesGeneExpression)
+
+# Create the SummarizedExperiment object
+se <- SummarizedExperiment(
+    assays = list(counts = e),
+    colData = DataFrame(tissue = tissue),
+    rowData = DataFrame(gene_id = rownames(e))
+)
+se
+```
+
+* We can directly access the expression matrix (`assay()`), sample metadata (`colData()`), and feature metadata (`rowData()`):
+
+```{r}
+dim(assay(se))
+head(colData(se), 3)
+```
+
 * Extended by `SingleCellExperiment`, `DESeqDataSet`
 * Emulated by `MultiAssayExperiment`
 
