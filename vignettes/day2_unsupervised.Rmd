@@ -122,17 +122,19 @@ Interested in identifying similar *samples* and similar *genes*
 
 Euclidean distance as for two dimensions. E.g., the distance between two samples $i$ and $j$ is:
 
-$$ \mbox{dist}(i,j) = \sqrt{ \sum_{g=1}^{22215} (Y_{g,i}-Y_{g,j })^2 } $$
+$$ \text{dist}(i,j) = \sqrt{ \sum_{g} (Y_{g,i}-Y_{g,j})^2 } $$
 
-and the distance between two features $h$ and $g$ is:
+where the sum runs over all $g = 1, \dots, 22215$ genes, and the distance between two features $h$ and $g$ is:
 
-$$ \mbox{dist}(h,g) = \sqrt{ \sum_{i=1}^{189} (Y_{h,i}-Y_{g,i})^2 } $$
+$$ \text{dist}(h,g) = \sqrt{ \sum_{i} (Y_{h,i}-Y_{g,i})^2 } $$
+
+where the sum runs over all $i = 1, \dots, 189$ samples.
 
 ## Euclidian distance in matrix algebra notation
 
 The Euclidian distance between samples $i$ and $j$ can be written as:
 
-$$ \mbox{dist}(i,j) = \sqrt{ (\mathbf{Y}_i - \mathbf{Y}_j)^\top(\mathbf{Y}_i - \mathbf{Y}_j) }$$
+$$ \text{dist}(i,j) = \sqrt{ (\mathbf{Y}_i - \mathbf{Y}_j)^\top(\mathbf{Y}_i - \mathbf{Y}_j) }$$
 
 with $\mathbf{Y}_i$ and $\mathbf{Y}_j$ columns $i$ and $j$. 
 
