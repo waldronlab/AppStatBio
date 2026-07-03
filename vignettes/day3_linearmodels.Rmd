@@ -228,21 +228,28 @@ broom::tidy(fit)
 
 ## Interpretation of spider leg type coefficients
 
-```{r spider_main_coef, fig.cap="Diagram of the estimated coefficients in the linear model. The green arrow indicates the Intercept term, which goes from zero to the mean of the reference group (here the 'pull' samples). The orange arrow indicates the difference between the push group and the pull group, which is negative in this example. The circles show the individual samples, jittered horizontally to avoid overplotting.",echo=FALSE}
-set.seed(1) #same jitter in stripchart
-stripchart(split(spider.sub$friction, spider.sub$type), 
-           vertical=TRUE, pch=1, method="jitter", las=2, xlim=c(0,3), ylim=c(0,2))
+```{r spider_main_coef, fig.cap="Diagram of the estimated coefficients in the linear model. The green dashed line indicates the Intercept term (mean of the reference group 'pull'). The orange dashed line indicates the push group mean. The solid green/orange segments explicitly show the intercept distance and the effect difference.", echo=FALSE, warning=FALSE}
+library(ggplot2)
 coefs <- coef(fit)
-a <- -0.25
-lgth <- .1
-library(RColorBrewer)
-cols <- brewer.pal(3,"Dark2")
-abline(h=0)
-arrows(1+a,0,1+a,coefs[1],lwd=3,col=cols[1],length=lgth)
-abline(h=coefs[1],col=cols[1])
-arrows(2+a,coefs[1],2+a,coefs[1]+coefs[2],lwd=3,col=cols[2],length=lgth)
-abline(h=coefs[1]+coefs[2],col=cols[2])
-legend("right",names(coefs),fill=cols,cex=.75,bg="white")
+spider.sub |>
+  ggplot(aes(x = type, y = friction)) +
+  geom_jitter(width = 0.1, color = "grey50", alpha = 0.7) +
+  # Intercept line and arrow
+  geom_hline(yintercept = coefs[1], color = "#1B9E77", linetype = "dashed") +
+  annotate("segment", x = 1, xend = 1, y = 0, yend = coefs[1], 
+           color = "#1B9E77", arrow = arrow(length = unit(0.1, "inches")), linewidth = 1) +
+  # Difference arrow
+  geom_hline(yintercept = coefs[1] + coefs[2], color = "#D95F02", linetype = "dashed") +
+  annotate("segment", x = 2, xend = 2, y = coefs[1], yend = coefs[1] + coefs[2], 
+           color = "#D95F02", arrow = arrow(length = unit(0.1, "inches")), linewidth = 1) +
+  # Base line
+  geom_hline(yintercept = 0, color = "black") +
+  labs(
+    title = "Estimated coefficients in the linear model",
+    x = "Type",
+    y = "Friction"
+  ) +
+  theme_minimal()
 ```
 
 ## regression on spider leg **position**
@@ -253,9 +260,8 @@ Remember there are positions 1-4
 fit <- lm(friction ~ leg, data=spider)
 ```
 
-```{r, results="asis", echo=TRUE, message=FALSE}
-fit.table <- xtable::xtable(fit, label=NULL)
-print(fit.table, type="html")
+```{r, echo=TRUE, message=FALSE}
+knitr::kable(broom::tidy(fit), digits = 3)
 ```
 
 -   Interpretation of the dummy variables legL2, legL3, legL4 ?
@@ -292,9 +298,8 @@ by:
 fit <- lm(friction ~ type + leg, data=spider)
 ```
 
-```{r, results="asis", echo=TRUE, message=FALSE}
-fit.table <- xtable::xtable(fit, label=NULL)
-print(fit.table, type="html")
+```{r, echo=TRUE, message=FALSE}
+gtsummary::tbl_regression(fit)
 ```
 
 -   this model still doesn't represent how the friction differences
@@ -318,9 +323,8 @@ Image credit: <http://personal.stevens.edu/~ysakamot/>
 fit <- lm(friction ~ type * leg, data=spider)
 ```
 
-```{r, results="asis", echo=TRUE, message=FALSE}
-fit.table <- xtable::xtable(fit, label=NULL)
-print(fit.table, type="html")
+```{r, echo=TRUE, message=FALSE}
+gtsummary::tbl_regression(fit)
 ```
 
 ## Model formulae (cont'd)
@@ -472,18 +476,39 @@ $$
     1.  \# of trials n,
     2.  probability of success p
 
-```{r, echo=FALSE}
-plot(x=0:40, y=dnbinom(0:40, size=10, prob=0.5), 
-     type="b", lwd=2, ylim=c(0, 0.15),
-     xlab="Counts (k)", ylab="Probability density")
-lines(x=0:40, y=dnbinom(0:40, size=20, prob=0.5), 
-      type="b", lwd=2, lty=2, pch=2)
-lines(x=0:40, y=dnbinom(0:40, size=10, prob=0.3),
-      type="b", lwd=2, lty=3, pch=3)
-lines(x=0:40, y=dpois(0:40, lambda=9), col="red")
-lines(x=0:40, y=dpois(0:40, lambda=20), col="red")
-legend("topright", lwd=c(2,2,2,1), lty=c(1:3,1), pch=c(1:3,-1), col=c(rep("black", 3), "red"),
-       legend=c("n=10, p=0.5", "n=20, p=0.5", "n=10, p=0.3", "Poisson"))
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+x <- 0:40
+df_dist <- data.frame(
+  Counts = x,
+  dist1 = dnbinom(x, size = 10, prob = 0.5),
+  dist2 = dnbinom(x, size = 20, prob = 0.5),
+  dist3 = dnbinom(x, size = 10, prob = 0.3),
+  dist4 = dpois(x, lambda = 9)
+)
+
+df_long <- df_dist |>
+  pivot_longer(-Counts, names_to = "Distribution", values_to = "Density") |>
+  mutate(Distribution = case_match(
+    Distribution,
+    "dist1" ~ "NB (n=10, p=0.5)",
+    "dist2" ~ "NB (n=20, p=0.5)",
+    "dist3" ~ "NB (n=10, p=0.3)",
+    "dist4" ~ "Poisson (\u03bb=9)"
+  ))
+
+ggplot(df_long, aes(x = Counts, y = Density, color = Distribution, linetype = Distribution, shape = Distribution)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_color_manual(values = c("black", "black", "black", "red")) +
+  scale_linetype_manual(values = c("solid", "dashed", "dotted", "solid")) +
+  scale_shape_manual(values = c(1, 2, 3, NA)) +
+  labs(x = "Counts (k)", y = "Probability density") +
+  theme_minimal() +
+  theme(legend.position = c(0.8, 0.7))
 ```
 
 ## Additive vs. multiplicative models
