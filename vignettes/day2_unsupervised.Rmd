@@ -1,5 +1,5 @@
 ---
-title: "Applied Statistics for High-throughput Biology Session 2: Unsupervised Learning & Dimensionality Reduction"
+title: "Applied Statistics for High-throughput Biology Session 2"
 output: slidy_presentation
 author: "Levi Waldron"
 vignette: >
@@ -38,19 +38,34 @@ suppressPackageStartupMessages({
 
 Each stage (separated by dashed lines) consists of a number of specific steps, many of which operate on and modify a SingleCellExperiment instance. ([original image](http://bioconductor.org/books/3.17/OSCA.intro/))
 
-## Metrics and distances
+## How do we measure similarity?
 
-A **metric** is a function that defines a distance between elements of a set and satisfies five key properties:
+- Defining similarity requires choosing a metric.
+- There is an infinite number of ways to do this, depending on:
+    - Which features to include and how they are weighted
+    - How features are scaled or transformed (e.g., standardizing features so they are equally important)
+    - The mathematical formula for the metric
 
-1.  **Non-negativity:** The distance from point A to point B is always non-negative ($d(a, b) \ge 0$).
-2.  **Symmetry:** The distance from A to B is the same as the distance from B to A ($d(a, b) = d(b, a)$).
-3.  **Identity of indiscernibles:** The distance from a point to itself is zero ($d(a, a) = 0$).
-4.  **Definiteness:** The distance is zero if and only if the points are the same ($d(a, b) = 0 \iff a=b$).
-5.  **Triangle Inequality:** The distance from A to C is never greater than the sum of the distances from A to B and B to C ($d(a, c) \le d(a, b) + d(b, c)$).
+![Birds and Dinosaurs](images/birds_and_dinosaurs.png)
+[xkcd](https://xkcd.com/1211/)
 
-- A **distance** is a more general term, typically required to satisfy only the first three properties.
-- A **similarity function** also satisfies non-negativity and symmetry, but its value **increases** as two objects become more alike.
-- A **dissimilarity function** is similar, but its value **decreases** as objects become more alike.
+## Common distance metrics (Continuous data)
+
+- **Euclidean distance ($L_2$ norm)**: Straight-line distance
+- **Manhattan distance ($L_1$ norm)**: Sum of absolute differences in all coordinates
+- **Maximum distance ($L_\infty$ norm)**: Maximum of the absolute differences across all coordinates
+- **Minkowski distance ($L_m$ norm)**: Generalization of Euclidean and Manhattan
+$$d(A,B) = \left( \sum_{i=1}^p \left|a_i-b_i\right|^m \right)^\frac{1}{m}$$
+- **Mahalanobis / Weighted Euclidean**: Accounts for dynamic range and correlation between features
+
+## Distances for categorical, binary, and correlated data
+
+- **Edit / Hamming distance**: Number of differences between character sequences
+- **Binary distance**: Proportion of features with only one bit on
+- **Jaccard distance**: Focuses on co-occurrence rather than co-absence (useful for ecological or mutation data)
+- **Correlation-based distance**: Distance based on Pearson correlation
+$$d(A,B) = \sqrt{2(1 - \text{cor}(A,B))}$$
+
 
 ## Euclidian distance (metric)
 
@@ -518,9 +533,16 @@ plotReducedDim(sce, dimred = "UMAP", colour_by = "tissue")
 
 ## Lab exercise
 
-* **Check your BLAS**: Matrix multiplication speed relies heavily on your Basic Linear Algebra Subprograms (BLAS). In the lab, verify you are using an optimized BLAS (like OpenBLAS, Intel MKL, or Apple Accelerate). You can check this by running `sessionInfo()` in your R console and looking for the "Matrix products:" and "BLAS:" fields. If it points to `libRblas.so` or `libR.dylib` (instead of e.g. `libopenblas.so` or `vecLib`), you might be using the unoptimized default!
 * OSCA Basics: [Chapter 4 Dimensionality Reduction](http://bioconductor.org/books/release/OSCA.basic/dimensionality-reduction.html)
 * Optional if you are interested, OSCA Advanced: [Chapter 4 Dimensionality reduction, redux](http://bioconductor.org/books/release/OSCA.advanced/dimensionality-reduction-redux.html)
+
+## Note about large matrices
+
+* "Stock" R uses an unoptimized `BLAS` C library for matrix algebra. Large speed
+gains may be made simply by installing one of (depending on your operating system):
+    + [OpenBLAS](https://www.openblas.net/)
+    + [Intel Math Kernel Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onemkl.html)
+    + [Apple Accelerate Framework (macOS)](https://developer.apple.com/documentation/accelerate) (default for MacOS R binaries)
 
 ## Links
 

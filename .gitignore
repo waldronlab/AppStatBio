@@ -26,3 +26,5 @@ README.html
 inst/doc
 docs
 tmp/
+labs/
+.DS_Store
