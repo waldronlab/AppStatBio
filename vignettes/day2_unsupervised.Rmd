@@ -58,6 +58,10 @@ Each stage (separated by dashed lines) consists of a number of specific steps, m
 $$d(A,B) = \left( \sum_{i=1}^p \left|a_i-b_i\right|^m \right)^\frac{1}{m}$$
 - **Mahalanobis / Weighted Euclidean**: Accounts for dynamic range and correlation between features
 
+![Distance example](images/fig-Mahalanobis-1.png)
+
+https://www.huber.embl.de/msmb/05-chap.html#how-do-we-measure-similarity
+
 ## Distances for categorical, binary, and correlated data
 
 - **Edit / Hamming distance**: Number of differences between character sequences
