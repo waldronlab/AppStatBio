@@ -10,14 +10,17 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
+    airway,
     BiocSingular,
     Biostrings,
     broom,
     broom.helpers,
     ComplexHeatmap,
+    DESeq2,
     downloader,
     DiagrammeR,
     genefilter,
+    ggplot2,
     gtsummary,
     GSE5859,
     GSE5859Subset,
