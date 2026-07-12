@@ -43,7 +43,7 @@ library(AppStatBio)
 ::: columns-2
 <center>
 
-<img src="images/srep01101-f4.jpg" height="600"/>
+<img src="images/srep01101-f4.jpg" alt="Barplot and Boxplot of spider leg friction coefficients" height="600"/>
 
 </center>
 
@@ -63,7 +63,7 @@ library(AppStatBio)
 ::: columns-2
 <center>
 
-<img src="images/srep01101-f4.jpg" height="600"/>
+<img src="images/srep01101-f4.jpg" alt="Barplot and Boxplot of spider leg friction coefficients" height="600"/>
 
 </center>
 
