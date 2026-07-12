@@ -214,7 +214,7 @@ Regression coefficients for `friction ~ type` for first set of spider
 legs:
 
 ```{r, echo=TRUE}
-broom::tidy(fit)
+gtsummary::tbl_regression(fit)
 ```
 
 <p>
@@ -261,24 +261,10 @@ fit <- lm(friction ~ leg, data=spider)
 ```
 
 ```{r, echo=TRUE, message=FALSE}
-knitr::kable(broom::tidy(fit), digits = 3)
+gtsummary::tbl_regression(fit)
 ```
 
 -   Interpretation of the dummy variables legL2, legL3, legL4 ?
-
-## Aside: beautiful regression tables using gt
-
-```{r, echo=TRUE, results="asis"}
-library(gtsummary)
-library(gt)
-regression_table <- tbl_regression(fit) |>
-  as_gt() |> # Convert to a gt object for more control
-  gt::tab_header(
-    title = "Linear Regression Model Summary",
-    subtitle = "Analysis of friction based on spider leg type and pair."
-  )
-print(regression_table)
-```
 
 
 ## Regression with multiple predictors
@@ -621,14 +607,7 @@ Important notes for intuition:
 
 ## Exercises
 
-- Repeat analyses of OSCA multi-sample Chapter 4: [DE analyses between conditions](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html)
-
-Please discuss the following questions:
-
-1. What is a major problem with the hypothesis testing in [4.6 Testing for between-label differences](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html#testing-for-between-label-differences)?
-    - (note, the inference problem is acknowledged in this section)
-2. What is a related problem with the hypothesis testing in [4.4 Performing the DE analysis](http://bioconductor.org/books/3.17/OSCA.multisample/multi-sample-comparisons.html#performing-the-de-analysis)?
-3. How might you avoid these same problems, with the same data or a multi'omic technology?
+- Work through the [Lab 3: Differential Expression and Double-Dipping](lab3.html) exercises to explore standard differential expression and the dangers of double-dipping.
 
 ## Links
 
