@@ -428,31 +428,31 @@ $$
 ## Poisson error model
 
 $$
-f(k, \lambda) = e^{-\lambda} \frac{\lambda^k}{k!}
+f(k, \mu) = e^{-\mu} \frac{\mu^k}{k!}
 $$
 
 -   where $f$ is the probability of $k$ events (e.g. \# of reads
     counted), and
--   $\lambda$ is the mean number of events, so $E[y|x]$
--   $\lambda$ is also the variance of the number of events
+-   $\mu$ is the mean number of events, so $E[y|x]$
+-   $\mu$ is also the variance of the number of events
 
 ## Negative Binomial error model
 
 -   *aka* gamma--Poisson mixture distribution
 
 $$
-f(k, \lambda, \theta) = \frac{\Gamma(\frac{1 + \theta k}{\theta})}{k! \, \Gamma(\frac{1}{\theta})} 
-    \left(\frac{\theta m}{1+\theta m}\right)^k 
-    \left(1+\theta m\right)^\theta
+f(k \mid \mu, \alpha) = \frac{\Gamma(k + 1/\alpha)}{k! \, \Gamma(1/\alpha)} 
+    \left(\frac{1}{1+\alpha\mu}\right)^{1/\alpha}
+    \left(\frac{\alpha\mu}{1+\alpha\mu}\right)^k
     \quad\text{for }k = 0, 1, 2, \dotsc
 $$
 
 -   where $f$ is still the probability of $k$ events (e.g. \# of reads
     counted),
--   $\lambda$ is still the mean number of events, so $E[y|x]$
--   An additional **dispersion parameter** $\theta$ is estimated:
-    -   $\theta \rightarrow 0$: Poisson distribution
-    -   $\theta \rightarrow \infty$: Gamma distribution
+-   $\mu$ is the mean number of events, so $E[y|x]$
+-   $\alpha$ is the dispersion parameter, so $Var(y|x) = \mu + \alpha\mu^2$
+    -   larger $\alpha$ means more overdispersion than Poisson
+    -   $\alpha \rightarrow 0$: Poisson distribution
 -   The Poisson model can be considered as **nested** within the
     Negative Binomial model
 -   A likelihood ratio test comparing the two models is possible
@@ -484,7 +484,7 @@ df_long <- df_dist |>
     "dist1" ~ "NB (n=10, p=0.5)",
     "dist2" ~ "NB (n=20, p=0.5)",
     "dist3" ~ "NB (n=10, p=0.3)",
-    "dist4" ~ "Poisson (\u03bb=9)"
+        "dist4" ~ "Poisson (\u03bc=9)"
   ))
 
 ggplot(df_long, aes(x = Counts, y = Density, color = Distribution, linetype = Distribution, shape = Distribution)) +
