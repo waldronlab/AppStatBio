@@ -90,7 +90,8 @@ summary(spider)
 ```{r, fig.align='center', echo=FALSE, fig.cap="Boxplot of friction coefficients by leg type and leg pair"}
 library(ggplot2)
 ggplot(spider, aes(x = interaction(type, leg), y = friction, fill = type)) +
-  geom_boxplot() +
+    geom_boxplot(varwidth = TRUE, notch = TRUE, outlier.shape = NA, alpha = 0.8) +
+    geom_jitter(width = 0.15, alpha = 0.6, size = 1.4, color = "black") +
   scale_fill_manual(values = c("grey90", "grey40")) +
   labs(
     x = NULL,  # Removes the x-axis title for a cleaner look like the original
