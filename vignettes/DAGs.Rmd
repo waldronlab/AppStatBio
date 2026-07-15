@@ -4,6 +4,82 @@ output: slidy_presentation
 author: "Levi Waldron"
 ---
 
+## Basic Causal Effect
+
+```{r dag_basic, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+library(ggdag)
+library(ggplot2)
+
+dag_basic <- dagify(
+    D.disease ~ E.exposure
+)
+ggdag(dag_basic, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+## Adding Confounders
+
+```{r dag_confounder, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_confounder <- dagify(
+    D.disease ~ E.exposure + G.measured_confounder,
+    E.exposure ~ C.confounder,
+    G.measured_confounder ~ C.confounder
+)
+ggdag(dag_confounder, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+## Adding Mediators
+
+```{r dag_mediator, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_mediator <- dagify(
+    D.disease ~ E.exposure + G.measured_confounder + M.mediator,
+    E.exposure ~ C.confounder,
+    G.measured_confounder ~ C.confounder,
+    M.mediator ~ E.exposure
+)
+ggdag(dag_mediator, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+## Adding Colliders
+
+```{r dag_collider, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_collider <- dagify(
+    D.disease ~ E.exposure + G.measured_confounder + M.mediator + L.unmeasured_cause,
+    E.exposure ~ C.confounder,
+    G.measured_confounder ~ C.confounder,
+    M.mediator ~ E.exposure,
+    S.collider ~ E.exposure + L.unmeasured_cause
+)
+ggdag(dag_collider, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+## Adding Descendants
+
+```{r dag_descendant, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_descendant <- dagify(
+    D.disease ~ E.exposure + G.measured_confounder + M.mediator + L.unmeasured_cause,
+    E.exposure ~ C.confounder,
+    G.measured_confounder ~ C.confounder,
+    M.mediator ~ E.exposure,
+    S.collider ~ E.exposure + L.unmeasured_cause,
+    Z.descendant ~ D.disease
+)
+ggdag(dag_descendant, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+## Adding Instrumental Variables
+
+```{r dag_instrument, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_instrument <- dagify(
+    D.disease ~ E.exposure + G.measured_confounder + M.mediator + L.unmeasured_cause,
+    E.exposure ~ C.confounder + I.instrumental_variable,
+    G.measured_confounder ~ C.confounder,
+    M.mediator ~ E.exposure,
+    S.collider ~ E.exposure + L.unmeasured_cause,
+    Z.descendant ~ D.disease
+)
+ggdag(dag_instrument, text = FALSE, use_labels = "name") + theme_dag()
+```
+
 ## Causal Directed Acyclic Graphs
 
 Digitale, J. C., Martin, J. N., & Glymour, M. M. (2022). _Tutorial on directed acyclic graphs._ Journal of clinical epidemiology, 142, 264–267. [https://doi.org/10.1016/j.jclinepi.2021.08.001](https://doi.org/10.1016/j.jclinepi.2021.08.001)
