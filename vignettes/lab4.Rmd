@@ -1,0 +1,95 @@
+---
+title: "Lab 4: DAGs in Data Analysis"
+author: "Levi Waldron"
+output: html_document
+---
+
+## Introduction
+
+In this lab, we will use simulated data to demonstrate the importance of Directed Acyclic Graphs (DAGs) in guiding statistical analysis. We will see how failing to control for a confounder, or mistakenly controlling for a collider, can both lead to biased estimates of a causal effect.
+
+We will simulate a scenario where the true causal effect of an Exposure (E) on a Disease (D) is exactly zero. However, there are two other variables present:
+- **C (Confounder):** Causes both E and D.
+- **S (Collider):** Caused by both E and D.
+
+Let's draw the DAG for this scenario:
+
+```{r dag, message=FALSE, warning=FALSE}
+library(ggdag)
+library(ggplot2)
+
+dag <- dagify(
+  D ~ C,
+  E ~ C,
+  S ~ E + D,
+  labels = c("D" = "Disease", "E" = "Exposure", "C" = "Confounder", "S" = "Collider"),
+  exposure = "E",
+  outcome = "D",
+  coords = list(
+    x = c(C = 0, E = -1, D = 1, S = 0),
+    y = c(C = 1, E = 0, D = 0, S = -1)
+  )
+)
+
+ggdag(dag, text = FALSE, use_labels = "label") + theme_dag()
+```
+
+## Data Simulation
+
+We simulate 1000 observations based on the relationships defined in our DAG:
+
+```{r simulate}
+set.seed(123)
+N <- 1000
+
+# 1. C is a confounder (causes E and D)
+C <- rnorm(N, mean = 0, sd = 1)
+
+# 2. E is caused by C, with some random noise
+E <- 0.5 * C + rnorm(N, mean = 0, sd = 1)
+
+# 3. D is caused by C, with some random noise.
+# Crucially, the true effect of E on D is 0.
+D <- 0.5 * C + 0 * E + rnorm(N, mean = 0, sd = 1)
+
+# 4. S is a collider (caused by both E and D)
+S <- 0.5 * E + 0.5 * D + rnorm(N, mean = 0, sd = 1)
+
+# Combine into a dataframe
+data <- data.frame(E, D, C, S)
+```
+
+## Data Analysis
+
+We want to estimate the causal effect of E on D. We know the true effect is 0. Let's see what happens under different modeling choices.
+
+### 1. A Biased Model: Failing to Control for the Confounder
+
+If we simply regress D on E without controlling for the confounder C, the path `E <- C -> D` remains open. This "backdoor path" creates a spurious association between E and D.
+
+```{r model_biased_confounder}
+summary(lm(D ~ E, data = data))
+```
+
+*Notice that the coefficient for E is statistically significant and positive, even though the true effect is 0!*
+
+*Now the coefficient for E is very close to 0 and not statistically significant. We successfully recovered the true effect.*
+
+### 2. Another Biased Model: Improperly Controlling for the Collider
+
+What if we decide to throw all available variables into the model, controlling for both C and S? 
+
+By conditioning on a collider (S), we open up a new non-causal path between E and D. This introduces "collider bias" (also known as Berkson's paradox or selection bias).
+
+```{r model_biased_collider}
+summary(lm(D ~ E + C + S, data = data))
+```
+
+*By controlling for the collider S, the coefficient for E becomes statistically significant and negative. We have introduced bias by over-adjusting!*
+
+### 2. The Unbiased Model: Properly Controlling for the Confounder
+
+To get an unbiased estimate of the effect of E on D, we must block the backdoor path by controlling for the confounder C. We must also be careful **not** to control for the collider S.
+
+Try this yourself, show your code and output, and let me know what you find. What happens when you simply "control for everything"?
+
