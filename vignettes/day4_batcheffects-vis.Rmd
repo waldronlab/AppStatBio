@@ -18,16 +18,183 @@ library(AppStatBio)
 ```
 
 ## Outline
-
+- [Directed acyclic graphs](https://pmc.ncbi.nlm.nih.gov/articles/PMC8821727/)
 - [Exploratory data analysis](https://genomicsclass.github.io/book/pages/exploratory_data_analysis.html) (Chapter 2)
     - Quantile Quantile (QQ)-plots
-    - Boxplots
-    - Scatterplots
     - Volcano plots
-    - p-value histograms
     - MA plots
     - heatmaps
 - [Batch effects](http://genomicsclass.github.io/book/pages/intro_to_batch_effects.html) (Chapter 10)
+
+
+```{r dag_layout, include=FALSE}
+dag_layout <- list(
+  x = c(I.instrumental_variable = -2, E.exposure = 0, C.confounder = -1, G.measured_confounder = 2, M.mediator = 2, S.collider = 2, L.unmeasured_cause = 2, D.disease = 4, J.effect_modifier = 4, Z.descendant = 6),
+  y = c(I.instrumental_variable = 0, E.exposure = 0, C.confounder = 2, G.measured_confounder = 2, M.mediator = 1, S.collider = -1, L.unmeasured_cause = -2.5, D.disease = 0, J.effect_modifier = 2, Z.descendant = 0)
+)
+```
+
+## Causal Directed Acyclic Graphs
+
+Digitale, J. C., Martin, J. N., & Glymour, M. M. (2022). _Tutorial on directed acyclic graphs._ Journal of clinical epidemiology, 142, 264–267. [https://doi.org/10.1016/j.jclinepi.2021.08.001](https://doi.org/10.1016/j.jclinepi.2021.08.001)
+
+- **Paths** are sequences of arrows, of any direction, connecting two variables and may be causal or non-causal.
+- **Paths are causal** if each variable causes the subsequent variable (all the arrows point in the same direction).
+- **Paths are non-causal** if the arrows do not all point in the same direction. They contain confounders and/or colliders.
+
+```{r dag_basic, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+library(ggdag)
+library(ggplot2)
+
+dag_basic <- dagify(
+  D.disease ~ E.exposure,
+  coords = dag_layout
+)
+ggplot(dag_basic, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_node(color = "lightgrey") +
+  geom_dag_text_repel(aes(label = name), color = "black", show.legend = FALSE) +
+  theme_dag()
+```
+
+## Adding Confounders
+
+- **Confounding** occurs because of common (shared) causes (e.g., C) of E and D. To estimate the effect of E on D, it is necessary to control for such common causes or other variables along the non-causal path. Control for either C or G would be adequate to eliminate the confounding due to C. G may be preferable, for example, if it is easier to obtain a high-quality measurement of G.
+
+```{r dag_confounder, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_confounder <- dagify(
+  D.disease ~ E.exposure + G.measured_confounder,
+  E.exposure ~ C.confounder,
+  G.measured_confounder ~ C.confounder,
+  coords = dag_layout
+)
+ggplot(dag_confounder, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_node(color = "lightgrey") +
+  geom_dag_text_repel(aes(label = name), color = "black", show.legend = FALSE) +
+  theme_dag()
+```
+
+## Adding Mediators
+
+- **Mediators** (e.g., M) are caused by E and, in turn, cause D. They should not be controlled for to estimate the total effect of E on D. (Control for them **only** if you want to estimate the **direct** effect of E on D, excluding the mediated pathway).
+
+```{r dag_mediator, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_mediator <- dagify(
+  D.disease ~ E.exposure + G.measured_confounder + M.mediator,
+  E.exposure ~ C.confounder,
+  G.measured_confounder ~ C.confounder,
+  M.mediator ~ E.exposure,
+  coords = dag_layout
+)
+ggplot(dag_mediator, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_node(color = "lightgrey") +
+  geom_dag_text_repel(aes(label = name), color = "black", show.legend = FALSE) +
+  theme_dag()
+```
+
+## Adding Colliders
+
+- **Colliders** (e.g., S) are so named because they have two arrows pointing into them. Colliders on a path block that path unless they are conditioned on (e.g., by controlling for them) or a consequence of the collider is conditioned on.
+
+```{r dag_collider, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_collider <- dagify(
+  D.disease ~ E.exposure + G.measured_confounder + M.mediator + L.unmeasured_cause,
+  E.exposure ~ C.confounder,
+  G.measured_confounder ~ C.confounder,
+  M.mediator ~ E.exposure,
+  S.collider ~ E.exposure + L.unmeasured_cause,
+  coords = dag_layout
+)
+ggplot(dag_collider, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_node(color = "lightgrey") +
+  geom_dag_text_repel(aes(label = name), color = "black", show.legend = FALSE) +
+  theme_dag()
+```
+
+## Adding Descendants
+
+- **Descendants** of D (e.g., Z). Analyses should not adjust for, stratify on, or in any way condition on descendants.
+
+```{r dag_descendant, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_descendant <- dagify(
+  D.disease ~ E.exposure + G.measured_confounder + M.mediator + L.unmeasured_cause,
+  E.exposure ~ C.confounder,
+  G.measured_confounder ~ C.confounder,
+  M.mediator ~ E.exposure,
+  S.collider ~ E.exposure + L.unmeasured_cause,
+  Z.descendant ~ D.disease,
+  coords = dag_layout
+)
+ggplot(dag_descendant, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_node(color = "lightgrey") +
+  geom_dag_text_repel(aes(label = name), color = "black", show.legend = FALSE) +
+  theme_dag()
+```
+
+## Adding Instrumental Variables
+
+- **Instrumental variables** (e.g., I) are variables related to the exposure of interest that have no association with the outcome except through the exposure. Instrumental variables analysis can be used to derive effect estimates when there is intractable confounding of E and D.
+
+```{r dag_instrument, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+dag_instrument <- dagify(
+  D.disease ~ E.exposure + G.measured_confounder + M.mediator + L.unmeasured_cause,
+  E.exposure ~ C.confounder + I.instrumental_variable,
+  G.measured_confounder ~ C.confounder,
+  M.mediator ~ E.exposure,
+  S.collider ~ E.exposure + L.unmeasured_cause,
+  Z.descendant ~ D.disease,
+  coords = dag_layout
+)
+ggplot(dag_instrument, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_node(color = "lightgrey") +
+  geom_dag_text_repel(aes(label = name), color = "black", show.legend = FALSE) +
+  theme_dag()
+```
+
+## The Full DAG
+
+- **Effect modifiers** (e.g., J) are variables that cause D and modify the effect of other causes of D, such as E. If E and J both cause D, then J modifies the effect of E on D on at least one effect-measure scale (additive or multiplicative).
+
+```{r dag1, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
+library(ggdag)
+library(ggplot2)
+
+dag <- dagify(
+  D.disease ~ E.exposure + G.measured_confounder + M.mediator + L.unmeasured_cause + J.effect_modifier,
+  E.exposure ~ C.confounder + I.instrumental_variable,
+  G.measured_confounder ~ C.confounder,
+  M.mediator ~ E.exposure,
+  S.collider ~ E.exposure + L.unmeasured_cause,
+  Z.descendant ~ D.disease,
+  coords = dag_layout
+)
+
+ggplot(dag, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_node(color = "lightgrey") +
+  geom_dag_text_repel(aes(label = name), color = "black", show.legend = FALSE) +
+  theme_dag()
+```
+
+## Key Concepts
+
+### General
+- **Paths** are sequences of arrows, of any direction, connecting two variables and may be causal or non-causal.
+- **Paths are causal** if each variable causes the subsequent variable (all the arrows point in the same direction).
+- **Paths are non-causal** if the arrows do not all point in the same direction. They contain confounders and/or colliders.
+- **Confounding** occurs because of common (shared) causes (e.g., C) of E and D. To estimate the effect of E on D, it is necessary to control for such common causes or other variables along the non-causal path. Control for either C or G would be adequate to eliminate the confounding due to C. G may be preferable, for example, if it is easier to obtain a high-quality measurement of G.
+- **Effect modifiers** (e.g., J) are variables that cause D and modify the effect of other causes of D, such as E. If E and J both cause D, then J modifies the effect of E on D on at least one effect-measure scale (additive or multiplicative).
+
+### Do NOT control for
+- **Mediators** (e.g., M) are caused by E and, in turn, cause D. They should not be controlled for to estimate the total effect of E on D. (Control for them **only** if you want to estimate the **direct** effect of E on D, excluding the mediated pathway).
+- **Colliders** (e.g., S) are so named because they have two arrows pointing into them. Colliders on a path block that path unless they are conditioned on (e.g., by controlling for them) or a consequence of the collider is conditioned on.
+- **Descendants** of D (e.g., Z). Analyses should not adjust for, stratify on, or in any way condition on descendants.
+- **Instrumental variables** (e.g., I) are variables related to the exposure of interest that have no association with the outcome except through the exposure. Instrumental variables analysis can be used to derive effect estimates when there is intractable confounding of E and D.
 
 # Exploratory data analysis
 
@@ -59,13 +226,14 @@ suppressPackageStartupMessages({
 
 # height qq plot
 p1 <- ggplot(data.frame(x = father.son$fheight), aes(sample = x)) +
-  stat_qq() + stat_qq_line() +
+  stat_qq() +
+  stat_qq_line() +
   labs(title = "Height Q-Q Plot", x = "Theoretical Normal Quantiles", y = "Height Quantiles") +
   theme_minimal()
 
 # t-distributed for 12 df
 p2 <- ggplot(data.frame(x = rt(1000, 12)), aes(sample = x)) +
-  stat_qq(distribution = qt, dparams = list(df = 12)) + 
+  stat_qq(distribution = qt, dparams = list(df = 12)) +
   stat_qq_line(distribution = qt, dparams = list(df = 12)) +
   labs(title = "T Quantiles (df=12) Q-Q Plot", x = "Theoretical t quantiles", y = "Sample Quantiles") +
   coord_cartesian(ylim = c(-6, 6)) +
@@ -73,79 +241,10 @@ p2 <- ggplot(data.frame(x = rt(1000, 12)), aes(sample = x)) +
 
 # t-distributed for 3 df
 p3 <- ggplot(data.frame(x = rt(1000, 3)), aes(sample = x)) +
-  stat_qq(distribution = qt, dparams = list(df = 3)) + 
+  stat_qq(distribution = qt, dparams = list(df = 3)) +
   stat_qq_line(distribution = qt, dparams = list(df = 3)) +
   labs(title = "T Quantiles (df=3) Q-Q Plot", x = "Theoretical t quantiles", y = "Sample Quantiles") +
   coord_cartesian(ylim = c(-6, 6)) +
-  theme_minimal()
-
-p1 | p2 | p3
-```
-
-## Boxplots: About
-
-- **Why use them?** Boxplots excel at showing the distribution of data, especially when it is not normally distributed (e.g., highly skewed data like income).
-- They provide a simple, easy-to-interpret summary of the data's range, center, and spread, while clearly highlighting outliers.
-- Their greatest advantage comes from placing them side-by-side to compare distributions across multiple groups at once.
-
-## Boxplots: Example
-
-```{r bp1, echo=FALSE, fig.width=10, fig.height=4, warning=FALSE}
-library(ggplot2)
-library(patchwork)
-
-df_exec <- data.frame(pay = exec.pay)
-
-p1 <- ggplot(df_exec, aes(x = pay)) + 
-  geom_histogram(bins = 30, fill = "gray", color = "black") + 
-  labs(title = "CEO Compensation", x = "10,000s of dollars", y = "Count") +
-  theme_minimal()
-
-p2 <- ggplot(df_exec, aes(sample = pay)) + 
-  stat_qq() + stat_qq_line() + 
-  labs(title = "CEO Compensation Q-Q Plot") +
-  theme_minimal()
-
-p3 <- ggplot(df_exec, aes(y = pay)) + 
-  geom_boxplot(fill = "lightblue") + 
-  coord_cartesian(ylim = c(0, 400)) +
-  labs(title = "CEO Compensation", y = "10,000s of dollars") +
-  theme_minimal() +
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-
-p1 | p2 | p3
-```
-<center>
-Three different views of a continuous variable. The boxplot clearly shows the skew and outliers.
-</center>
-
-## Scatterplots And Correlation: About
-
-- For two continuous variables, a scatter plot graphically shows the relationship, while correlation provides a single number to summarize its strength and direction.
-- Quick and easy with `plot()` and `cor()`.
-
-## Scatterplots And Correlation: Example
-
-```{r cor1, echo=FALSE, fig.width=10, fig.height=4, warning=FALSE}
-library(ggplot2)
-library(patchwork)
-
-p1 <- ggplot(father.son, aes(x = fheight, y = sheight)) +
-  geom_point(alpha = 0.5) +
-  labs(title = paste("correlation =", signif(cor(father.son$fheight, father.son$sheight), 2)),
-       x = "Father's height in inches", y = "Son's height in inches") +
-  theme_minimal()
-
-p2 <- ggplot(cars, aes(x = speed, y = dist)) +
-  geom_point(alpha = 0.5) +
-  labs(title = paste("correlation =", signif(cor(cars$speed, cars$dist), 2)),
-       x = "Speed", y = "Stopping Distance") +
-  theme_minimal()
-
-p3 <- ggplot(faithful, aes(x = eruptions, y = waiting)) +
-  geom_point(alpha = 0.5) +
-  labs(title = paste("correlation =", signif(cor(faithful$eruptions, faithful$waiting), 2)),
-       x = "Eruption Duration", y = "Waiting Time") +
   theme_minimal()
 
 p1 | p2 | p3
@@ -156,7 +255,7 @@ p1 | p2 | p3
 
 ```{r eda1}
 library(GSE5859Subset)
-data(GSE5859Subset) ##this loads three tables
+data(GSE5859Subset) ## this loads three tables
 class(geneExpression)
 dim(geneExpression)
 class(sampleInfo)
@@ -197,8 +296,10 @@ ggplot(df_volcano, aes(x = EffectSize, y = NegLogP, color = Significant)) +
   labs(x = "Effect size (difference in group means)", y = "-log10(p-value)") +
   theme_minimal() +
   theme(legend.position = "none") +
-  annotate("text", x = max(df_volcano$EffectSize), y = bonferroni_thresh + 0.2, 
-           label = "Bonferroni = 0.05", color = "red", hjust = 1)
+  annotate("text",
+    x = max(df_volcano$EffectSize), y = bonferroni_thresh + 0.2,
+    label = "Bonferroni = 0.05", color = "red", hjust = 1
+  )
 ```
 
 ## Volcano plots: Summary
@@ -317,16 +418,21 @@ suppressPackageStartupMessages(library(ComplexHeatmap))
 keep <- rank(apply(geneExpression, 1, var)) <= 100
 ge <- geneExpression[keep, ]
 ge <- t(scale(t(ge))) # Scale genes across samples
-rownames(ge) <- NULL; colnames(ge) <- NULL
+rownames(ge) <- NULL
+colnames(ge) <- NULL
 chr <- sub("chr", "", geneAnnotation$CHR)
 chr[is.na(chr)] <- "Un"
 chr <- factor(chr, levels = c(1:22, "Un", "X", "Y"))
 chrcols <- list(chromosome = c(colorRampPalette(c("lightgrey", "black"))(22), "white", "pink", "blue"))
 names(chrcols[["chromosome"]]) <- c(1:22, "Un", "X", "Y")
 row_ha <- rowAnnotation(chromosome = chr[keep], col = chrcols, na_col = "white")
-column_ha <- HeatmapAnnotation(ethnicity = sampleInfo$ethnicity, group = factor(sampleInfo$group),
-                               col = list(ethnicity = c("ASN"="lightgrey", "CEU"="darkgrey"),
-                                          group = c("0" = "brown", "1" = "blue")))
+column_ha <- HeatmapAnnotation(
+  ethnicity = sampleInfo$ethnicity, group = factor(sampleInfo$group),
+  col = list(
+    ethnicity = c("ASN" = "lightgrey", "CEU" = "darkgrey"),
+    group = c("0" = "brown", "1" = "blue")
+  )
+)
 Heatmap(ge, use_raster = FALSE, top_annotation = column_ha, right_annotation = row_ha)
 ```
 
@@ -380,9 +486,9 @@ library(Biobase)
 library(genefilter)
 library(GSE5859)
 data(GSE5859)
-geneExpression = exprs(e)
-sampleInfo = pData(e)
-year <-  as.integer(format(sampleInfo$date, "%y")) - min(as.integer(format(sampleInfo$date, "%y")))
+geneExpression <- exprs(e)
+sampleInfo <- pData(e)
+year <- as.integer(format(sampleInfo$date, "%y")) - min(as.integer(format(sampleInfo$date, "%y")))
 hcclass <- cutree(hclust(as.dist(1 - cor(geneExpression))), k = 5)
 table(hcclass, year) # Clustering is driven by year of processing, not biology
 ```
