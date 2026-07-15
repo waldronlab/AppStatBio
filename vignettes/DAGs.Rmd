@@ -6,12 +6,16 @@ author: "Levi Waldron"
 
 ```{r dag_layout, include=FALSE}
 dag_layout <- list(
-  x = c(I.instrumental_variable = -2, E.exposure = 0, C.confounder = -1, G.measured_confounder = 2, M.mediator = 2, S.collider = 2, L.unmeasured_cause = 0, D.disease = 4, J.effect_modifier = 4, Z.descendant = 6),
-  y = c(I.instrumental_variable = 0, E.exposure = 0, C.confounder = 2, G.measured_confounder = 2, M.mediator = 1, S.collider = -1, L.unmeasured_cause = -2, D.disease = 0, J.effect_modifier = 2, Z.descendant = 0)
+    x = c(I.instrumental_variable = -2, E.exposure = 0, C.confounder = -1, G.measured_confounder = 2, M.mediator = 2, S.collider = 2, L.unmeasured_cause = 0, D.disease = 4, J.effect_modifier = 4, Z.descendant = 6),
+    y = c(I.instrumental_variable = 0, E.exposure = 0, C.confounder = 2, G.measured_confounder = 2, M.mediator = 1, S.collider = -1, L.unmeasured_cause = -2, D.disease = 0, J.effect_modifier = 2, Z.descendant = 0)
 )
 ```
 
 ## Basic Causal Effect
+
+- **Paths** are sequences of arrows, of any direction, connecting two variables and may be causal or non-causal.
+- **Paths are causal** if each variable causes the subsequent variable (all the arrows point in the same direction).
+- **Paths are non-causal** if the arrows do not all point in the same direction. They contain confounders and/or colliders.
 
 ```{r dag_basic, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
 library(ggdag)
@@ -26,6 +30,8 @@ ggdag(dag_basic, text = FALSE, use_labels = "name") + theme_dag()
 
 ## Adding Confounders
 
+- **Confounding** occurs because of common (shared) causes (e.g., C) of E and D. To estimate the effect of E on D, it is necessary to control for such common causes or other variables along the non-causal path. Control for either C or G would be adequate to eliminate the confounding due to C. G may be preferable, for example, if it is easier to obtain a high-quality measurement of G.
+
 ```{r dag_confounder, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
 dag_confounder <- dagify(
     D.disease ~ E.exposure + G.measured_confounder,
@@ -37,6 +43,8 @@ ggdag(dag_confounder, text = FALSE, use_labels = "name") + theme_dag()
 ```
 
 ## Adding Mediators
+
+- **Mediators** (e.g., M) are caused by E and, in turn, cause D. They should not be controlled for to estimate the total effect of E on D. (Control for them **only** if you want to estimate the **direct** effect of E on D, excluding the mediated pathway).
 
 ```{r dag_mediator, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
 dag_mediator <- dagify(
@@ -50,6 +58,8 @@ ggdag(dag_mediator, text = FALSE, use_labels = "name") + theme_dag()
 ```
 
 ## Adding Colliders
+
+- **Colliders** (e.g., S) are so named because they have two arrows pointing into them. Colliders on a path block that path unless they are conditioned on (e.g., by controlling for them) or a consequence of the collider is conditioned on.
 
 ```{r dag_collider, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
 dag_collider <- dagify(
@@ -65,6 +75,8 @@ ggdag(dag_collider, text = FALSE, use_labels = "name") + theme_dag()
 
 ## Adding Descendants
 
+- **Descendants** of D (e.g., Z). Analyses should not adjust for, stratify on, or in any way condition on descendants.
+
 ```{r dag_descendant, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
 dag_descendant <- dagify(
     D.disease ~ E.exposure + G.measured_confounder + M.mediator + L.unmeasured_cause,
@@ -79,6 +91,8 @@ ggdag(dag_descendant, text = FALSE, use_labels = "name") + theme_dag()
 ```
 
 ## Adding Instrumental Variables
+
+- **Instrumental variables** (e.g., I) are variables related to the exposure of interest that have no association with the outcome except through the exposure. Instrumental variables analysis can be used to derive effect estimates when there is intractable confounding of E and D.
 
 ```{r dag_instrument, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
 dag_instrument <- dagify(
@@ -96,6 +110,8 @@ ggdag(dag_instrument, text = FALSE, use_labels = "name") + theme_dag()
 ## Causal Directed Acyclic Graphs
 
 Digitale, J. C., Martin, J. N., & Glymour, M. M. (2022). _Tutorial on directed acyclic graphs._ Journal of clinical epidemiology, 142, 264–267. [https://doi.org/10.1016/j.jclinepi.2021.08.001](https://doi.org/10.1016/j.jclinepi.2021.08.001)
+
+- **Effect modifiers** (e.g., J) are variables that cause D and modify the effect of other causes of D, such as E. If E and J both cause D, then J modifies the effect of E on D on at least one effect-measure scale (additive or multiplicative).
 
 ```{r dag1, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
 library(ggdag)
