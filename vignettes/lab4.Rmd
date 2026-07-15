@@ -38,6 +38,7 @@ ggdag(dag, text = FALSE, use_labels = "label") + theme_dag()
 
 We simulate 1000 observations based on the relationships defined in our DAG:
 
+
 ```{r simulate}
 set.seed(123)
 N <- 1000
@@ -89,7 +90,32 @@ summary(lm(D ~ E + C + S, data = data))
 
 ### 2. The Unbiased Model: Properly Controlling for the Confounder
 
-To get an unbiased estimate of the effect of E on D, we must block the backdoor path by controlling for the confounder C. We must also be careful **not** to control for the collider S.
+To get an unbiased estimate of the effect of E on D, we must block the backdoor path by controlling for the confounder C. We also must **not** control for the collider S.
 
 Try this yourself, show your code and output, and let me know what you find. What happens when you simply "control for everything"?
 
+## Exercise: The Importance of Visualization and Diagnostics
+
+We have prepared four datasets (Dataset A, B, C, and D). For each dataset, you will analyze the relationship between `x` and `y`.
+
+```{r prepare_exercise_data}
+dataset_A <- data.frame(x = anscombe$x1, y = anscombe$y1)
+dataset_B <- data.frame(x = anscombe$x2, y = anscombe$y2)
+dataset_C <- data.frame(x = anscombe$x3, y = anscombe$y3)
+dataset_D <- data.frame(x = anscombe$x4, y = anscombe$y4)
+```
+
+**Task 1: Linear Models**
+Fit a simple linear regression model (`lm(y ~ x)`) for each of the four datasets. Use `summary()` to examine the output of each model. 
+- What do you notice about the coefficient estimates, R-squared values, and p-values across the four models? 
+- Comment on your findings.
+
+**Task 2: Visualization**
+Create a scatterplot (`plot(x, y)`) for each of the four datasets.
+- Do the scatterplots look the way you expected based on the `summary()` output in Task 1? 
+- Comment on any differences between the datasets.
+
+**Task 3: Diagnostics**
+Run standard regression diagnostics (`plot(model)`) on each of your four fitted linear models from Task 1. 
+- Comment on anything that stands out to you in the diagnostic plots.
+- Which dataset is actually appropriate for simple linear regression?

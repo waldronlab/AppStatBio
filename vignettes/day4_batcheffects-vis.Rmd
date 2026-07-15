@@ -20,7 +20,7 @@ library(AppStatBio)
 ## Outline
 - [Directed acyclic graphs](https://pmc.ncbi.nlm.nih.gov/articles/PMC8821727/)
 - [Exploratory data analysis](https://genomicsclass.github.io/book/pages/exploratory_data_analysis.html) (Chapter 2)
-    - Quantile Quantile (QQ)-plots
+    - Quantile Quantile (QQ)-plots and regression diagnostics
     - Volcano plots
     - MA plots
     - heatmaps
@@ -248,6 +248,14 @@ p3 <- ggplot(data.frame(x = rt(1000, 3)), aes(sample = x)) +
   theme_minimal()
 
 p1 | p2 | p3
+```
+
+## Regression Diagnostics
+
+```{r reg_diag, echo=FALSE, fig.width=10, fig.height=7, warning=FALSE, message=FALSE}
+fit <- lm(dist ~ speed, data = cars)
+par(mfrow = c(2, 2))
+plot(fit)
 ```
 
 ## Exploratory data analysis in high dimensions
