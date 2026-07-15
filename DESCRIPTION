@@ -20,6 +20,7 @@ Imports:
     downloader,
     DiagrammeR,
     genefilter,
+    ggdag,
     ggplot2,
     gtsummary,
     GSE5859,
