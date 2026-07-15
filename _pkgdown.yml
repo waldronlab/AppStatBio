@@ -23,3 +23,5 @@ navbar:
       menu:
         - text: "Lab 3"
           href: articles/lab3.html
+        - text: "Lab 4"
+          href: articles/lab4.html
