@@ -4,6 +4,13 @@ output: slidy_presentation
 author: "Levi Waldron"
 ---
 
+```{r dag_layout, include=FALSE}
+dag_layout <- list(
+  x = c(I.instrumental_variable = -2, E.exposure = 0, C.confounder = -1, G.measured_confounder = 2, M.mediator = 2, S.collider = 2, L.unmeasured_cause = 0, D.disease = 4, J.effect_modifier = 4, Z.descendant = 6),
+  y = c(I.instrumental_variable = 0, E.exposure = 0, C.confounder = 2, G.measured_confounder = 2, M.mediator = 1, S.collider = -1, L.unmeasured_cause = -2, D.disease = 0, J.effect_modifier = 2, Z.descendant = 0)
+)
+```
+
 ## Basic Causal Effect
 
 ```{r dag_basic, echo=FALSE, fig.width=10, fig.height=6, warning=FALSE, message=FALSE}
@@ -11,7 +18,8 @@ library(ggdag)
 library(ggplot2)
 
 dag_basic <- dagify(
-    D.disease ~ E.exposure
+    D.disease ~ E.exposure,
+    coords = dag_layout
 )
 ggdag(dag_basic, text = FALSE, use_labels = "name") + theme_dag()
 ```
@@ -22,7 +30,8 @@ ggdag(dag_basic, text = FALSE, use_labels = "name") + theme_dag()
 dag_confounder <- dagify(
     D.disease ~ E.exposure + G.measured_confounder,
     E.exposure ~ C.confounder,
-    G.measured_confounder ~ C.confounder
+    G.measured_confounder ~ C.confounder,
+    coords = dag_layout
 )
 ggdag(dag_confounder, text = FALSE, use_labels = "name") + theme_dag()
 ```
@@ -34,7 +43,8 @@ dag_mediator <- dagify(
     D.disease ~ E.exposure + G.measured_confounder + M.mediator,
     E.exposure ~ C.confounder,
     G.measured_confounder ~ C.confounder,
-    M.mediator ~ E.exposure
+    M.mediator ~ E.exposure,
+    coords = dag_layout
 )
 ggdag(dag_mediator, text = FALSE, use_labels = "name") + theme_dag()
 ```
@@ -47,7 +57,8 @@ dag_collider <- dagify(
     E.exposure ~ C.confounder,
     G.measured_confounder ~ C.confounder,
     M.mediator ~ E.exposure,
-    S.collider ~ E.exposure + L.unmeasured_cause
+    S.collider ~ E.exposure + L.unmeasured_cause,
+    coords = dag_layout
 )
 ggdag(dag_collider, text = FALSE, use_labels = "name") + theme_dag()
 ```
@@ -61,7 +72,8 @@ dag_descendant <- dagify(
     G.measured_confounder ~ C.confounder,
     M.mediator ~ E.exposure,
     S.collider ~ E.exposure + L.unmeasured_cause,
-    Z.descendant ~ D.disease
+    Z.descendant ~ D.disease,
+    coords = dag_layout
 )
 ggdag(dag_descendant, text = FALSE, use_labels = "name") + theme_dag()
 ```
@@ -75,7 +87,8 @@ dag_instrument <- dagify(
     G.measured_confounder ~ C.confounder,
     M.mediator ~ E.exposure,
     S.collider ~ E.exposure + L.unmeasured_cause,
-    Z.descendant ~ D.disease
+    Z.descendant ~ D.disease,
+    coords = dag_layout
 )
 ggdag(dag_instrument, text = FALSE, use_labels = "name") + theme_dag()
 ```
@@ -94,7 +107,8 @@ dag <- dagify(
     G.measured_confounder ~ C.confounder,
     M.mediator ~ E.exposure,
     S.collider ~ E.exposure + L.unmeasured_cause,
-    Z.descendant ~ D.disease
+    Z.descendant ~ D.disease,
+    coords = dag_layout
 )
 
 ggdag(dag, text = FALSE, use_labels = "name") +
