@@ -31,7 +31,7 @@ dag <- dagify(
   )
 )
 
-ggdag(dag, text = FALSE, use_labels = "label") + theme_dag()
+ggdag(dag, text = FALSE) + geom_dag_label_repel(aes(label = label)) + theme_dag()
 ```
 
 ## Data Simulation
@@ -40,7 +40,7 @@ We simulate 1000 observations based on the relationships defined in our DAG:
 
 
 ```{r simulate}
-set.seed(123)
+# use set.seed() if you want reproducible random numbers
 N <- 1000
 
 # 1. C is a confounder (causes E and D)
@@ -57,7 +57,7 @@ D <- 0.5 * C + 0 * E + rnorm(N, mean = 0, sd = 1)
 S <- 0.5 * E + 0.5 * D + rnorm(N, mean = 0, sd = 1)
 
 # Combine into a dataframe
-data <- data.frame(E, D, C, S)
+df <- data.frame(E, D, C, S)
 ```
 
 ## Data Analysis
@@ -69,7 +69,7 @@ We want to estimate the causal effect of E on D. We know the true effect is 0. L
 If we simply regress D on E without controlling for the confounder C, the path `E <- C -> D` remains open. This "backdoor path" creates a spurious association between E and D.
 
 ```{r model_biased_confounder}
-summary(lm(D ~ E, data = data))
+summary(lm(D ~ E, data = df))
 ```
 
 *Notice that the coefficient for E is statistically significant and positive, even though the true effect is 0!*
@@ -80,10 +80,10 @@ summary(lm(D ~ E, data = data))
 
 What if we decide to throw all available variables into the model, controlling for both C and S? 
 
-By conditioning on a collider (S), we open up a new non-causal path between E and D. This introduces "collider bias" (also known as Berkson's paradox or selection bias).
+By conditioning on a collider (S), we open up a new non-causal path between E and D. This introduces "collider bias".
 
 ```{r model_biased_collider}
-summary(lm(D ~ E + C + S, data = data))
+summary(lm(D ~ E + C + S, data = df))
 ```
 
 *By controlling for the collider S, the coefficient for E becomes statistically significant and negative. We have introduced bias by over-adjusting!*
